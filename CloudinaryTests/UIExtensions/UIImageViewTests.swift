@@ -30,7 +30,7 @@ class UIImageViewTests: UIBaseTest {
     
     func testImageDownloadedAndSetFromURL() {
         
-        let expectation = self.expectation(description: "should succeed downloading and setting image.")
+        let expectation = expectationWithDescription("should succeed downloading and setting image.")
         
         var imageDownloadedAndSet = false
         let imageView = TestImageView { (image) in
@@ -41,7 +41,7 @@ class UIImageViewTests: UIBaseTest {
         }
         
         imageView.cldSetImage(url, cloudinary: cloudinary!)
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertTrue(imageDownloadedAndSet)
         
@@ -49,7 +49,7 @@ class UIImageViewTests: UIBaseTest {
     
     func testImageDownloadedAndSetFromPublicID() {
         
-        var expectation = self.expectation(description: "Upload should succeed")
+        var expectation = expectationWithDescription("Upload should succeed")
         
         var publicId: String?
         uploadFile().response({ (result, error) in
@@ -57,14 +57,14 @@ class UIImageViewTests: UIBaseTest {
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         guard let pubId = publicId else {
             XCTFail("Public ID should not be nil at this point")
             return
         }
         
-        expectation = self.expectation(description: "should succeed downloading and setting image.")
+        expectation = expectationWithDescription("should succeed downloading and setting image.")
         
         var imageDownloadedAndSet = false
         let imageView = TestImageView { (image) in
@@ -75,7 +75,7 @@ class UIImageViewTests: UIBaseTest {
         }
         
         imageView.cldSetImage(publicId: pubId, cloudinary: cloudinary!)
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertTrue(imageDownloadedAndSet)
         
@@ -87,14 +87,14 @@ class UIImageViewTests: UIBaseTest {
         
         var imageSetListener: ((UIImage?) -> ())?
         
-        override var image: UIImage? {
+        private override var image: UIImage? {
             didSet {
                 imageSetListener?(image)
             }
         }
         
         init(imageSetListener: ((UIImage?) -> ())? = nil) {
-            super.init(frame: CGRect.zero)
+            super.init(frame: CGRectZero)
             self.imageSetListener = imageSetListener
         }
         

@@ -1,5 +1,5 @@
 //
-//  NetworkAdapter.swift
+//  CLDNetworkAdapter.swift
 //
 //  Copyright (c) 2016 Cloudinary (http://cloudinary.com)
 //
@@ -43,11 +43,11 @@ to use a custom network adapter you must implement the `CLDNetworkAdapter` proto
     - parameter headers:        A dictionary of the headers to set to the request.
     - parameter parameters:     A dictionary of the parameters to set to the request.
     
-    - returns:                  An instance implementing the protocol `CLDNetworkDataRequest`,
+    - returns:                  An instance implementing the protocol `CLDNetworkRequest`,
                                 allowing the options to add response closure to be called once the request has finished,
                                 as well as performing actions on the request, such as cancelling, suspending or resuming it.
     */
-    func cloudinaryRequest(_ url: String, headers: [String : String], parameters: [String : Any]) -> CLDNetworkDataRequest
+    func cloudinaryRequest(url: String, headers: [String : String], parameters: [String : AnyObject]) -> CLDNetworkRequest
     
     /**
      Create a network upload request for the given URL, with the specified headers, body parameters and data.
@@ -55,14 +55,14 @@ to use a custom network adapter you must implement the `CLDNetworkAdapter` proto
      - parameter url:            The URL to make the request to.
      - parameter headers:        A dictionary of the headers to set to the request.
      - parameter parameters:     A dictionary of the parameters to set to the request.
-     - parameter data:           Can receive eithe the data to upload or an NSURL to either a local or a remote file to upload.
-
+     - parameter data:           Can receive eithe the data to upload or an NSURL to either a local or a remote file to upload.     
+     
      - returns:                 An instance implementing the protocol `CLDNetworkDataRequest`,
                                 allowing the options to add a progress closure that is called periodically during the upload
                                 and a response closure to be called once the upload is finished,
                                 as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    func uploadToCloudinary(_ url: String, headers: [String : String], parameters: [String : Any],  data: Any) -> CLDNetworkDataRequest
+    func uploadToCloudinary(url: String, headers: [String : String], parameters: [String : AnyObject], data: AnyObject) -> CLDNetworkDataRequest
     
     /**
      Download a file from the specified url.
@@ -74,7 +74,7 @@ to use a custom network adapter you must implement the `CLDNetworkAdapter` proto
                                 The protocol also allows the options to add a progress closure that is called periodically during the download,
                                 as well as cancelling the request.
      */
-    func downloadFromCloudinary(_ url: String) -> CLDFetchImageRequest
+    func downloadFromCloudinary(url: String) -> CLDFetchImageRequest
     
     // MARK: Setters
     
@@ -84,14 +84,14 @@ to use a custom network adapter you must implement the `CLDNetworkAdapter` proto
     
     default is `nil`.
     */
-    func setBackgroundCompletionHandler(_ newValue: (() -> ())?)
+    func setBackgroundCompletionHandler(newValue: (() -> ())?)
     
     /**
      The maximum number of queued downloads that can execute at the same time.
      
      The default value of this property is NSOperationQueueDefaultMaxConcurrentOperationCount.
      */
-    func setMaxConcurrentDownloads(_ maxConcurrentDownloads: Int)
+    func setMaxConcurrentDownloads(maxConcurrentDownloads: Int)
     
     // MARK: Getters
     /**
@@ -129,6 +129,16 @@ as well as performing actions on the request, such as cancelling, suspending or 
      */
     func cancel()
     
+    //MARK: Handlers
+    
+    /**
+    Set a response closure to be called once the request has finished.
+        
+    - parameter completionHandler:      The closure to be called once the request has finished, holding either the response object or the error.
+    
+    - returns:                          The same instance of CLDNetworkRequest.
+    */
+    func response(completionHandler: ((response: AnyObject?, error: NSError?) -> ())?) -> CLDNetworkRequest
 }
 
 // MARK: - CLDNetworkDataRequest
@@ -150,20 +160,8 @@ as well as performing actions on the request, such as cancelling, suspending or 
     
     - returns:                          The same instance of CLDNetworkDataRequest.
     */
-    @discardableResult
-    func progress(_ progress: ((Progress) -> Void)?) -> CLDNetworkDataRequest
-    
-    /**
-     Set a response closure to be called once the request has finished.
-     
-     - parameter completionHandler:      The closure to be called once the request has finished, holding either the response object or the error.
-     
-     - returns:                          The same instance of CLDNetworkRequest.
-     */
-    @discardableResult
-    func response(_ completionHandler: ((_ response: Any?, _ error: NSError?) -> ())?) -> CLDNetworkRequest
+    func progress(progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())?) -> CLDNetworkDataRequest
 }
-
 
 // MARK: - CLDFetchImageRequest
 
@@ -184,7 +182,6 @@ as well as cancelling the request.
      
      - returns:                          The same instance of CLDFetchImageRequest.
      */
-    @discardableResult
-    func responseImage(_ completionHandler: ((_ responseImage: UIImage?, _ error: NSError?) -> ())?) -> CLDFetchImageRequest
+    func responseImage(completionHandler: ((responseImage: UIImage?, error: NSError?) -> ())?) -> CLDFetchImageRequest
 }
 

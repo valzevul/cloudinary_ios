@@ -29,7 +29,7 @@ import Foundation
  It allows the options to add a response closure to be called once the request has finished,
  as well as performing actions on the request, such as cancelling, suspending or resuming it.
  */
-@objc open class CLDExplodeRequest: CLDRequest {
+@objc public class CLDExplodeRequest: CLDRequest {
     
     /**
      Set a response closure to be called once the request has finished.
@@ -38,17 +38,16 @@ import Foundation
      
      - returns:                          The same instance of CLDExplodeRequest.
      */
-    @discardableResult
-    open func response(_ completionHandler: ((_ result: CLDExplodeResult?, _ error: NSError?) -> ())?) -> CLDExplodeRequest {
+    public func response(completionHandler: ((result: CLDExplodeResult?, error: NSError?) -> ())?) -> CLDExplodeRequest {
         responseRaw { (response, error) in
             if let res = response as? [String : AnyObject] {
-                completionHandler?(CLDExplodeResult(json: res), nil)
+                completionHandler?(result: CLDExplodeResult(json: res), error: nil)
             }
             else if let err = error {
-                completionHandler?(nil, err)
+                completionHandler?(result: nil, error: err)
             }
             else {
-                completionHandler?(nil, CLDError.generalError())
+                completionHandler?(result: nil, error: CLDError.generalError())
             }
         }
         

@@ -24,187 +24,187 @@
 
 import Foundation
 
-@objc open class CLDFace: CLDBaseResult {
+@objc public class CLDFace: CLDBaseResult {
     
-    open var boundingBox: CLDBoundingBox? {
-        guard let bb = getParam(.boundingBox) as? [String : AnyObject] else {
+    public var boundingBox: CLDBoundingBox? {
+        guard let bb = getParam(.BoundingBox) as? [String : AnyObject] else {
             return nil
         }
         return CLDBoundingBox(json: bb)
     }
     
-    open var confidence: Double? {
-        return getParam(.confidence) as? Double
+    public var confidence: Double? {
+        return getParam(.Confidence) as? Double
     }
     
-    open var age: Double? {
-        return getParam(.age) as? Double
+    public var age: Double? {
+        return getParam(.Age) as? Double
     }
     
-    open var smile: Double? {
-        return getParam(.smile) as? Double
+    public var smile: Double? {
+        return getParam(.Smile) as? Double
     }
     
-    open var glasses: Double? {
-        return getParam(.glasses) as? Double
+    public var glasses: Double? {
+        return getParam(.Glasses) as? Double
     }
     
-    open var sunglasses: Double? {
-        return getParam(.sunglasses) as? Double
+    public var sunglasses: Double? {
+        return getParam(.Sunglasses) as? Double
     }
     
-    open var beard: Double? {
-        return getParam(.beard) as? Double
+    public var beard: Double? {
+        return getParam(.Beard) as? Double
     }
     
-    open var mustache: Double? {
-        return getParam(.mustache) as? Double
+    public var mustache: Double? {
+        return getParam(.Mustache) as? Double
     }
     
-    open var eyeClosed: Double? {
-        return getParam(.eyeClosed) as? Double
+    public var eyeClosed: Double? {
+        return getParam(.EyeClosed) as? Double
     }
     
-    open var mouthOpenWide: Double? {
-        return getParam(.mouthOpenWide) as? Double
+    public var mouthOpenWide: Double? {
+        return getParam(.MouthOpenWide) as? Double
     }
     
-    open var beauty: Double? {
-        return getParam(.beauty) as? Double
+    public var beauty: Double? {
+        return getParam(.Beauty) as? Double
     }
     
-    open var gender: Double? {
-        return getParam(.gender) as? Double
+    public var gender: Double? {
+        return getParam(.Gender) as? Double
     }
     
-    open var race: [String : Double]? {
-        return getParam(.race) as? [String : Double]
+    public var race: [String : Double]? {
+        return getParam(.Race) as? [String : Double]
     }
     
-    open var emotion: [String : Double]? {
-        return getParam(.emotion) as? [String : Double]
+    public var emotion: [String : Double]? {
+        return getParam(.Emotion) as? [String : Double]
     }
     
-    open var quality: [String : Double]? {
-        return getParam(.quality) as? [String : Double]
+    public var quality: [String : Double]? {
+        return getParam(.Quality) as? [String : Double]
     }
     
-    open var pose: [String : Double]? {
-        return getParam(.pose) as? [String : Double]
+    public var pose: [String : Double]? {
+        return getParam(.Pose) as? [String : Double]
     }
     
-    open var eyeLeftPosition: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeLeftPosition))
+    public var eyeLeftPosition: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeLeftPosition))
     }
     
-    open var eyeRightPosition: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeRightPosition))
+    public var eyeRightPosition: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeRightPosition))
     }
     
-    open var eyeLeft_Left: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeLeft_Left))
+    public var eyeLeft_Left: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeLeft_Left))
     }
     
-    open var eyeLeft_Right: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeLeft_Right))
+    public var eyeLeft_Right: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeLeft_Right))
     }
     
-    open var eyeLeft_Up: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeLeft_Up))
+    public var eyeLeft_Up: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeLeft_Up))
     }
     
-    open var eyeLeft_Down: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeLeft_Down))
+    public var eyeLeft_Down: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeLeft_Down))
     }
     
-    open var eyeRight_Left: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeRight_Left))
+    public var eyeRight_Left: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeRight_Left))
     }
     
-    open var eyeRight_Right: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeRight_Right))
+    public var eyeRight_Right: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeRight_Right))
     }
     
-    open var eyeRight_Up: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeRight_Up))
+    public var eyeRight_Up: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeRight_Up))
     }
     
-    open var eyeRight_Down: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.eyeRight_Down))
+    public var eyeRight_Down: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.EyeRight_Down))
     }
     
-    open var nosePosition: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.nosePosition))
+    public var nosePosition: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.NosePosition))
     }
     
-    open var noseLeft: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.noseLeft))
+    public var noseLeft: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.NoseLeft))
     }
     
-    open var noseRight: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.noseRight))
+    public var noseRight: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.NoseRight))
     }
     
-    open var mouthLeft: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.mouthLeft))
+    public var mouthLeft: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.MouthLeft))
     }
     
-    open var mouthRight: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.mouthRight))
+    public var mouthRight: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.MouthRight))
     }
     
-    open var mouthUp: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.mouthUp))
+    public var mouthUp: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.MouthUp))
     }
     
-    open var mouthDown: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDFaceKey.mouthDown))
+    public var mouthDown: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDFaceKey.MouthDown))
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: CLDFaceKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDFaceKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDFaceKey: CustomStringConvertible {
-        case boundingBox, confidence, age, smile, glasses, sunglasses, beard, mustache, eyeClosed, mouthOpenWide, beauty, gender, race, emotion, quality, pose, eyeLeftPosition, eyeRightPosition, eyeLeft_Left, eyeLeft_Right, eyeLeft_Up, eyeLeft_Down, eyeRight_Left, eyeRight_Right, eyeRight_Up, eyeRight_Down, nosePosition, noseLeft, noseRight, mouthLeft, mouthRight, mouthUp, mouthDown
+    private enum CLDFaceKey: CustomStringConvertible {
+        case BoundingBox, Confidence, Age, Smile, Glasses, Sunglasses, Beard, Mustache, EyeClosed, MouthOpenWide, Beauty, Gender, Race, Emotion, Quality, Pose, EyeLeftPosition, EyeRightPosition, EyeLeft_Left, EyeLeft_Right, EyeLeft_Up, EyeLeft_Down, EyeRight_Left, EyeRight_Right, EyeRight_Up, EyeRight_Down, NosePosition, NoseLeft, NoseRight, MouthLeft, MouthRight, MouthUp, MouthDown
         
         var description: String {
             switch self {
-            case .boundingBox:          return "boundingbox"
-            case .confidence:           return "confidence"
-            case .age:                  return "age"
-            case .smile:                return "smile"
-            case .glasses:              return "glasses"
-            case .sunglasses:           return "sunglasses"
-            case .beard:                return "beard"
-            case .mustache:             return "mustache"
-            case .eyeClosed:            return "eye_closed"
-            case .mouthOpenWide:        return "mouth_open_wide"
-            case .beauty:               return "beauty"
-            case .gender:               return "sex"
-            case .race:                 return "race"
-            case .emotion:              return "emotion"
-            case .quality:              return "quality"
-            case .pose:                 return "pose"
-            case .eyeLeftPosition:      return "eye_left"
-            case .eyeRightPosition:     return "eye_right"
-            case .eyeLeft_Left:         return "e_ll"
-            case .eyeLeft_Right:        return "e_lr"
-            case .eyeLeft_Up:           return "e_lu"
-            case .eyeLeft_Down:         return "e_ld"
-            case .eyeRight_Left:        return "e_rl"
-            case .eyeRight_Right:       return "e_rr"
-            case .eyeRight_Up:          return "e_ru"
-            case .eyeRight_Down:        return "e_rd"
-            case .nosePosition:         return "nose"
-            case .noseLeft:             return "n_l"
-            case .noseRight:            return "n_r"
-            case .mouthLeft:            return "mouth_l"
-            case .mouthRight:           return "mouth_r"
-            case .mouthUp:              return "m_u"
-            case .mouthDown:            return "m_d"
+            case .BoundingBox:          return "boundingbox"
+            case .Confidence:           return "confidence"
+            case .Age:                  return "age"
+            case .Smile:                return "smile"
+            case .Glasses:              return "glasses"
+            case .Sunglasses:           return "sunglasses"
+            case .Beard:                return "beard"
+            case .Mustache:             return "mustache"
+            case .EyeClosed:            return "eye_closed"
+            case .MouthOpenWide:        return "mouth_open_wide"
+            case .Beauty:               return "beauty"
+            case .Gender:               return "sex"
+            case .Race:                 return "race"
+            case .Emotion:              return "emotion"
+            case .Quality:              return "quality"
+            case .Pose:                 return "pose"
+            case .EyeLeftPosition:      return "eye_left"
+            case .EyeRightPosition:     return "eye_right"
+            case .EyeLeft_Left:         return "e_ll"
+            case .EyeLeft_Right:        return "e_lr"
+            case .EyeLeft_Up:           return "e_lu"
+            case .EyeLeft_Down:         return "e_ld"
+            case .EyeRight_Left:        return "e_rl"
+            case .EyeRight_Right:       return "e_rr"
+            case .EyeRight_Up:          return "e_ru"
+            case .EyeRight_Down:        return "e_rd"
+            case .NosePosition:         return "nose"
+            case .NoseLeft:             return "n_l"
+            case .NoseRight:            return "n_r"
+            case .MouthLeft:            return "mouth_l"
+            case .MouthRight:           return "mouth_r"
+            case .MouthUp:              return "m_u"
+            case .MouthDown:            return "m_d"
             }
         }
     }

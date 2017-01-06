@@ -24,8 +24,8 @@
 
 import Foundation
 
-internal extension Dictionary {
-    mutating func cldMerge(_ otherDictionary: Dictionary?) {
+extension Dictionary {    
+    mutating func cldMerge(otherDictionary: Dictionary?) {
         guard let otherDictionary = otherDictionary else {
             return
         }

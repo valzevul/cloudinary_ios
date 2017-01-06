@@ -27,7 +27,7 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing an `explicit` request.
  */
-@objc open class CLDExplicitRequestParams: CLDUploadRequestParams {
+@objc public class CLDExplicitRequestParams: CLDUploadRequestParams {
 
     
     //MARK: Init
@@ -45,7 +45,7 @@ import Foundation
     - returns:                       A new instance of CLDExplicitRequestParams.
     */
     internal convenience init(publicId: String, type: CLDType) {
-        self.init(publicId: publicId, type: String(describing: type))
+        self.init(publicId: publicId, type: String(type))
     }
     
     /**

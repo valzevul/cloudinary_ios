@@ -27,11 +27,11 @@ import Foundation
 /**
  The CLDDownloader class is used to asynchronously fetch images either from the image cache if they exist or download them from a remote source.
 */
-@objc open class CLDDownloader: CLDBaseNetworkObject {
+@objc public class CLDDownloader: CLDBaseNetworkObject {
     
     // MARK: - Init
     
-    fileprivate override init() {
+    private override init() {
         super.init()
     }
     
@@ -51,8 +51,7 @@ import Foundation
     
     - returns:              A `CLDFetchImageRequest` instance to be used to get the fetched image from, or to get the download progress or cancel the task.
     */
-    @discardableResult
-    open func fetchImage(_ url: String, _ progress: ((Progress) -> Void)? = nil, completionHandler: ((_ responseImage: UIImage?, _ error: NSError?) -> ())? = nil) -> CLDFetchImageRequest {
+    public func fetchImage(url: String, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler: ((responseImage: UIImage?, error: NSError?) -> ())? = nil) -> CLDFetchImageRequest {
         let request = CLDFetchImageRequestImpl(url: url, networkCoordinator: networkCoordinator)
         request.fetchImage()
         request.responseImage(completionHandler)

@@ -27,62 +27,70 @@ import Alamofire
 
 
 internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
-
-    init(configuration: URLSessionConfiguration? = nil) {
+    
+    private struct SessionProperties {
+        static let identifier: String = NSBundle.mainBundle().bundleIdentifier ?? "" + ".cloudinarySDKbackgroundSession"
+    }
+    
+    private let manager: Alamofire.Manager
+    
+    private let downloadQueue: NSOperationQueue = NSOperationQueue()
+    
+    internal static let sharedNetworkDelegate = CLDNetworkDelegate()
+    
+    // MARK: - Init
+    
+    init(configuration: NSURLSessionConfiguration? = nil) {
         if let configuration = configuration {
-            manager = SessionManager(configuration: configuration)
+            manager = Manager(configuration: configuration)
         } else {
-            let configuration: URLSessionConfiguration = {
-                let configuration = URLSessionConfiguration.background(withIdentifier: SessionProperties.identifier)
-                configuration.httpAdditionalHeaders = SessionManager.defaultHTTPHeaders
+            let configuration: NSURLSessionConfiguration = {
+                let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier(SessionProperties.identifier)
+                configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
                 return configuration
             }()
-            manager = SessionManager(configuration: configuration)
+            manager = Manager(configuration: configuration)
         }
         manager.startRequestsImmediately = false
     }
-
-    private struct SessionProperties {
-        static let identifier: String = Bundle.main.bundleIdentifier ?? "" + ".cloudinarySDKbackgroundSession"
-    }
-
-    fileprivate let manager: Alamofire.SessionManager
-
-    fileprivate let downloadQueue: OperationQueue = OperationQueue()
-
-    internal static let sharedNetworkDelegate = CLDNetworkDelegate()
-
+    
     // MARK: Features
-
-    internal func cloudinaryRequest(_ url: String, headers: [String: String], parameters: [String: Any]) -> CLDNetworkDataRequest {
-        let req: DataRequest = manager.request(url, method: .post, parameters: parameters, headers: headers)
+    
+    internal func cloudinaryRequest(url: String, headers: [String : String], parameters: [String : AnyObject]) -> CLDNetworkRequest {
+        let req: Request = manager.request(.POST, url, parameters: parameters, headers: headers)
         req.resume()
-        return CLDNetworkDataRequestImpl(request: req)
+        return CLDGenericNetworkRequest(request: req)
     }
-
-    internal func uploadToCloudinary(_ url: String, headers: [String: String], parameters: [String: Any], data: Any) -> CLDNetworkDataRequest {
-
+    
+    internal func uploadToCloudinary(url: String, headers: [String : String], parameters: [String : AnyObject], data: AnyObject) -> CLDNetworkDataRequest {
+        
         let asyncUploadRequest = CLDAsyncNetworkUploadRequest()
-        manager.upload(multipartFormData: { (multipartFormData) in
-
-            if let data = data as? Data {
-                multipartFormData.append(data, withName: "file", fileName: "file", mimeType: "application/octet-stream")
-            } else if let url = data as? URL {
-                if url.absoluteString.range(of: "^ftp:|^https?:|^s3:|^data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)$", options: [NSString.CompareOptions.regularExpression, NSString.CompareOptions.caseInsensitive], range: nil, locale: nil) != nil {
-                    if let urlAsData = url.absoluteString.data(using: String.Encoding.utf8) {
-                        multipartFormData.append(urlAsData, withName: "file")
+        manager.upload(.POST, url, headers: headers, multipartFormData: { (multipartFormData) in
+            
+            if let data = data as? NSData {
+                multipartFormData.appendBodyPart(data: data, name: "file", fileName: "file", mimeType: "application/octet-stream")
+            } else if let fileUrl = data as? NSURL {
+                var absoluteString: String
+                #if swift(>=2.3)
+                    absoluteString = fileUrl.absoluteString!
+                #else
+                    absoluteString = fileUrl.absoluteString
+                #endif
+                if absoluteString.rangeOfString("^ftp:|^https?:|^s3:|^data:[^;]*;base64,([a-zA-Z0-9/+\n=]+)$", options: [NSStringCompareOptions.RegularExpressionSearch, NSStringCompareOptions.CaseInsensitiveSearch], range: nil, locale: nil) != nil {
+                    if let urlAsData = absoluteString.dataUsingEncoding(NSUTF8StringEncoding) {
+                        multipartFormData.appendBodyPart(data: urlAsData, name: "file")
                     }
                 } else {
-                    multipartFormData.append(url, withName: "file", fileName: url.lastPathComponent, mimeType: "application/octet-stream")
+                    multipartFormData.appendBodyPart(fileURL: fileUrl, name: "file", fileName: fileUrl.lastPathComponent!, mimeType: "application/octet-stream")
                 }
             }
-
+            
             for key in parameters.keys {
-                if let value = parameters[key], value is [String] {
+                if let value = parameters[key] where value is [String] {
                     if let valueArr = value as? [String] {
                         for paramValue in valueArr {
-                            if let valueData = paramValue.data(using: String.Encoding.utf8) {
-                                multipartFormData.append(valueData, withName: key + "[]")
+                            if let valueData = paramValue.dataUsingEncoding(NSUTF8StringEncoding) {
+                                multipartFormData.appendBodyPart(data: valueData, name: key + "[]")
                             }
                         }
                     }
@@ -90,53 +98,55 @@ internal class CLDNetworkDelegate: NSObject, CLDNetworkAdapter {
                     if value.isEmpty {
                         continue
                     }
-
-                    if let valueData = value.data(using: String.Encoding.utf8) {
-                        multipartFormData.append(valueData, withName: key)
+                    
+                    if let valueData = value.dataUsingEncoding(NSUTF8StringEncoding) {
+                        multipartFormData.appendBodyPart(data: valueData, name: key)
                     }
                 } else if let value = parameters[key] as? Bool {
-                    if let valueData = String(describing: NSNumber(value: value)).data(using: String.Encoding.utf8) {
-                        multipartFormData.append(valueData, withName: key)
+                    if let valueData = String(NSNumber(bool: value)).dataUsingEncoding(NSUTF8StringEncoding) {
+                        multipartFormData.appendBodyPart(data: valueData, name: key)
                     }
                 }
             }
-
-        }, usingThreshold: UInt64(), to: url, method: .post, headers: headers) { (encodingResult) in
+            
+        }) { (encodingResult) in
             switch encodingResult {
-            case .success(let upload, _, _):
+            case .Success(let upload, _, _):
                 upload.resume()
-                let uploadRequest = CLDNetworkUploadRequest(request: upload)
+                let uploadRequest = CLDNetworkDataRequestImpl(request: upload)
                 asyncUploadRequest.networkDataRequest = uploadRequest
-            case .failure(let encodingError):
-                asyncUploadRequest.networkDataRequest = CLDRequestError(error: encodingError)
+            case .Failure(let encodingError):
+                asyncUploadRequest.networkDataRequest = CLDRequestError(error: encodingError as NSError)
             }
         }
-
+        
         return asyncUploadRequest
     }
-
-    internal func downloadFromCloudinary(_ url: String) -> CLDFetchImageRequest {
-        let req = manager.request(url)
-        downloadQueue.addOperation { () -> () in
+    
+    
+    internal func downloadFromCloudinary(url: String) -> CLDFetchImageRequest {
+        let req: Request = manager.request(.GET, url)
+        downloadQueue.addOperationWithBlock { () -> () in
             req.resume()
         }
         return CLDNetworkDownloadRequest(request: req)
+        
+        
     }
-
+    
     // MARK: - Setters
-
-    internal func setBackgroundCompletionHandler(_ newValue: (() -> ())?) {
+    
+    internal func setBackgroundCompletionHandler(newValue: (() -> ())?) {
         manager.backgroundCompletionHandler = newValue
     }
-
-    internal func setMaxConcurrentDownloads(_ maxConcurrentDownloads: Int) {
+    
+    internal func setMaxConcurrentDownloads(maxConcurrentDownloads: Int) {
         downloadQueue.maxConcurrentOperationCount = maxConcurrentDownloads
     }
-
+    
     // MARK: - Getters
-
+    
     internal func getBackgroundCompletionHandler() -> (() -> ())? {
         return manager.backgroundCompletionHandler
-    }
-
+    }    
 }

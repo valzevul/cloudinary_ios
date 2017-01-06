@@ -24,10 +24,10 @@
 
 import Foundation
 
-@objc open class CLDDetection: CLDBaseResult {
+@objc public class CLDDetection: CLDBaseResult {
     
-    open var rekognitionFace: CLDRekognitionFace? {
-        guard let rekognitionFace = getParam(.rekognitionFace) as? [String : AnyObject] else {
+    public var rekognitionFace: CLDRekognitionFace? {
+        guard let rekognitionFace = getParam(.RekognitionFace) as? [String : AnyObject] else {
             return nil
         }
         return CLDRekognitionFace(json: rekognitionFace)
@@ -35,16 +35,16 @@ import Foundation
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: CLDDetectionKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDDetectionKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDDetectionKey: CustomStringConvertible {
-        case rekognitionFace
+    private enum CLDDetectionKey: CustomStringConvertible {
+        case RekognitionFace
         
         var description: String {
             switch self {
-            case .rekognitionFace:           return "rekognition_face"
+            case .RekognitionFace:           return "rekognition_face"
             }
         }
     }

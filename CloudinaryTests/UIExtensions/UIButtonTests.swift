@@ -31,7 +31,7 @@ class UIButtonTests: UIBaseTest {
     
     func testImageDownloadedAndSetFromURL() {
         
-        let expectation = self.expectation(description: "should succeed downloading and setting image.")
+        let expectation = expectationWithDescription("should succeed downloading and setting image.")
         
         var imageDownloadedAndSet = false
         let btn = TestButton { (image) in
@@ -41,8 +41,8 @@ class UIButtonTests: UIBaseTest {
             expectation.fulfill()
         }
         
-        btn.cldSetImage(url, forState: .normal, cloudinary: cloudinary!)
-        waitForExpectations(timeout: timeout, handler: nil)
+        btn.cldSetImage(url, forState: .Normal, cloudinary: cloudinary!)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertTrue(imageDownloadedAndSet)
         
@@ -50,7 +50,7 @@ class UIButtonTests: UIBaseTest {
     
     func testImageDownloadedAndSetFromPublicID() {
         
-        var expectation = self.expectation(description: "Upload should succeed")
+        var expectation = expectationWithDescription("Upload should succeed")
         
         var publicId: String?
         uploadFile().response({ (result, error) in
@@ -58,14 +58,14 @@ class UIButtonTests: UIBaseTest {
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         guard let pubId = publicId else {
             XCTFail("Public ID should not be nil at this point")
             return
         }
         
-        expectation = self.expectation(description: "should succeed downloading and setting image.")
+        expectation = expectationWithDescription("should succeed downloading and setting image.")
         
         var imageDownloadedAndSet = false
         let btn = TestButton { (image) in
@@ -75,8 +75,8 @@ class UIButtonTests: UIBaseTest {
             expectation.fulfill()
         }
         
-        btn.cldSetImage(publicId: pubId, cloudinary: cloudinary!, forState: .normal)
-        waitForExpectations(timeout: timeout, handler: nil)
+        btn.cldSetImage(publicId: pubId, cloudinary: cloudinary!, forState: .Normal)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertTrue(imageDownloadedAndSet)
         
@@ -84,7 +84,7 @@ class UIButtonTests: UIBaseTest {
     
     func testBackgroundImageDownloadedAndSetFromURL() {
         
-        let expectation = self.expectation(description: "should succeed downloading and setting image.")
+        let expectation = expectationWithDescription("should succeed downloading and setting image.")
         
         var imageDownloadedAndSet = false
         let btn = TestButton { (image) in
@@ -94,8 +94,8 @@ class UIButtonTests: UIBaseTest {
             expectation.fulfill()
         }
                 
-        btn.cld_setBackgroundImage(url, forState: .normal, cloudinary: cloudinary!)
-        waitForExpectations(timeout: timeout, handler: nil)
+        btn.cldSetBackgroundImage(url, forState: .Normal, cloudinary: cloudinary!)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertTrue(imageDownloadedAndSet)
         
@@ -103,7 +103,7 @@ class UIButtonTests: UIBaseTest {
     
     func testBackgroundImageDownloadedAndSetFromPublicID() {
         
-        var expectation = self.expectation(description: "Upload should succeed")
+        var expectation = expectationWithDescription("Upload should succeed")
         
         var publicId: String?
         uploadFile().response({ (result, error) in
@@ -111,14 +111,14 @@ class UIButtonTests: UIBaseTest {
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         guard let pubId = publicId else {
             XCTFail("Public ID should not be nil at this point")
             return
         }
         
-        expectation = self.expectation(description: "should succeed downloading and setting image.")
+        expectation = expectationWithDescription("should succeed downloading and setting image.")
         
         var imageDownloadedAndSet = false
         let btn = TestButton { (image) in
@@ -128,8 +128,8 @@ class UIButtonTests: UIBaseTest {
             expectation.fulfill()
         }
         
-        btn.cld_setBackgroundImage(publicId: pubId, cloudinary: cloudinary!, forState: .normal)
-        waitForExpectations(timeout: timeout, handler: nil)
+        btn.cldSetBackgroundImage(publicId: pubId, cloudinary: cloudinary!, forState: .Normal)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertTrue(imageDownloadedAndSet)
         
@@ -137,12 +137,12 @@ class UIButtonTests: UIBaseTest {
     
     // MARK: - Helpers
     
-    fileprivate class TestButton: UIButton {
+    private class TestButton: UIButton {
         
         var imageSetListener: ((UIImage?) -> ())?
         
         init(imageSetListener: ((UIImage?) -> ())? = nil) {
-            super.init(frame: CGRect.zero)
+            super.init(frame: CGRectZero)
             self.imageSetListener = imageSetListener            
         }
         
@@ -150,13 +150,13 @@ class UIButtonTests: UIBaseTest {
             fatalError("init(coder:) has not been implemented")
         }
         
-        fileprivate override func setImage(_ image: UIImage?, for state: UIControlState) {
-            super.setImage(image, for: state)
+        private override func setImage(image: UIImage?, forState state: UIControlState) {
+            super.setImage(image, forState: state)
             imageSetListener?(image)
         }
         
-        fileprivate override func setBackgroundImage(_ image: UIImage?, for state: UIControlState) {
-            super.setBackgroundImage(image, for: state)
+        private override func setBackgroundImage(image: UIImage?, forState state: UIControlState) {
+            super.setBackgroundImage(image, forState: state)
             imageSetListener?(image)
         }
     }

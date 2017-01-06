@@ -26,7 +26,7 @@ import Foundation
 
 private let lock = NSLock()
 
-internal extension Data {
+internal extension NSData {
     internal func cldToUIImageThreadSafe() -> UIImage? {
         lock.lock()
         let image = UIImage(data: self)

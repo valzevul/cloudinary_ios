@@ -25,15 +25,15 @@
 import Foundation
 
 internal extension UIView {    
-    internal func fetchImageForUIElement(_ url: String, placeholder: UIImage?, cloudinary: CLDCloudinary, fetchedImageHandler: @escaping ((_ fetchedImage: UIImage) -> ())) {
+    internal func fetchImageForUIElement(url: String, placeholder: UIImage?, cloudinary: CLDCloudinary, fetchedImageHandler: ((fetchedImage: UIImage) -> ())) {
         
         if let placeholder = placeholder {
-            fetchedImageHandler(placeholder)
+            fetchedImageHandler(fetchedImage: placeholder)
         }
         
         cloudinary.createDownloader().fetchImage(url) { (responseImage, error) in
             if let img = responseImage {
-                fetchedImageHandler(img)
+                fetchedImageHandler(fetchedImage: img)
             }
         }
     }

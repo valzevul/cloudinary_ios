@@ -28,15 +28,15 @@ import Foundation
  The CLDRequestParams class is a base class for all different request params object.
  It holds a dictionary of the actual params, the request's resource type, the request signature for signing a request using an externaly generated signature, and the subclass' representing action.
 */
-@objc open class CLDRequestParams: NSObject {
+@objc public class CLDRequestParams: NSObject {
 
     /**
      A dictionary of the params to be sent as part of the request.
     */
-    internal var params: [String : Any] = [:]
+    internal var params: [String : AnyObject] = [:]
     
     /**
-     The request's resource type, if set it will be part of the request URL. On most cases defaults to "image".
+     The requst's resource type, if set it will be part of the requset URL. On most cases defaults to "image".
      */
     internal var resourceType: String?
     
@@ -60,28 +60,24 @@ import Foundation
     - returns:                     The same instance of CLDUploadRequestParams.
     
     */
-    @discardableResult
-    open func setParam(_ key: String, value: Any?) -> CLDRequestParams {
+    public func setParam(key: String, value: AnyObject?) -> CLDRequestParams {
         params[key] = value
         return self
     }
 
-    @discardableResult
     @objc(setResourceTypeFromUrlResourceType:)
-    open func setResourceType(_ resourceType: CLDUrlResourceType) -> CLDRequestParams {
-        return setResourceType(String(describing: resourceType))
+    public func setResourceType(resourceType: CLDUrlResourceType) -> CLDRequestParams {
+        return setResourceType(String(resourceType))
     }
-
-    @discardableResult
+    
     @objc(setResourceTypeFromString:)
-    open func setResourceType(_ resourceType: String) -> CLDRequestParams {
+    public func setResourceType(resourceType: String) -> CLDRequestParams {
         self.resourceType = resourceType
         return self
     }
-
-    @discardableResult
+    
     @objc(setSignatureWithSignature:)
-    open func setSignature(_ signature: CLDSignature) -> CLDRequestParams {
+    public func setSignature(signature: CLDSignature) -> CLDRequestParams {
         self.signature = signature
         return self
     }
@@ -96,7 +92,7 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      
      */
-    open func getParam(_ key: String) -> Any? {
+    public func getParam(key: String) -> AnyObject? {
         return params[key]
     }
 }

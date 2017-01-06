@@ -27,7 +27,7 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing a rename request.
  */
-@objc open class CLDRenameRequestParams: CLDRequestParams {
+@objc public class CLDRenameRequestParams: CLDRequestParams {
 
     
     // MARK: Init
@@ -68,7 +68,7 @@ import Foundation
     
     // MARK: - Rename Params
     
-    fileprivate enum RenameParams: String {
+    private enum RenameParams: String {
         case FromPublicId =         "from_public_id"
         case ToPublicId =           "to_public_id"
         case Overwrite =            "overwrite"

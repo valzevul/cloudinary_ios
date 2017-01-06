@@ -24,116 +24,116 @@
 
 import Foundation
 
-@objc open class CLDRenameResult: CLDBaseResult {
+@objc public class CLDRenameResult: CLDBaseResult {
     
     // MARK: - Getters
     
-    open var publicId: String? {
-        return getParam(.publicId) as? String
+    public var publicId: String? {
+        return getParam(.PublicId) as? String
     }
     
-    open var format: String? {
-        return getParam(.format) as? String
+    public var format: String? {
+        return getParam(.Format) as? String
     }
     
-    open var version: String? {
-        guard let version = getParam(.version) else {
+    public var version: String? {
+        guard let version = getParam(.Version) else {
             return nil
         }
-        return String(describing: version)
+        return String(version)
     }
     
-    open var resourceType: String? {
-        return getParam(.resourceType) as? String
+    public var resourceType: String? {
+        return getParam(.ResourceType) as? String
     }
     
-    open var type: String? {
-        return getParam(.urlType) as? String
+    public var type: String? {
+        return getParam(.UrlType) as? String
     }
     
-    open var createdAt: String? {
-        return getParam(.createdAt) as? String
+    public var createdAt: String? {
+        return getParam(.CreatedAt) as? String
     }
     
-    open var length: Double? {
-        return getParam(.length) as? Double
+    public var length: Double? {
+        return getParam(.Length) as? Double
     }
     
-    open var width: Int? {
-        return getParam(.width) as? Int
+    public var width: Int? {
+        return getParam(.Width) as? Int
     }
     
-    open var height: Int? {
-        return getParam(.height) as? Int
+    public var height: Int? {
+        return getParam(.Height) as? Int
     }
     
-    open var url: String? {
-        return getParam(.url) as? String
+    public var url: String? {
+        return getParam(.Url) as? String
     }
     
-    open var secureUrl: String? {
-        return getParam(.secureUrl) as? String
+    public var secureUrl: String? {
+        return getParam(.SecureUrl) as? String
     }
     
-    open var nextCursor: String? {
-        return getParam(.nextCursor) as? String
+    public var nextCursor: String? {
+        return getParam(.NextCursor) as? String
     }
     
-    open var exif: [String : String]? {
-        return getParam(.exif) as? [String : String]
+    public var exif: [String : String]? {
+        return getParam(.Exif) as? [String : String]
     }
     
-    open var metadata: [String : String]? {
-        return getParam(.metadata) as? [String : String]
+    public var metadata: [String : String]? {
+        return getParam(.Metadata) as? [String : String]
     }
     
-    open var faces: AnyObject? {
-        return getParam(.faces)
+    public var faces: AnyObject? {
+        return getParam(.Faces)
     }
     
-    open var colors: AnyObject? {
-        return getParam(.colors)
+    public var colors: AnyObject? {
+        return getParam(.Colors)
     }
     
-    open var derived: CLDDerived? {
-        guard let derived = getParam(.derived) as? [String : AnyObject] else {
+    public var derived: CLDDerived? {
+        guard let derived = getParam(.Derived) as? [String : AnyObject] else {
             return nil
         }
         return CLDDerived(json: derived)
     }
     
-    open var tags: [String]? {
-        return getParam(.tags) as? [String]
+    public var tags: [String]? {
+        return getParam(.Tags) as? [String]
     }
     
-    open var moderation: AnyObject? {
-        return getParam(.moderation)
+    public var moderation: AnyObject? {
+        return getParam(.Moderation)
     }
     
-    open var context: AnyObject? {
-        return getParam(.context)
+    public var context: AnyObject? {
+        return getParam(.Context)
     }
     
-    open var phash: String? {
-        return getParam(.phash) as? String
+    public var phash: String? {
+        return getParam(.Phash) as? String
     }
     
-    open var predominant: CLDPredominant? {
-        guard let predominant = getParam(.predominant) as? [String : AnyObject] else {
+    public var predominant: CLDPredominant? {
+        guard let predominant = getParam(.Predominant) as? [String : AnyObject] else {
             return nil
         }
         return CLDPredominant(json: predominant)
     }
     
-    open var coordinates: CLDCoordinates? {
-        guard let coordinates = getParam(.coordinates) as? [String : AnyObject] else {
+    public var coordinates: CLDCoordinates? {
+        guard let coordinates = getParam(.Coordinates) as? [String : AnyObject] else {
             return nil
         }
         return CLDCoordinates(json: coordinates)
     }
     
-    open var info: CLDInfo? {
-        guard let info = getParam(.info) as? [String : AnyObject] else {
+    public var info: CLDInfo? {
+        guard let info = getParam(.Info) as? [String : AnyObject] else {
             return nil
         }
         return CLDInfo(json: info)
@@ -141,20 +141,20 @@ import Foundation
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: RenameResultKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: RenameResultKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
 
-    fileprivate enum RenameResultKey: CustomStringConvertible {
-        case nextCursor, derived, context, predominant, coordinates
+    private enum RenameResultKey: CustomStringConvertible {
+        case NextCursor, Derived, Context, Predominant, Coordinates
         
         var description: String {
             switch self {
-            case .nextCursor:       return "next_cursor"
-            case .derived:          return "derived"            
-            case .context:          return "context"
-            case .predominant:      return "predominant"
-            case .coordinates:      return "coordinates"
+            case .NextCursor:       return "next_cursor"
+            case .Derived:          return "derived"            
+            case .Context:          return "context"
+            case .Predominant:      return "predominant"
+            case .Coordinates:      return "coordinates"
             }
         }
     }
@@ -163,28 +163,28 @@ import Foundation
 
 // MARK: - CLDCoordinates
 
-@objc open class CLDCoordinates: CLDBaseResult {
+@objc public class CLDCoordinates: CLDBaseResult {
     
-    open var custom: AnyObject? {
-        return getParam(.custom)
+    public var custom: AnyObject? {
+        return getParam(.Custom)
     }
     
-    open var faces: AnyObject? {
-        return getParam(.faces)
+    public var faces: AnyObject? {
+        return getParam(.Faces)
     }
     
     // MARK: Private Helpers
     
-    fileprivate func getParam(_ param: CLDCoordinatesKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDCoordinatesKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDCoordinatesKey: CustomStringConvertible {
-        case custom
+    private enum CLDCoordinatesKey: CustomStringConvertible {
+        case Custom
         
         var description: String {
             switch self {
-            case .custom:           return "custom"
+            case .Custom:           return "custom"
             }
         }
     }
@@ -193,24 +193,24 @@ import Foundation
 
 // MARK: - CLDPredominant
 
-@objc open class CLDPredominant: CLDBaseResult {
+@objc public class CLDPredominant: CLDBaseResult {
     
-    open var google: AnyObject? {
-        return getParam(.google)
+    public var google: AnyObject? {
+        return getParam(.Google)
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: CLDPredominantKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDPredominantKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDPredominantKey: CustomStringConvertible {
-        case google
+    private enum CLDPredominantKey: CustomStringConvertible {
+        case Google
         
         var description: String {
             switch self {
-            case .google:           return "google"
+            case .Google:           return "google"
             }
         }
     }
@@ -219,45 +219,45 @@ import Foundation
 
 // MARK: - CLDDerived
 
-@objc open class CLDDerived: CLDBaseResult {
+@objc public class CLDDerived: CLDBaseResult {
     
-    open var transformation: String? {
-        return getParam(.transformation) as? String
+    public var transformation: String? {
+        return getParam(.Transformation) as? String
     }
     
-    open var format: String? {
-        return getParam(.format) as? String
+    public var format: String? {
+        return getParam(.Format) as? String
     }
     
-    open var length: Double? {
-        return getParam(.length) as? Double
+    public var length: Double? {
+        return getParam(.Length) as? Double
     }
     
-    open var identifier: String? {
-        return getParam(.id) as? String
+    public var identifier: String? {
+        return getParam(.Id) as? String
     }
     
-    open var url: String? {
-        return getParam(.url) as? String
+    public var url: String? {
+        return getParam(.Url) as? String
     }
     
-    open var secureUrl: String? {
-        return getParam(.secureUrl) as? String
+    public var secureUrl: String? {
+        return getParam(.SecureUrl) as? String
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: CLDDerivedKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDDerivedKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDDerivedKey: CustomStringConvertible {
-        case transformation, id
+    private enum CLDDerivedKey: CustomStringConvertible {
+        case Transformation, Id
         
         var description: String {
             switch self {
-            case .transformation:           return "transformation"
-            case .id:                       return "id"
+            case .Transformation:           return "transformation"
+            case .Id:                       return "id"
             }
         }
     }

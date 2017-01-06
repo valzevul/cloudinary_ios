@@ -24,7 +24,7 @@
 
 import Foundation
 
-@objc open class CLDTextLayer: CLDLayer {
+@objc public class CLDTextLayer: CLDLayer {
     
     internal var text: String?
     internal var fontFamily: String?
@@ -46,7 +46,7 @@ import Foundation
      */
     public override init() {        
         super.init()
-        resourceType = String(describing: LayerResourceType.text)
+        resourceType = String(LayerResourceType.Text)
     }
     
     // MARK: - Set Values
@@ -59,7 +59,7 @@ import Foundation
      
      - returns:                 The same instance of CLDTextLayer.
      */
-    open func setText(text: String) -> CLDTextLayer {
+    public func setText(text text: String) -> CLDTextLayer {
         self.text = text
         return self
     }
@@ -71,7 +71,7 @@ import Foundation
      
      - returns:                 The same instance of CLDTextLayer.
      */
-    open func setFontFamily(fontFamily: String) -> CLDTextLayer {
+    public func setFontFamily(fontFamily fontFamily: String) -> CLDTextLayer {
         self.fontFamily = fontFamily
         return self
     }
@@ -84,7 +84,7 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setFontSizeFromInt:)
-    open func setFontSize(_ fontSize: Int) -> CLDTextLayer {
+    public func setFontSize(fontSize: Int) -> CLDTextLayer {
         return setFontSize(String(fontSize))
     }
     
@@ -96,7 +96,7 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setFontSizeFromString:)
-    open func setFontSize(_ fontSize: String) -> CLDTextLayer {
+    public func setFontSize(fontSize: String) -> CLDTextLayer {
         self.fontSize = fontSize
         return self
     }
@@ -109,8 +109,8 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setFontStyleFromLayerFontStyle:)
-    open func setFontStyle(_ fontStyle: CLDFontStyle) -> CLDTextLayer {
-        return setFontStyle(String(describing: fontStyle))
+    public func setFontStyle(fontStyle: CLDFontStyle) -> CLDTextLayer {
+        return setFontStyle(String(fontStyle))
     }
     
     /**
@@ -121,7 +121,7 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setFontStyleFromString:)
-    open func setFontStyle(_ fontStyle: String) -> CLDTextLayer {
+    public func setFontStyle(fontStyle: String) -> CLDTextLayer {
         self.fontStyle = fontStyle
         return self
     }
@@ -134,8 +134,8 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setFontWeightFromLayerFontWeight:)
-    open func setFontWeight(_ fontWeight: CLDFontWeight) -> CLDTextLayer {
-        return setFontWeight(String(describing: fontWeight))
+    public func setFontWeight(fontWeight: CLDFontWeight) -> CLDTextLayer {
+        return setFontWeight(String(fontWeight))
     }
     
     /**
@@ -146,7 +146,7 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setFontWeightFromString:)
-    open func setFontWeight(_ fontWeight: String) -> CLDTextLayer {
+    public func setFontWeight(fontWeight: String) -> CLDTextLayer {
         self.fontWeight = fontWeight
         return self
     }
@@ -159,7 +159,7 @@ import Foundation
      - returns:                     The same instance of CLDTextLayer.
      */
     @objc(setTextDecorationString:)
-    open func setTextDecoration(_ textDecoration: String) -> CLDTextLayer {
+    public func setTextDecoration(textDecoration: String) -> CLDTextLayer {
         self.textDecoration = textDecoration
         return self
     }
@@ -172,7 +172,7 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setTextAlignString:)
-    open func setTextAlign(_ textAlign: String) -> CLDTextLayer {
+    public func setTextAlign(textAlign: String) -> CLDTextLayer {
         self.textAlign = textAlign
         return self
     }
@@ -187,7 +187,7 @@ import Foundation
      - returns:                 The same instance of CLDTextLayer.
      */
     @objc(setStrokeString:)
-    open func setStroke(_ stroke: String) -> CLDTextLayer {
+    public func setStroke(stroke: String) -> CLDTextLayer {
         self.stroke = stroke
         return self
     }
@@ -200,7 +200,7 @@ import Foundation
      - returns:                         The same instance of CLDTextLayer.
      */
     @objc(setLetterSpacingFromInt:)
-    open func setLetterSpacing(_ letterSpacing: Int) -> CLDTextLayer {
+    public func setLetterSpacing(letterSpacing: Int) -> CLDTextLayer {
         return setLetterSpacing(String(letterSpacing))
     }
     
@@ -212,7 +212,7 @@ import Foundation
      - returns:                         The same instance of CLDTextLayer.
      */
     @objc(setLetterSpacingFromFloat:)
-    open func setLetterSpacing(_ letterSpacing: Float) -> CLDTextLayer {
+    public func setLetterSpacing(letterSpacing: Float) -> CLDTextLayer {
         return setLetterSpacing(letterSpacing.cldFloatFormat())
     }
     
@@ -224,7 +224,7 @@ import Foundation
      - returns:                         The same instance of CLDTextLayer.
      */
     @objc(setLetterSpacingString:)
-    open func setLetterSpacing(_ letterSpacing: String) -> CLDTextLayer {
+    public func setLetterSpacing(letterSpacing: String) -> CLDTextLayer {
         self.letterSpacing = letterSpacing
         return self
     }
@@ -237,8 +237,8 @@ import Foundation
      - returns:                         The same instance of CLDTextLayer.
      */
     @objc(setLineSpacingFromInt:)
-    open func setLineSpacing(_ lineSpacing: Int) -> CLDTextLayer {
-        return setLineSpacing(String(describing: letterSpacing))
+    public func setLineSpacing(lineSpacing: Int) -> CLDTextLayer {
+        return setLineSpacing(String(letterSpacing))
     }
     
     /**
@@ -249,7 +249,7 @@ import Foundation
      - returns:                         The same instance of CLDTextLayer.
      */
     @objc(setLineSpacingFromFloat:)
-    open func setLineSpacing(_ lineSpacing: Float) -> CLDTextLayer {
+    public func setLineSpacing(lineSpacing: Float) -> CLDTextLayer {
         return setLineSpacing(lineSpacing.cldFloatFormat())
     }
     
@@ -261,7 +261,7 @@ import Foundation
      - returns:                         The same instance of CLDTextLayer.
      */
     @objc(setLineSpacingString:)
-    open func setLineSpacing(_ lineSpacing: String) -> CLDTextLayer {
+    public func setLineSpacing(lineSpacing: String) -> CLDTextLayer {
         self.lineSpacing = lineSpacing
         return self
     }
@@ -271,7 +271,7 @@ import Foundation
     internal override func getStringComponents() -> [String]? {
         
         if (text == nil || text!.isEmpty) && (publicId == nil || publicId!.isEmpty) {
-            printLog(.error, text: "Must supply either text or publicId")
+            printLog(.Error, text: "Must supply either text or publicId")
             return nil
         }
         
@@ -283,25 +283,25 @@ import Foundation
         let mandatoryTextParams = getMandatoryTextPropertiesArray()
         if optionalTextParams.isEmpty {
             if !mandatoryTextParams.isEmpty {
-                components.append(mandatoryTextParams.joined(separator: "_"))
+                components.append(mandatoryTextParams.joinWithSeparator("_"))
             }
         }
         else if !mandatoryTextParams.isEmpty {
             let textProperties = mandatoryTextParams + optionalTextParams
-            components.append(textProperties.joined(separator: "_"))
+            components.append(textProperties.joinWithSeparator("_"))
         }
         else  {
-            printLog(.error, text: "Must supply fontSize and fontFamily for text layer")
+            printLog(.Error, text: "Must supply fontSize and fontFamily for text layer")
             return nil
         }
         
-        if let publicId = publicId , !publicId.isEmpty {
-            components.append(publicId.replacingOccurrences(of: "/", with: ":"))
+        if let publicId = publicId where !publicId.isEmpty {
+            components.append(publicId.stringByReplacingOccurrencesOfString("/", withString: ":"))
         }
-        if let text = text , !text.isEmpty {
+        if let text = text where !text.isEmpty {
             if let text = text.cldSmartEncodeUrl() {
-                var textToAdd = text.replacingOccurrences(of: "%2C", with: "%E2%80%9A")
-                textToAdd = textToAdd.replacingOccurrences(of: "/", with: "%E2%81%84")
+                var textToAdd = text.stringByReplacingOccurrencesOfString("%2C", withString: "%E2%80%9A")
+                textToAdd = textToAdd.stringByReplacingOccurrencesOfString("/", withString: "%E2%81%84")
                 components.append(textToAdd)
             }
         }
@@ -311,42 +311,42 @@ import Foundation
     
     //MARK: - Private
     
-    fileprivate func getOptionalTextPropertiesArray() -> [String] {
+    private func getOptionalTextPropertiesArray() -> [String] {
         var properties: [String] = []
-        if let fontWeight = fontWeight , fontWeight != "normal" {
+        if let fontWeight = fontWeight where fontWeight != "normal" {
             properties.append(fontWeight)
         }
-        if let fontStyle = fontStyle , fontStyle != "normal" {
+        if let fontStyle = fontStyle where fontStyle != "normal" {
             properties.append(fontStyle)
         }
-        if let textDecoration = textDecoration , textDecoration != "none" {
+        if let textDecoration = textDecoration where textDecoration != "none" {
             properties.append(textDecoration)
         }
-        if let stroke = stroke , stroke != "none" {
+        if let stroke = stroke where stroke != "none" {
             properties.append(stroke)
         }
-        if let textAlign = textAlign , !textAlign.isEmpty {
+        if let textAlign = textAlign where !textAlign.isEmpty {
             properties.append(textAlign)
         }
-        if let letterSpacing = letterSpacing , !letterSpacing.isEmpty {
+        if let letterSpacing = letterSpacing where !letterSpacing.isEmpty {
             properties.append("letter_spacing_\(letterSpacing)")
         }
-        if let lineSpacing = lineSpacing , !lineSpacing.isEmpty {
+        if let lineSpacing = lineSpacing where !lineSpacing.isEmpty {
             properties.append("line_spacing_\(lineSpacing)")
         }
         
         return properties
     }
     
-    fileprivate func getMandatoryTextPropertiesArray() -> [String] {
+    private func getMandatoryTextPropertiesArray() -> [String] {
         var properties: [String] = []
         
         if let fontSize = fontSize {
-            properties.insert(fontSize, at: 0)
+            properties.insert(fontSize, atIndex: 0)
         }
         
         if let fontFamily = fontFamily {
-            properties.insert(fontFamily, at: 0)
+            properties.insert(fontFamily, atIndex: 0)
         }
         
         return properties

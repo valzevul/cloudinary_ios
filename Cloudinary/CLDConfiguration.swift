@@ -27,67 +27,67 @@ import Foundation
 /**
  The CLDConfiguration class holds the configuration parameters to be used by the `CLDCloudinary` instance.
 */
-@objc open class CLDConfiguration: NSObject {
-
-    fileprivate struct Defines {
-        fileprivate static let ENV_VAR_CLOUDINARY_URL = "CLOUDINARY_URL"
+@objc public class CLDConfiguration: NSObject {
+    
+    private struct Defines {
+        private static let ENV_VAR_CLOUDINARY_URL = "CLOUDINARY_URL"
     }
     
     /**
      Your account's cloud name on Cloudinary.
     */
-    open fileprivate(set) var cloudName: String!
+    public private(set) var cloudName: String!
     
     /**
      Your account's API key, can be found in your account's dashboard on Cloudinary as part of the account details.
      */
-    open fileprivate(set) var apiKey: String?
+    public private(set) var apiKey: String?
     
     /**
      Your account's API secret, can be found in your account's dashboard on Cloudinary as part of the account details.
      */
-    open fileprivate(set) var apiSecret: String?
+    public private(set) var apiSecret: String?
     
     /**
      A boolean value specifying whether or not to use a private CDN. false by default.
      */
-    open fileprivate(set) var privateCdn: Bool = false
+    public private(set) var privateCdn: Bool = false
     
     /**
      A boolean value specifying whether or not to use a secure CDN connection. false by default.
      */
-    open fileprivate(set) var secure: Bool = false
+    public private(set) var secure: Bool = false
     
     /**
      A boolean value specifying whether or not to use a CDN subdomain. false by default.
      */
-    open fileprivate(set) var cdnSubdomain: Bool = false
+    public private(set) var cdnSubdomain: Bool = false
     
     /**
      A boolean value specifying whether or not to use a secure connection with a CDN subdomain. false by default.
      */
-    open fileprivate(set) var secureCdnSubdomain: Bool = false
+    public private(set) var secureCdnSubdomain: Bool = false
     
     /**
      Your secure distribution domain to be set when using a secure distribution (advanced plan only). nil by default.
      */
-    open fileprivate(set) var secureDistribution: String?
+    public private(set) var secureDistribution: String?
     
     /**
      Your custom domain. nil by default.
      */
-    open fileprivate(set) var cname: String?
+    public private(set) var cname: String?
     
     /**
      A custom upload prefix to be used instead of Cloudinary's default API prefix. nil by default.
      */
-    open fileprivate(set) var uploadPrefix: String?
+    public private(set) var uploadPrefix: String?
     
     internal var userPlatform : CLDUserPlatform?
     
     // MARK: - Init
     
-    fileprivate override init() {
+    private override init() {
         super.init()
     }
     
@@ -99,8 +99,8 @@ import Foundation
      - returns:                             A new `CLDConfiguration` instance if the environment parameter URL exists and is valid, otherwise returns nil.
      
      */
-    open static func initWithEnvParams() -> CLDConfiguration? {
-        let dict = ProcessInfo.processInfo.environment
+    public static func initWithEnvParams() -> CLDConfiguration? {
+        let dict = NSProcessInfo.processInfo().environment
         if let url = dict[Defines.ENV_VAR_CLOUDINARY_URL] {
             return CLDConfiguration(cloudinaryUrl: url)
         }
@@ -203,7 +203,7 @@ import Foundation
      - returns:                             A new `CLDConfiguration` instance.
      
      */
-    public init(cloudName: String, apiKey: String? = nil, apiSecret: String? = nil, privateCdn: Bool = false, secure: Bool = false, cdnSubdomain: Bool = false, secureCdnSubdomain: Bool = false, secureDistribution: String? = nil, cname: String? = nil, uploadPrefix: String? = nil) {
+    public init(cloudName: String, apiKey: String?, apiSecret: String?, privateCdn: Bool = false, secure: Bool = false, cdnSubdomain: Bool = false, secureCdnSubdomain: Bool = false, secureDistribution: String? = nil, cname: String? = nil, uploadPrefix: String? = nil) {
         self.cloudName = cloudName
         self.apiKey = apiKey
         self.apiSecret = apiSecret
@@ -229,14 +229,14 @@ import Foundation
         super.init()
         
         guard let
-            uri = URL(string: cloudinaryUrl),
-            let cloudName = uri.host
+            uri = NSURL(string: cloudinaryUrl),
+            cloudName = uri.host
             else {
                 return nil
         }
         
         self.cloudName = cloudName
-
+        
         if let apiKey = uri.user {
             self.apiKey = apiKey
         }
@@ -244,15 +244,15 @@ import Foundation
             self.apiSecret = apiSecret
         }
         
-        if !uri.path.isEmpty {
+        if let path = uri.path where !path.isEmpty {
             privateCdn = true
-            let index1 = uri.path.characters.index(uri.path.startIndex, offsetBy: 1)
-            secureDistribution = uri.path.substring(from: index1)
+            let index1 = path.startIndex.advancedBy(1)
+            secureDistribution = path.substringFromIndex(index1)
         }        
         
-        if let params = uri.query?.components(separatedBy: "&") {
+        if let params = uri.query?.componentsSeparatedByString("&") {
             for param in params {
-                let keyValue = param.components(separatedBy: "=")
+                let keyValue = param.componentsSeparatedByString("=")
                 if keyValue.count < 2 {
                     continue
                 }
@@ -310,7 +310,7 @@ import Foundation
     
     // MARK: User Platform
     
-    internal func setUserPlatform(_ platformName: String, version: String) {
+    internal func setUserPlatform(platformName: String, version: String) {
         userPlatform = CLDUserPlatform(platform: platformName, version: version)
     }
     

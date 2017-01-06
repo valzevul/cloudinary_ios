@@ -29,7 +29,7 @@ import Foundation
  It allows the options to add a response closure to be called once the request has finished,
  as well as performing actions on the request, such as cancelling, suspending or resuming it.
  */
-@objc open class CLDSpriteRequest: CLDRequest {
+@objc public class CLDSpriteRequest: CLDRequest {
     
     /**
      Set a response closure to be called once the request has finished.
@@ -38,17 +38,16 @@ import Foundation
      
      - returns:                          The same instance of CLDSpriteRequest.
      */
-    @discardableResult
-    open func response(_ completionHandler: ((_ result: CLDSpriteResult?, _ error: NSError?) -> ())?) -> CLDSpriteRequest {
+    public func response(completionHandler: ((result: CLDSpriteResult?, error: NSError?) -> ())?) -> CLDSpriteRequest {
         responseRaw { (response, error) in
             if let res = response as? [String : AnyObject] {
-                completionHandler?(CLDSpriteResult(json: res), nil)
+                completionHandler?(result: CLDSpriteResult(json: res), error: nil)
             }
             else if let err = error {
-                completionHandler?(nil, err)
+                completionHandler?(result: nil, error: err)
             }
             else {
-                completionHandler?(nil, CLDError.generalError())
+                completionHandler?(result: nil, error: CLDError.generalError())
             }
         }
         

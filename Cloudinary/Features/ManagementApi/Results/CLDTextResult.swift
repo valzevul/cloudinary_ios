@@ -24,17 +24,17 @@
 
 import Foundation
 
-@objc open class CLDTextResult: CLDBaseResult {
+@objc public class CLDTextResult: CLDBaseResult {
     
     
     // MARK: - Getters
     
-    open var width: Int? {
-        return getParam(.width) as? Int
+    public var width: Int? {
+        return getParam(.Width) as? Int
     }
     
-    open var height: Int? {
-        return getParam(.height) as? Int
+    public var height: Int? {
+        return getParam(.Height) as? Int
     }    
 }
 

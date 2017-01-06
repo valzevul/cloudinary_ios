@@ -26,25 +26,25 @@ import Foundation
 
 internal struct CLDError {
     
-    fileprivate static let domain = "com.cloudinary.error"
+    private static let domain = "com.cloudinary.error"
     
     enum CloudinaryErrorCode: Int {
-        case generalErrorCode                       = -7000
-        case failedCreatingImageFromData            = -7001
-        case failedDownloadingImage                 = -7002
+        case GeneralErrorCode                       = -7000
+        case FailedCreatingImageFromData            = -7001
+        case FailedDownloadingImage                 = -7002
                 
     }
     
     static func generalError() -> NSError {
-        return error(code: .generalErrorCode, message: "Something went wrong.")
+        return error(code: .GeneralErrorCode, message: "Something went wrong.")
     }
     
-    static func error(domain: String = CLDError.domain, code: CloudinaryErrorCode, message: String) -> NSError {
+    static func error(domain domain: String = CLDError.domain, code: CloudinaryErrorCode, message: String) -> NSError {
         let userInfo = [NSLocalizedFailureReasonErrorKey: message]
         return error(domain: domain, code: code.rawValue, userInfo: userInfo)
     }
     
-    static func error(domain: String = CLDError.domain, code: Int, userInfo: [AnyHashable: Any]?) -> NSError {
+    static func error(domain domain: String = CLDError.domain, code: Int, userInfo: [NSObject : AnyObject]?) -> NSError {
         return NSError(domain: domain, code: code, userInfo: userInfo)
     }
 }

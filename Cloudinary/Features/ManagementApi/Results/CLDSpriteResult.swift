@@ -24,39 +24,39 @@
 
 import Foundation
 
-@objc open class CLDSpriteResult: CLDBaseResult {
+@objc public class CLDSpriteResult: CLDBaseResult {
     
     // MARK: - Getters
     
-    open var cssUrl: String? {
-        return getParam(.cssUrl) as? String
+    public var cssUrl: String? {
+        return getParam(.CssUrl) as? String
     }
     
-    open var secureCssUrl: String? {
-        return getParam(.secureCssUrl) as? String
+    public var secureCssUrl: String? {
+        return getParam(.SecureCssUrl) as? String
     }
     
-    open var imageUrl: String? {
-        return getParam(.imageUrl) as? String
+    public var imageUrl: String? {
+        return getParam(.ImageUrl) as? String
     }
     
-    open var jsonUrl: String? {
-        return getParam(.jsonUrl) as? String
+    public var jsonUrl: String? {
+        return getParam(.JsonUrl) as? String
     }
     
-    open var publicId: String? {
-        return getParam(.publicId) as? String
+    public var publicId: String? {
+        return getParam(.PublicId) as? String
     }
     
-    open var version: String? {
-        guard let version = getParam(.version) else {
+    public var version: String? {
+        guard let version = getParam(.Version) else {
             return nil
         }
-        return String(describing: version)
+        return String(version)
     }
     
-    open var imageInfos: [String : CLDImageInfo]? {
-        guard let imageInfosDic = getParam(.imageInfos) as? [String : AnyObject] else {
+    public var imageInfos: [String : CLDImageInfo]? {
+        guard let imageInfosDic = getParam(.ImageInfos) as? [String : AnyObject] else {
             return nil
         }
         var imageInfos: [String : CLDImageInfo] = [:]
@@ -71,42 +71,42 @@ import Foundation
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: SpriteResultKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: SpriteResultKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum SpriteResultKey: CustomStringConvertible {
-        case cssUrl, secureCssUrl, imageUrl, jsonUrl, imageInfos
+    private enum SpriteResultKey: CustomStringConvertible {
+        case CssUrl, SecureCssUrl, ImageUrl, JsonUrl, ImageInfos
         
         var description: String {
             switch self {
-            case .cssUrl:               return "css_url"
-            case .secureCssUrl:         return "secure_css_url"
-            case .imageUrl:             return "image_url"
-            case .jsonUrl:              return "json_url"
-            case .imageInfos:           return "image_infos"
+            case .CssUrl:               return "css_url"
+            case .SecureCssUrl:         return "secure_css_url"
+            case .ImageUrl:             return "image_url"
+            case .JsonUrl:              return "json_url"
+            case .ImageInfos:           return "image_infos"
             }
         }
     }
 }
 
 
-@objc open class CLDImageInfo: CLDBaseResult {
+@objc public class CLDImageInfo: CLDBaseResult {
     
-    open var x: Int? {
-        return getParam(.x) as? Int
+    public var x: Int? {
+        return getParam(.X) as? Int
     }
     
-    open var y: Int? {
-        return getParam(.y) as? Int
+    public var y: Int? {
+        return getParam(.Y) as? Int
     }
     
-    open var width: Int? {
-        return getParam(.width) as? Int
+    public var width: Int? {
+        return getParam(.Width) as? Int
     }
     
-    open var height: Int? {
-        return getParam(.height) as? Int
+    public var height: Int? {
+        return getParam(.Height) as? Int
     }    
 }
 

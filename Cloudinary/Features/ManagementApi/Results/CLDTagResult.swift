@@ -24,27 +24,27 @@
 
 import Foundation
 
-@objc open class CLDTagResult: CLDBaseResult {
+@objc public class CLDTagResult: CLDBaseResult {
     
     
     // MARK: - Getters
     
-    open var publicIds: [String]? {
-        return getParam(.publicIds) as? [String]
+    public var publicIds: [String]? {
+        return getParam(.PublicIds) as? [String]
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: TagResultKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: TagResultKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum TagResultKey: CustomStringConvertible {
-        case publicIds
+    private enum TagResultKey: CustomStringConvertible {
+        case PublicIds
         
         var description: String {
             switch self {
-            case .publicIds:             return "public_ids"
+            case .PublicIds:             return "public_ids"
             }
         }
     }

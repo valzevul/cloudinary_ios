@@ -26,15 +26,16 @@ import Foundation
 
 internal class CLDNetworkCoordinator {
     
-    fileprivate struct CLDNetworkCoordinatorConsts {
+    private struct CLDNetworkCoordinatorConsts {
         static let BASE_CLOUDINARY_URL =    "https://api.cloudinary.com"
         static let DEFAULT_VERSION =        "2.0"
         
         static let API_KEY =                "api_key"
     }
     
-    fileprivate var config: CLDConfiguration
-    fileprivate var networkAdapter: CLDNetworkAdapter
+    
+    private var config: CLDConfiguration
+    private var networkAdapter: CLDNetworkAdapter
     
     // MARK: - Init
     
@@ -42,15 +43,16 @@ internal class CLDNetworkCoordinator {
         config = configuration
         self.networkAdapter = networkAdapter
     }
-
-    init(configuration: CLDConfiguration, sessionConfiguration: URLSessionConfiguration) {
+    
+    init(configuration: CLDConfiguration, sessionConfiguration: NSURLSessionConfiguration) {
         config = configuration
         self.networkAdapter = CLDNetworkDelegate(configuration: sessionConfiguration)
     }
 
+    
     // MARK: - Actions
     
-    internal func callAction(_ action: CLDAPIAction, params: CLDRequestParams) -> CLDNetworkDataRequest {
+    internal func callAction(action: CLDAPIAction, params: CLDRequestParams) -> CLDNetworkRequest {
         let url = getUrl(action, resourceType: params.resourceType)
         let headers = getHeaders()
         let requestParams = getSignedRequestParams(params)
@@ -58,54 +60,54 @@ internal class CLDNetworkCoordinator {
         return networkAdapter.cloudinaryRequest(url, headers: headers, parameters: requestParams)
     }
     
-    internal func upload(_ data: Any, params: CLDUploadRequestParams) -> CLDNetworkDataRequest {
+    internal func upload(data: AnyObject, params: CLDUploadRequestParams) -> CLDNetworkDataRequest {
         let url = getUrl(.Upload, resourceType: params.resourceType)
-        let requestParams = params.signed ? getSignedRequestParams(params) : params.params
         let headers = getHeaders()
+        let requestParams = params.signed ? getSignedRequestParams(params) : params.params
         
         return networkAdapter.uploadToCloudinary(url, headers: headers, parameters: requestParams,  data: data)
     }
     
-    internal func download(_ url: String) -> CLDFetchImageRequest {
+    internal func download(url: String) -> CLDFetchImageRequest {
         return networkAdapter.downloadFromCloudinary(url)
     }
     
     // MARK: - Helpers
     
-    fileprivate func getSignedRequestParams(_ requestParams: CLDRequestParams) -> [String : Any] {
-        var params: [String : Any] = requestParams.params
+    private func getSignedRequestParams(requestParams: CLDRequestParams) -> [String : AnyObject] {
+        var params: [String : AnyObject] = requestParams.params
         if let signatureObj = requestParams.signature {
             params[CLDSignature.SignatureParam.Signature.rawValue] = signatureObj.signature
             params[CLDSignature.SignatureParam.Timestamp.rawValue] = signatureObj.timestamp
         }
-        else if let apiSecret = config.apiSecret, let apiKey = config.apiKey {
-            let timestamp = Int(Date().timeIntervalSince1970)
-            params[CLDSignature.SignatureParam.Timestamp.rawValue] = cldParamValueAsString(value: timestamp)
+        else if let apiSecret = config.apiSecret {
+            let timestamp = Int(NSDate().timeIntervalSince1970)
+            params[CLDSignature.SignatureParam.Timestamp.rawValue] = cldParamValueAsString(timestamp)
             let signature = cloudinarySignParamsUsingSecret(params, cloudinaryApiSecret: apiSecret)
             params[CLDSignature.SignatureParam.Signature.rawValue] = signature
-            params[CLDNetworkCoordinatorConsts.API_KEY] = apiKey
+            params[CLDNetworkCoordinatorConsts.API_KEY] = config.apiKey
         }
         else {
-            printLog(.error, text: "Must supply api key and secret for a signed request")
+            printLog(.Error, text: "Must supply api key and secret for a signed request")
         }
         return params
     }
     
-    fileprivate func getUrl(_ action: CLDAPIAction, resourceType: String?) -> String {
+    private func getUrl(action: CLDAPIAction, resourceType: String?) -> String {
         var urlComponents: [String] = []
         let prefix = config.uploadPrefix ?? CLDNetworkCoordinatorConsts.BASE_CLOUDINARY_URL
         urlComponents.append(prefix)
         urlComponents.append("v1_1")
         urlComponents.append(config.cloudName)
         if action != CLDAPIAction.DeleteByToken {
-            let rescourceType = resourceType ?? String(describing: CLDUrlResourceType.image)
+            let rescourceType = resourceType ?? String(CLDUrlResourceType.Image)
             urlComponents.append(rescourceType)
         }
         urlComponents.append(action.rawValue)
-        return urlComponents.joined(separator: "/")
+        return urlComponents.joinWithSeparator("/")
     }
     
-    fileprivate func getHeaders() -> [String : String] {
+    private func getHeaders() -> [String : String] {
         var headers: [String : String] = [:]
         var userAgent: String
         if let userPlatform = config.userPlatform {
@@ -120,8 +122,8 @@ internal class CLDNetworkCoordinator {
         return headers
     }
     
-    fileprivate func getVersion() -> String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? CLDNetworkCoordinatorConsts.DEFAULT_VERSION
+    private func getVersion() -> String {
+        let version = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String ?? CLDNetworkCoordinatorConsts.DEFAULT_VERSION
         return version
     }    
     
@@ -157,11 +159,11 @@ internal class CLDNetworkCoordinator {
     
     // MARK: - Public
         
-    internal func setBackgroundCompletionHandler(_ newValue: (() -> ())?) {
+    internal func setBackgroundCompletionHandler(newValue: (() -> ())?) {
         networkAdapter.setBackgroundCompletionHandler(newValue)
     }
     
-    internal func setMaxConcurrentDownloads(_ maxConcurrentDownloads: Int) {
+    internal func setMaxConcurrentDownloads(maxConcurrentDownloads: Int) {
         networkAdapter.setMaxConcurrentDownloads(maxConcurrentDownloads)
     }
     

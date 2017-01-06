@@ -26,26 +26,26 @@ import Foundation
 
 internal class CLDFetchImageRequestImpl: CLDFetchImageRequest {
     
-    fileprivate let url: String
-    fileprivate let networkCoordinator: CLDNetworkCoordinator
+    private let url: String
+    private let networkCoordinator: CLDNetworkCoordinator
     
-    fileprivate let closureQueue: OperationQueue
+    private let closureQueue: NSOperationQueue
     
-    fileprivate var image: UIImage?
-    fileprivate var error: NSError?
+    private var image: UIImage?
+    private var error: NSError?
     
     
     // Requests
-    fileprivate var imageDownloadRequest: CLDNetworkDownloadRequest?
-    fileprivate var progress: ((Progress) -> Void)?
+    private var imageDownloadRequest: CLDNetworkDownloadRequest?
+    private var progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())?
     
     init(url: String, networkCoordinator: CLDNetworkCoordinator) {
         self.url = url
         self.networkCoordinator = networkCoordinator
         closureQueue = {
-            let operationQueue = OperationQueue()
+            let operationQueue = NSOperationQueue()
             operationQueue.maxConcurrentOperationCount = 1
-            operationQueue.isSuspended = true
+            operationQueue.suspended = true
             return operationQueue
             }()
     }
@@ -53,12 +53,12 @@ internal class CLDFetchImageRequestImpl: CLDFetchImageRequest {
     // MARK: - Actions
     
     func fetchImage() {
-        DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             if CLDImageCache.defaultImageCache.hasCachedImageForKey(self.url) {
                 CLDImageCache.defaultImageCache.getImageForKey(self.url, completion: { [weak self] (image) -> () in
                     if let fetchedImage = image {
                         self?.image = fetchedImage
-                        self?.closureQueue.isSuspended = false
+                        self?.closureQueue.suspended = false
                     }
                     else {
                         self?.downloadImageAndCacheIt()
@@ -73,20 +73,22 @@ internal class CLDFetchImageRequestImpl: CLDFetchImageRequest {
     
     // MARK: Private
     
-    fileprivate func downloadImageAndCacheIt() {
+    private func downloadImageAndCacheIt() {
         imageDownloadRequest = networkCoordinator.download(url) as? CLDNetworkDownloadRequest
-        imageDownloadRequest?.progress(progress)
+        if let progress = progress {
+            imageDownloadRequest?.progress(progress)
+        }
         
         imageDownloadRequest?.responseData { [weak self] (responseData, responseError) -> () in
             if let data = responseData {
                 if let
                     image = data.cldToUIImageThreadSafe(),
-                    let url = self?.url {
+                    url = self?.url {
                     self?.image = image
                     CLDImageCache.defaultImageCache.cacheImage(image, data: data, key: url, completion: nil)
                 }
                 else {
-                    let error = CLDError.error(code: .failedCreatingImageFromData, message: "Failed creating an image from the received data.")
+                    let error = CLDError.error(code: .FailedCreatingImageFromData, message: "Failed creating an image from the received data.")
                     self?.error = error
                 }
             }
@@ -94,33 +96,31 @@ internal class CLDFetchImageRequestImpl: CLDFetchImageRequest {
                 self?.error = err
             }
             else {
-                let error = CLDError.error(code: .failedDownloadingImage, message: "Failed attempting to download image.")
+                let error = CLDError.error(code: .FailedDownloadingImage, message: "Failed attempting to download image.")
                 self?.error = error
             }
-            self?.closureQueue.isSuspended = false
+            self?.closureQueue.suspended = false
         }
     }
     
     // MARK: - CLDFetchImageRequest
     
-    @discardableResult
-    @objc func responseImage(_ completionHandler: ((_ responseImage: UIImage?, _ error: NSError?) -> ())?) -> CLDFetchImageRequest {
-        closureQueue.addOperation {
+    @objc func responseImage(completionHandler: ((responseImage: UIImage?, error: NSError?) -> ())?) -> CLDFetchImageRequest {
+        closureQueue.addOperationWithBlock {
             if let image = self.image {
-                completionHandler?(image, nil)
+                completionHandler?(responseImage: image, error: nil)
             }
             else if let error = self.error {
-                completionHandler?(nil, error)
+                completionHandler?(responseImage: nil, error: error)
             }
             else {                
-                completionHandler?(nil, CLDError.generalError())
+                completionHandler?(responseImage: nil, error: CLDError.generalError())
             }
         }
         return self
     }
     
-    @discardableResult
-    @objc func progress(_ progress: ((Progress) -> Void)?) -> CLDNetworkDataRequest {
+    @objc func progress(progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())?) -> CLDNetworkDataRequest {
         if let downloadRequest = self.imageDownloadRequest {
             downloadRequest.progress(progress)
         }
@@ -143,7 +143,7 @@ internal class CLDFetchImageRequestImpl: CLDFetchImageRequest {
         imageDownloadRequest?.cancel()
     }
     
-    @objc func response(_ completionHandler: ((_ response: Any?, _ error: NSError?) -> ())?) -> CLDNetworkRequest {
+    @objc func response(completionHandler: ((response: AnyObject?, error: NSError?) -> ())?) -> CLDNetworkRequest {
         responseImage(completionHandler)
         return self
     }

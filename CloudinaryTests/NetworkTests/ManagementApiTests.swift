@@ -32,15 +32,14 @@ class ManagementApiTests: NetworkBaseTest {
     
     func testRename() {
         
-        let expectation = self.expectation(description: "Rename should succeed")
+        let expectation = expectationWithDescription("Rename should succeed")
         
         var result: CLDRenameResult?
-        var error: Error?
+        var error: NSError?
         
         uploadFile().response({ (uploadResult, uploadError) in
             if let publicId = uploadResult?.publicId {
-                let toRename = publicId + "__APPENDED STRING"
-                self.cloudinary!.createManagementApi().rename(publicId, to: toRename).response({ (resultRes, errorRes) in
+                self.cloudinary!.createManagementApi().rename(publicId, to: publicId.stringByAppendingString("__APPENDED STRING")).response({ (resultRes, errorRes) in
                     result = resultRes
                     error = errorRes
                     
@@ -53,23 +52,22 @@ class ManagementApiTests: NetworkBaseTest {
             }
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
-
+        waitForExpectationsWithTimeout(timeout, handler: nil)
+        
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "response should not be nil")
     }
     
     func testRenameWithParams() {
         
-        let expectation = self.expectation(description: "Rename should succeed")
+        let expectation = expectationWithDescription("Rename should succeed")
         
         var result: CLDRenameResult?
-        var error: Error?
+        var error: NSError?
         
         uploadFile().response({ (uploadResult, uploadError) in
             if let publicId = uploadResult?.publicId {
-                let toRename = publicId + "__APPENDED STRING"
-                self.cloudinary!.createManagementApi().rename(publicId, to: toRename, overwrite: true, invalidate: true).response({ (resultRes, errorRes) in
+                self.cloudinary!.createManagementApi().rename(publicId, to: publicId.stringByAppendingString("__APPENDED STRING"), overwrite: true, invalidate: true).response({ (resultRes, errorRes) in
                     result = resultRes
                     error = errorRes
                     
@@ -82,30 +80,29 @@ class ManagementApiTests: NetworkBaseTest {
             }
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
-
+        waitForExpectationsWithTimeout(timeout, handler: nil)
+        
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "response should not be nil")
     }
     
     func testExplicit() {
         
-        let expectation = self.expectation(description: "Explicit should succeed")
+        let expectation = expectationWithDescription("Explicit should succeed")
         
         var result: CLDExplicitResult?
-        var error: Error?
+        var error: NSError?
         
         var publicId: String = ""
         var version: String = ""
         var eager: [CLDEagerResult] = []
-        let trans = CLDTransformation().setCrop(.scale).setWidth(2.0)
-        let resource = TestResourceType.borderCollie
-        uploadFile(resource).response({ (uploadResult, uploadError) in
+        let trans = CLDTransformation().setCrop(.Scale).setWidth(2.0)
+        uploadFile().response({ (uploadResult, uploadError) in
             if let pubId = uploadResult?.publicId {
                 publicId = pubId
                 let params = CLDExplicitRequestParams()
                 params.setEager([trans])
-                self.cloudinary!.createManagementApi().explicit(publicId, type: .upload, params: params, completionHandler: { (resultRes, errorRes) in
+                self.cloudinary!.createManagementApi().explicit(publicId, type: .Upload, params: params, completionHandler: { (resultRes, errorRes) in
                     result = resultRes
                     error = errorRes
                     
@@ -121,26 +118,24 @@ class ManagementApiTests: NetworkBaseTest {
             }
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
-
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "response should not be nil")
-        let derivedUrl = eager.first?.url ?? ""
         
-        if let url = cloudinary!.createUrl().setFormat(resource.resourceExtension).setVersion(version).setTransformation(trans).generate(publicId){
-            XCTAssertEqual(url, derivedUrl)
-        } else{
-            XCTFail("url should not be nil")
-        }
+        let derivedUrl = eager.first?.url ?? ""
+        let url = cloudinary!.createUrl().setFormat(TestResourceType.defaultResource.resourceExtension).setVersion(version).setTransformation(trans).generate(publicId)
+        
+        XCTAssertEqual(url, derivedUrl)
     }
+    
     
     func testTags() {
         
-        var expectation = self.expectation(description: "Adding a tag should succeed")
+        var expectation = expectationWithDescription("Adding a tag should succeed")
         
         var result: CLDTagResult?
-        var error: Error?
+        var error: NSError?
         
         var uploadedPublicId: String = ""
         // first upload
@@ -161,18 +156,18 @@ class ManagementApiTests: NetworkBaseTest {
             }
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
+        
         XCTAssertEqual(result?.publicIds?.first ?? "", uploadedPublicId)
         
         
         // Reaplace tag
         result = nil
         error = nil
-        expectation = self.expectation(description: "Replacing a tag should succeed")
+        expectation = expectationWithDescription("Replacing a tag should succeed")
         let replacedTag = "replaced_tag"
         cloudinary!.createManagementApi().replaceTag(replacedTag, publicIds: [uploadedPublicId]) { (resultRes, errorRes) in
             result = resultRes
@@ -180,38 +175,38 @@ class ManagementApiTests: NetworkBaseTest {
             expectation.fulfill()
         }
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
+        
         XCTAssertEqual(result?.publicIds?.first ?? "", uploadedPublicId)
         
         // Remove tag
         result = nil
         error = nil
-        expectation = self.expectation(description: "Removing a tag should succeed")
+        expectation = expectationWithDescription("Removing a tag should succeed")
         cloudinary!.createManagementApi().removeTag(replacedTag, publicIds: [uploadedPublicId]) { (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             expectation.fulfill()
         }
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
+        
         XCTAssertEqual(result?.publicIds?.first ?? "", uploadedPublicId)
     }
     
     func testGenerateText() {
         
-        let expectation = self.expectation(description: "Generate text should succeed")
+        let expectation = expectationWithDescription("Generate text should succeed")
         
         var result: CLDTextResult?
-        var error: Error?
-        let params = CLDTextRequestParams().setFontStyle(.italic).setFontColor("blue").setTextDecoration(.underline)
+        var error: NSError?
+        let params = CLDTextRequestParams().setFontStyle(.Italic).setFontColor("blue").setTextDecoration(.Underline)
         cloudinary!.createManagementApi().text("Hello World", params: params) { (resultRes, errorRes) in
             result = resultRes
             error = errorRes
@@ -219,10 +214,10 @@ class ManagementApiTests: NetworkBaseTest {
             expectation.fulfill()
         }
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
-        XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
+        XCTAssertNil(error, "error should be nil")
     }
     
     func testGenerateSprite() {
@@ -230,21 +225,12 @@ class ManagementApiTests: NetworkBaseTest {
         let uploadParams = CLDUploadRequestParams()
         let tag = "sprite_test_tag"
         uploadParams.setTags([tag])
-        let expectation1 = self.expectation(description: "Upload first image")
-        let expectation2 = self.expectation(description: "Upload second image")
-        uploadFile(params: uploadParams).response({ (r, e) in
-            expectation1.fulfill()
-            }
-        )
-        uploadFile(params: uploadParams).response({ (r, e) in
-            expectation2.fulfill()
-            }
-        )
-        waitForExpectations(timeout: timeout)
-
-        let expectation = self.expectation(description: "Generating sprite should succeed")
+        uploadFile(params:uploadParams)
+        uploadFile(params:uploadParams)        
+        
+        let expectation = expectationWithDescription("Generating sprite should succeed")
         var result: CLDSpriteResult?
-        var error: Error?
+        var error: NSError?
         let width = 120, height = 25
         let params = CLDSpriteRequestParams().setTransformation(CLDTransformation().setWidth(width).setHeight(height))
         cloudinary!.createManagementApi().generateSprite(tag, params: params) { (resultRes, errorRes) in
@@ -254,11 +240,11 @@ class ManagementApiTests: NetworkBaseTest {
         }
         
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
+        
         XCTAssertGreaterThan(result?.imageInfos?.count ?? 0, 1)
         
         guard let imageInfo = result?.imageInfos?.first?.1 else {
@@ -275,22 +261,12 @@ class ManagementApiTests: NetworkBaseTest {
         let uploadParams = CLDUploadRequestParams()
         let tag = "multi_test_tag"
         uploadParams.setTags([tag])
-        let expectation1 = self.expectation(description: "Upload first image")
-        let expectation2 = self.expectation(description: "Upload second image")
-
-        uploadFile(params: uploadParams).response({ (r, e) in
-            expectation1.fulfill()
-            }
-        )
-        uploadFile(params: uploadParams).response({ (r, e) in
-            expectation2.fulfill()
-            }
-        )
-        waitForExpectations(timeout: timeout)
-
-        let expectation = self.expectation(description: "Generating multi should succeed")
+        uploadFile(params:uploadParams)
+        uploadFile(params:uploadParams)
+        
+        let expectation = expectationWithDescription("Generating multi should succeed")
         var result: CLDMultiResult?
-        var error: Error?
+        var error: NSError?
         let params = CLDMultiRequestParams().setTransformation(CLDTransformation().setWidth(120).setHeight(25))
         cloudinary!.createManagementApi().multi(tag, params: params) { (resultRes, errorRes) in
             result = resultRes
@@ -298,23 +274,24 @@ class ManagementApiTests: NetworkBaseTest {
             expectation.fulfill()
         }
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
-        let multiUrl = result?.url
-        XCTAssertNotNil(multiUrl)
-        if let multiUrl = multiUrl {
-            let gifRange = multiUrl.range(of: ".gif")
-            XCTAssertNotNil(gifRange)
-            XCTAssertEqual(multiUrl.distance(from: multiUrl.startIndex, to: gifRange!.lowerBound), multiUrl.characters.count - 4)
+        
+        guard let
+            multiUrl = result?.url,
+            gifRange = multiUrl.rangeOfString(".gif") else {
+                XCTFail("should have a multi url at this part, and should have a .gif extension")
+                return
         }
+        
+        XCTAssertEqual(multiUrl.startIndex.distanceTo(gifRange.startIndex), multiUrl.characters.count - 4)
     }
     
     func testDeleteByToken() {
         
-        var expectation = self.expectation(description: "Upload should succeed")
+        var expectation = expectationWithDescription("Upload should succeed")
         
         var deleteToken: String?
         let uploadParams = CLDUploadRequestParams()
@@ -324,16 +301,16 @@ class ManagementApiTests: NetworkBaseTest {
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         guard let token = deleteToken else {
             XCTFail("Delete token should not be nil at this point")
             return
         }
         
-        expectation = self.expectation(description: "Delete by token should succeed")
+        expectation = expectationWithDescription("Delete by token should succeed")
         var result: CLDDeleteResult?
-        var error: Error?
+        var error: NSError?
         
         // test the params
         let params = CLDDeleteByTokenRequestParams(params: ["token" : token])
@@ -344,17 +321,17 @@ class ManagementApiTests: NetworkBaseTest {
             expectation.fulfill()
         }
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
+        
         XCTAssertEqual(result?.result ?? "", "ok")
     }
 
     func testDestroy() {
         
-        var expectation = self.expectation(description: "Upload should succeed")
+        var expectation = expectationWithDescription("Upload should succeed")
         
         var publicId: String?
         uploadFile().response({ (result, error) in
@@ -362,16 +339,16 @@ class ManagementApiTests: NetworkBaseTest {
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         guard let pubId = publicId else {
             XCTFail("Public ID should not be nil at this point")
             return
         }
         
-        expectation = self.expectation(description: "Destroy should succeed")
+        expectation = expectationWithDescription("Destroy should succeed")
         var result: CLDDeleteResult?
-        var error: Error?
+        var error: NSError?
         let params = CLDDestroyRequestParams().setInvalidate(true)
         cloudinary!.createManagementApi().destroy(pubId, params: params).response({ (resultRes, errorRes) in
             result = resultRes
@@ -379,46 +356,46 @@ class ManagementApiTests: NetworkBaseTest {
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
+        
         XCTAssertEqual(result?.result ?? "", "ok")
     }
     
     func testExplode() {
         
-        var expectation = self.expectation(description: "Upload should succeed")
+        var expectation = expectationWithDescription("Upload should succeed")
         
         var publicId: String?
-        uploadFile(.pdf).response({ (result, error) in
+        uploadFile(TestResourceType.pdf).response({ (result, error) in
             publicId = result?.publicId
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         guard let pubId = publicId else {
             XCTFail("Public ID should not be nil at this point")
             return
         }
         
-        expectation = self.expectation(description: "Explode should succeed")
+        expectation = expectationWithDescription("Explode should succeed")
         var result: CLDExplodeResult?
-        var error: Error?
-        let params = CLDExplodeRequestParams().setType(.upload)
+        var error: NSError?
+        let params = CLDExplodeRequestParams().setType(.Upload)
         cloudinary!.createManagementApi().explode(pubId, transformation: CLDTransformation().setWidth(306).setHeight(396).setPage("all"), params: params) { (resultRes: CLDExplodeResult?, errorRes) in
             result = resultRes
             error = errorRes
             expectation.fulfill()
         }
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNil(error, "error should be nil")
         XCTAssertNotNil(result, "result should not be nil")
-
+        
         XCTAssertEqual(result?.status ?? "", "processing")
     }
     

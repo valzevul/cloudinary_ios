@@ -24,26 +24,26 @@
 
 import Foundation
 
-@objc open class CLDDeleteResult: CLDBaseResult {
+@objc public class CLDDeleteResult: CLDBaseResult {
        
     // MARK: - Getters
     
-    open var result: String? {
-        return getParam(.result) as? String
+    public var result: String? {
+        return getParam(.Result) as? String
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: DeleteResultKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: DeleteResultKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum DeleteResultKey: CustomStringConvertible {
-        case result
+    private enum DeleteResultKey: CustomStringConvertible {
+        case Result
         
         var description: String {
             switch self {
-            case .result:       return "result"
+            case .Result:       return "result"
             }
         }
     }

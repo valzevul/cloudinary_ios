@@ -29,7 +29,7 @@ import Foundation
  It allows the options to add a response closure to be called once the request has finished,
  as well as performing actions on the request, such as cancelling, suspending or resuming it.
  */
-@objc open class CLDTagRequest: CLDRequest {
+@objc public class CLDTagRequest: CLDRequest {
     
     /**
      Set a response closure to be called once the request has finished.
@@ -38,17 +38,16 @@ import Foundation
      
      - returns:                          The same instance of CLDTagRequest.
      */
-    @discardableResult
-    open func response(_ completionHandler: ((_ result: CLDTagResult?, _ error: NSError?) -> ())?) -> CLDTagRequest {
+    public func response(completionHandler: ((result: CLDTagResult?, error: NSError?) -> ())?) -> CLDTagRequest {
         responseRaw { (response, error) in
             if let res = response as? [String : AnyObject] {
-                completionHandler?(CLDTagResult(json: res), nil)
+                completionHandler?(result: CLDTagResult(json: res), error: nil)
             }
             else if let err = error {
-                completionHandler?(nil, err)
+                completionHandler?(result: nil, error: err)
             }
             else {
-                completionHandler?(nil, CLDError.generalError())
+                completionHandler?(result: nil, error: CLDError.generalError())
             }
         }
         

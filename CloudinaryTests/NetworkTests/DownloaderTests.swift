@@ -32,7 +32,7 @@ class DownloaderTests: NetworkBaseTest {
     func testDownloadImage() {
         XCTAssertNotNil(cloudinary!.config.apiSecret, "Must set api secret for this test")
         
-        var expectation = self.expectation(description: "Upload should succeed")
+        var expectation = expectationWithDescription("Upload should succeed")
         
         var publicId: String?
         uploadFile().response({ (result, error) in
@@ -41,27 +41,27 @@ class DownloaderTests: NetworkBaseTest {
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         guard let pubId = publicId else {
             XCTFail("Public ID should not be nil at this point")
             return
         }
         
-        expectation = self.expectation(description: "Download should succeed")
+        expectation = expectationWithDescription("Download should succeed")
         
         var response: UIImage?
         var error: NSError?
         
         let url = cloudinary!.createUrl().generate(pubId)
-        cloudinary!.createDownloader().fetchImage(url!).responseImage({ (responseImage, errorRes) in
+        cloudinary!.createDownloader().fetchImage(url!).responseImage({ (responseImage, errorRes) -> () in
             response = responseImage
             error = errorRes
             
             expectation.fulfill()
         })
         
-        waitForExpectations(timeout: timeout, handler: nil)
+        waitForExpectationsWithTimeout(timeout, handler: nil)
         
         XCTAssertNotNil(response, "response should not be nil")
         XCTAssertNil(error, "error should be nil")

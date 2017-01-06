@@ -24,17 +24,17 @@
 
 import Foundation
 
-@objc open class CLDCloudinary: NSObject {
+@objc public class CLDCloudinary: NSObject {
     
     /**
      Holds the configuration parameters to be used by the `CLDCloudinary` instance.
      */
-    open fileprivate(set) var config: CLDConfiguration
+    public private(set) var config: CLDConfiguration
     
     /**
      The network coordinator coordinates between the SDK's API level classes to its network adapter layer.
      */
-    fileprivate var networkCoordinator: CLDNetworkCoordinator
+    private var networkCoordinator: CLDNetworkCoordinator
     
     
     // MARK: - SDK Configurations
@@ -42,9 +42,9 @@ import Foundation
     // MARK: Log Level
     
     /**
-     Sets Cloudinary SDK's log level, default level is set to **None**.
+     Sets Cludinary SDK's log level, default level is set to **None**.
      */
-    open static var logLevel: CLDLogLevel {
+    public static var logLevel: CLDLogLevel {
         get {
             return CLDLogManager.minimumLogLevel
         }
@@ -56,10 +56,10 @@ import Foundation
     // MARK: Image Cache
     
     /**
-     Sets Cloudinary SDK's caching policy for images that are downloaded via the SDK's CLDDownloader.
+     Sets Cloudinary SDK's caching policy for images that are dowloaded via the SDK's CLDDownloader.
      The options are: **None**, **Memory** and **Disk**. default is Disk
      */
-    open var cachePolicy: CLDImageCachePolicy {
+    public var cachePolicy: CLDImageCachePolicy {
         get {
             return CLDImageCache.defaultImageCache.cachePolicy
         }
@@ -72,7 +72,7 @@ import Foundation
      Sets Cloudinary SDK's image cache maximum disk capacity.
      default is 150 MB.     
      */
-    open var cacheMaxDiskCapacity: UInt64 {
+    public var cacheMaxDiskCapacity: UInt64 {
         get {
             return CLDImageCache.defaultImageCache.maxDiskCapacity
         }
@@ -88,20 +88,22 @@ import Foundation
      
     - parameter configuration:          The configuration used by this CLDCloudinary instance.
     - parameter networkAdapter:         A network adapter that implements `CLDNetworkAdapter`. CLDNetworkDelegate() by default.
+    - parameter configuration:          The configuration used to construct the NSURLSession.
     
      - returns: The new `CLDCloudinary` instance.
      */
-    public init(configuration: CLDConfiguration, networkAdapter: CLDNetworkAdapter? = nil, sessionConfiguration: URLSessionConfiguration? = nil) {
+    public init(configuration: CLDConfiguration, networkAdapter: CLDNetworkAdapter? = nil, sessionConfiguration: NSURLSessionConfiguration? = nil) {
         config = configuration
         if let customNetworkAdapter = networkAdapter {
             networkCoordinator = CLDNetworkCoordinator(configuration: config, networkAdapter: customNetworkAdapter)
         }
-        else {
+        else {            
             if let sessionConfiguration = sessionConfiguration {
                 networkCoordinator = CLDNetworkCoordinator(configuration: config, sessionConfiguration: sessionConfiguration)
             } else {
                 networkCoordinator = CLDNetworkCoordinator(configuration: config)
             }
+
         }
         super.init()
     }
@@ -113,7 +115,7 @@ import Foundation
     
     - returns: A new `CLDUrl` instance.
     */
-    open func createUrl() -> CLDUrl {
+    public func createUrl() -> CLDUrl {
         return CLDUrl(configuration: config)
     }
     
@@ -122,7 +124,7 @@ import Foundation
      
      - returns: A new `CLDUploader` instance.
      */
-    open func createUploader() -> CLDUploader {
+    public func createUploader() -> CLDUploader {
         return CLDUploader(networkCoordinator: networkCoordinator)
     }
     
@@ -131,7 +133,7 @@ import Foundation
      
      - returns: A new `CLDDownloader` instance.
      */
-    open func createDownloader() -> CLDDownloader {
+    public func createDownloader() -> CLDDownloader {
         return CLDDownloader(networkCoordinator: networkCoordinator)
     }
     
@@ -140,7 +142,7 @@ import Foundation
      
      - returns: A new `CLDAdminApi` instance.
      */
-    open func createManagementApi() -> CLDManagementApi {
+    public func createManagementApi() -> CLDManagementApi {
         return CLDManagementApi(networkCoordinator: networkCoordinator)
     }
 
@@ -154,7 +156,7 @@ import Foundation
     - parameter maxConcurrentDownloads:     The maximum concurrent downloads to allow.
     */
     @available(iOS 8.0, *)
-    open func setMaxConcurrentDownloads(_ maxConcurrentDownloads: Int) {
+    public func setMaxConcurrentDownloads(maxConcurrentDownloads: Int) {
         networkCoordinator.setMaxConcurrentDownloads(maxConcurrentDownloads)
     }
     
@@ -167,7 +169,7 @@ import Foundation
         default is `nil`.
     */
     @available(iOS 8.0, *)
-    open func setBackgroundCompletionHandler(_ newValue: (() -> ())?) {
+    public func setBackgroundCompletionHandler(newValue: (() -> ())?) {
         networkCoordinator.setBackgroundCompletionHandler(newValue)
     }
     
@@ -176,7 +178,7 @@ import Foundation
     Sets the "USER-AGENT" HTTP header on all network requests to be **"PlatformName/ver CloudinaryiOS/ver"**
     By default the header is set to **"CloudinaryiOS/ver"**
     */
-    open func setUserPlatform(_ platformName: String, version: String) {
+    public func setUserPlatform(platformName: String, version: String) {
         config.setUserPlatform(platformName, version: version)
     }
     

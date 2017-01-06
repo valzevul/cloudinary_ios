@@ -27,12 +27,12 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing a `delete by token` request.
  */
-open class CLDDeleteByTokenRequestParams: CLDRequestParams {
+public class CLDDeleteByTokenRequestParams: CLDRequestParams {
 
     
     // MARK: Init
     
-    fileprivate override init() {
+    private override init() {
         super.init()
     }
     
@@ -55,14 +55,14 @@ open class CLDDeleteByTokenRequestParams: CLDRequestParams {
      
      - returns:             A new instance of CLDDeleteByTokenRequestParams.
      */
-    public init(params: [String : Any]) {
+    public init(params: [String : AnyObject]) {
         super.init()
         self.params = params
     }
     
     // MARK: Params
     
-    fileprivate enum DeleteByTokenParams: String {
+    private enum DeleteByTokenParams: String {
         case Token =                "token"
     }
     

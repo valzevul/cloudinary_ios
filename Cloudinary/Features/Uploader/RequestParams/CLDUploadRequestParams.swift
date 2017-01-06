@@ -28,7 +28,7 @@ import Foundation
  This class represents the different parameters that can be passed when performing an upload request.
  For more information see the [documentation](http://cloudinary.com/documentation/image_upload_api_reference#upload).
 */
-@objc open class CLDUploadRequestParams: CLDRequestParams {
+@objc public class CLDUploadRequestParams: CLDRequestParams {
 
     /**
      A boolean variable representing whether or not the request should be signed.
@@ -55,143 +55,143 @@ import Foundation
     
     // MARK: - Get Values
     
-    open var publicId: String? {
+    public var publicId: String? {
         return getParam(.PublicId) as? String
     }
     
-    open var format: String? {
+    public var format: String? {
         return getParam(.Format) as? String
     }
     
-    open var type: String? {
+    public var type: String? {
         return getParam(.FileType) as? String
     }
     
-    open var notificationUrl: String? {
+    public var notificationUrl: String? {
         return getParam(.NotificationUrl) as? String
     }
     
-    open var eagerNotificationUrl: String? {
+    public var eagerNotificationUrl: String? {
         return getParam(.EagerNotificationUrl) as? String
     }
     
-    open var proxy: String? {
+    public var proxy: String? {
         return getParam(.Proxy) as? String
     }
     
-    open var folder: String? {
+    public var folder: String? {
         return getParam(.Folder) as? String
     }
     
-    open var moderation: String? {
+    public var moderation: String? {
         return getParam(.PublicId) as? String
     }
     
-    open var rawConvert: String? {
+    public var rawConvert: String? {
         return getParam(.RawConvert) as? String
     }
     
-    open var detection: String? {
+    public var detection: String? {
         return getParam(.Detection) as? String
     }
     
-    open var categorization: String? {
+    public var categorization: String? {
         return getParam(.Categorization) as? String
     }
     
-    open var similaritySearch: String? {
+    public var similaritySearch: String? {
         return getParam(.SimilaritySearch) as? String
     }
     
-    open var autoTagging: String? {
+    public var autoTagging: String? {
         return getParam(.AutoTagging) as? String
     }
     
-    open var backup: Bool? {
+    public var backup: Bool? {
         return getParam(.Backup) as? Bool
     }
     
-    open var useFilename: Bool? {
+    public var useFilaname: Bool? {
         return getParam(.UseFilename) as? Bool
     }
     
-    open var uniqueFilename: Bool? {
+    public var uniqueFilename: Bool? {
         return getParam(.UniqueFilename) as? Bool
     }
     
-    open var discardOriginalFilename: Bool? {
+    public var discardOriginalFilename: Bool? {
         return getParam(.DiscardOriginalFilename) as? Bool
     }
     
-    open var eagerAsync: Bool? {
+    public var eagerAsync: Bool? {
         return getParam(.EagerAsync) as? Bool
     }
     
-    open var invalidate: Bool? {
+    public var invalidate: Bool? {
         return getParam(.Invalidate) as? Bool
     }
     
-    open var overwrite: Bool? {
+    public var overwrite: Bool? {
         return getParam(.Overwrite) as? Bool
     }
     
-    open var imageMetadata: Bool? {
+    public var imageMetadata: Bool? {
         return getParam(.ImageMetadata) as? Bool
     }
     
-    open var colors: Bool? {
+    public var colors: Bool? {
         return getParam(.Colors) as? Bool
     }
     
-    open var phash: Bool? {
+    public var phash: Bool? {
         return getParam(.Phash) as? Bool
     }
     
-    open var faces: Bool? {
+    public var faces: Bool? {
         return getParam(.Faces) as? Bool
     }
     
-    open var returnDeleteToken: Bool? {
+    public var returnDeleteToken: Bool? {
         return getParam(.ReturnDeleteToken) as? Bool
     }
     
-    open var transformation: String? {
+    public var transformation: String? {
         return getParam(.Transformation) as? String
     }
     
-    open var tags: String? {
+    public var tags: String? {
         return getParam(.Tags) as? String
     }
     
-    open var allowedFormats: String? {
+    public var allowedFormats: String? {
         return getParam(.AllowedFormats) as? String
     }
     
-    open var context: String? {
+    public var context: String? {
         return getParam(.Context) as? String
     }
     
-    open var faceCoordinates: String? {
+    public var faceCoordinates: String? {
         return getParam(.FaceCoordinates) as? String
     }
     
-    open var customCoordinates: String? {
+    public var customCoordinates: String? {
         return getParam(.CustomCoordinates) as? String
     }
     
-    open var eager: String? {
+    public var eager: String? {
         return getParam(.Eager) as? String
     }
     
-    open var headers: String? {
+    public var headers: String? {
         return getParam(.Headers) as? String
     }
     
     
     
     
-    fileprivate func getParam(_ param: UploadRequestParams) -> AnyObject? {
-        return getParam(CLDUploadRequestParams.UploadRequestParams(rawValue: param.rawValue)!)
+    private func getParam(param: UploadRequestParams) -> AnyObject? {
+        return getParam(param.rawValue)
     }
     
     // MARK: Set Simple Params
@@ -204,8 +204,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setPublicId(_ publicId: String) -> CLDUploadRequestParams {
+    public func setPublicId(publicId: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.PublicId.rawValue, value: publicId)
         return self
     }
@@ -217,7 +216,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    open func setFormat(_ format: String) -> CLDUploadRequestParams {
+    public func setFormat(format: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Format.rawValue, value: format)
         return self
     }
@@ -230,8 +229,8 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      */
     @objc(setTypeFromType:)
-    open func setType(_ type: CLDType) -> CLDUploadRequestParams {        
-        return setType(String(describing: type))
+    public func setType(type: CLDType) -> CLDUploadRequestParams {        
+        return setType(String(type))
     }
     
     /**
@@ -241,8 +240,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setType(_ type: String) -> CLDUploadRequestParams {
+    public func setType(type: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.FileType.rawValue, value: type)
         return self
     }
@@ -254,7 +252,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    open func setNotificationUrl(_ notificationUrl: String) -> CLDUploadRequestParams {
+    public func setNotificationUrl(notificationUrl: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.NotificationUrl.rawValue, value: notificationUrl)
         return self
     }
@@ -266,7 +264,7 @@ import Foundation
      
      - returns:                             The same instance of CLDUploadRequestParams.
      */
-    open func setEagerNotificationUrl(_ eagerNotificationUrl: String) -> CLDUploadRequestParams {
+    public func setEagerNotificationUrl(eagerNotificationUrl: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.EagerNotificationUrl.rawValue, value: eagerNotificationUrl)
         return self
     }
@@ -278,7 +276,7 @@ import Foundation
      
      - returns:             The same instance of CLDUploadRequestParams.
      */
-    open func setProxy(_ proxy: String) -> CLDUploadRequestParams {
+    public func setProxy(proxy: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Proxy.rawValue, value: proxy)
         return self
     }
@@ -290,7 +288,7 @@ import Foundation
      
      - returns:             The same instance of CLDUploadRequestParams.
      */
-    open func setFolder(_ folder: String) -> CLDUploadRequestParams {
+    public func setFolder(folder: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Folder.rawValue, value: folder)
         return self
     }
@@ -304,9 +302,8 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      */
     @objc(setModerationFromModeration:)
-    @discardableResult
-    open func setModeration(_ moderation: CLDModeration) -> CLDUploadRequestParams {
-        return setModeration(String(describing: moderation))
+    public func setModeration(moderation: CLDModeration) -> CLDUploadRequestParams {
+        return setModeration(String(moderation))
     }
     
     /**
@@ -317,7 +314,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    open func setModeration(_ moderation: String) -> CLDUploadRequestParams {
+    public func setModeration(moderation: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Moderation.rawValue, value: moderation)
         return self
     }
@@ -329,8 +326,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setRawConvert(_ rawConvert: String) -> CLDUploadRequestParams {
+    public func setRawConvert(rawConvert: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.RawConvert.rawValue, value: rawConvert)
         return self
     }
@@ -342,8 +338,7 @@ import Foundation
      
      - returns:                 The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setDetection(_ detection: String) -> CLDUploadRequestParams {
+    public func setDetection(detection: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Detection.rawValue, value: detection)
         return self
     }
@@ -355,8 +350,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setCategorization(_ categorization: String) -> CLDUploadRequestParams {
+    public func setCategorization(categorization: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Categorization.rawValue, value: categorization)
         return self
     }
@@ -367,8 +361,7 @@ import Foundation
      
      - returns:                         The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setSimilaritySearch(_ similaritySearch: String) -> CLDUploadRequestParams {
+    public func setSimilaritySearch(similaritySearch: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.SimilaritySearch.rawValue, value: similaritySearch)
         return self
     }
@@ -382,9 +375,8 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      */
     @objc(setAutoTaggingWithDouble:)
-    @discardableResult
-    open func setAutoTagging(_ autoTagging: Double) -> CLDUploadRequestParams {
-        setAutoTagging(autoTagging.cldFormat(f: ".1"))
+    public func setAutoTagging(autoTagging: Double) -> CLDUploadRequestParams {
+        setAutoTagging(autoTagging.cldFormat(".1"))
         return self
     }
     
@@ -396,8 +388,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setAutoTagging(_ autoTagging: String) -> CLDUploadRequestParams {
+    public func setAutoTagging(autoTagging: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.AutoTagging.rawValue, value: autoTagging)
         return self
     }
@@ -412,8 +403,7 @@ import Foundation
      
      - returns:                 The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setBackup(_ backup: Bool) -> Self {
+    public func setBackup(backup: Bool) -> Self {
         setBoolParam(.Backup, value: backup)
         return self
     }
@@ -426,8 +416,7 @@ import Foundation
      
      - returns:                 The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setUseFilename(_ useFilename: Bool) -> Self {
+    public func setUseFilename(useFilename: Bool) -> Self {
         setBoolParam(.UseFilename, value: useFilename)
         return self
     }
@@ -439,8 +428,7 @@ import Foundation
      
      - returns:                     The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setUniqueFilename(_ uniqueFilename: Bool) -> Self {
+    public func setUniqueFilename(uniqueFilename: Bool) -> Self {
         setBoolParam(.UniqueFilename, value: uniqueFilename)
         return self
     }
@@ -454,8 +442,7 @@ import Foundation
      
      - returns:                             The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setDiscardOriginalFilename(_ discardOriginalFilename: Bool) -> Self {
+    public func setDiscardOriginalFilename(discardOriginalFilename: Bool) -> Self {
         setBoolParam(.DiscardOriginalFilename, value: discardOriginalFilename)
         return self
     }
@@ -467,8 +454,7 @@ import Foundation
      
      - returns:                 The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setEagerAsync(_ eagerAsync: Bool) -> Self {
+    public func setEagerAsync(eagerAsync: Bool) -> Self {
         setBoolParam(.EagerAsync, value: eagerAsync)
         return self
     }
@@ -480,8 +466,7 @@ import Foundation
      
      - returns:             The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setInvalidate(_ invalidate: Bool) -> Self {
+    public func setInvalidate(invalidate: Bool) -> Self {
         setBoolParam(.Invalidate, value: invalidate)
         return self
     }
@@ -494,8 +479,7 @@ import Foundation
      
      - returns:                 The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setOverwrite(_ overwrite: Bool) -> Self {
+    public func setOverwrite(overwrite: Bool) -> Self {
         setBoolParam(.Overwrite, value: overwrite)
         return self
     }
@@ -507,8 +491,7 @@ import Foundation
      
      - returns:                     The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setImageMetadata(_ imageMetadata: Bool) -> Self {
+    public func setImageMetadata(imageMetadata: Bool) -> Self {
         setBoolParam(.ImageMetadata, value: imageMetadata)
         return self
     }
@@ -520,8 +503,7 @@ import Foundation
      
      - returns:                     The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setColors(_ colors: Bool) -> Self {
+    public func setColors(colors: Bool) -> Self {
         setBoolParam(.Colors, value: colors)
         return self
     }
@@ -534,8 +516,7 @@ import Foundation
      
      - returns:                     The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setPhash(_ phash: Bool) -> Self {
+    public func setPhash(phash: Bool) -> Self {
         setBoolParam(.Phash, value: phash)
         return self
     }
@@ -548,8 +529,7 @@ import Foundation
      
      - returns:                     The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setFaces(_ faces: Bool) -> Self {
+    public func setFaces(faces: Bool) -> Self {
         setBoolParam(.Faces, value: faces)
         return self
     }
@@ -563,8 +543,7 @@ import Foundation
      
      - returns:                         The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setReturnDeleteToken(_ returnDeleteToken: Bool) -> Self {
+    public func setReturnDeleteToken(returnDeleteToken: Bool) -> Self {
         setBoolParam(.ReturnDeleteToken, value: returnDeleteToken)
         return self
     }
@@ -577,9 +556,8 @@ import Foundation
     
     - returns:                       The same instance of CLDUploadRequestParams.
     */
-    @discardableResult
-    fileprivate func setBoolParam(_ param: UploadRequestParams, value: Bool) -> CLDUploadRequestParams {
-        let boolNumber = NSNumber(value: value as Bool)
+    private func setBoolParam(param: UploadRequestParams, value: Bool) -> CLDUploadRequestParams {
+        let boolNumber = NSNumber(bool: value)
         setParam(param.rawValue, value: boolNumber)
         return self
     }
@@ -594,27 +572,25 @@ import Foundation
     
     - returns:                       The same instance of CLDUploadRequestParams.
     */
-    @discardableResult
-    open func setUploadPreset(_ uploadPreset: String) -> CLDUploadRequestParams {
+    internal func setUploadPreset(uploadPreset: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.UploadPreset.rawValue, value: uploadPreset)
         return self
     }
     
     /**
-    Set the request to be an unsigned request, using an upload preset that can be set in the Cloudinary account dashboard.
-    For more information see the [documentation](http://cloudinary.com/documentation/upload_images#unsigned_upload).
-
-    - parameter uploadPreset:       The upload preset from your account settings.
-
-    - returns:                       The same instance of CLDUploadRequestParams.
-    */
-    @discardableResult
+     Set the request to be an unsigned request, using an upload preset that can be set in the Cloudinary account dashboard.
+     For more information see the [documentation](http://cloudinary.com/documentation/upload_images#unsigned_upload).
+     
+     - parameter uploadPreset:       The upload preset from your account settings.
+     
+     - returns:                       The same instance of CLDUploadRequestParams.
+     */
     @objc(setSignedWithBool:)
-    internal func setSigned(_ signed: Bool) -> CLDUploadRequestParams {
+    internal func setSigned(signed: Bool) -> CLDUploadRequestParams {
         self.signed = signed
         return self
     }
-
+    
     /**
      Apply an incoming transformation as part of the upload request. 
      Any image transformation parameter can be specified as an option in the upload call and these transformations are applied before saving the image in the cloud.
@@ -624,9 +600,8 @@ import Foundation
      
      - returns:                       The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
     @objc(setTransformationFromTransformation:)
-    open func setTransformation(_ transformation: CLDTransformation) -> CLDUploadRequestParams {
+    public func setTransformation(transformation: CLDTransformation) -> CLDUploadRequestParams {
         if let stringRep = transformation.asString() {
             setTransformation(stringRep)
         }
@@ -642,8 +617,7 @@ import Foundation
      
      - returns:                       The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setTransformation(_ transformation: String) -> CLDUploadRequestParams {
+    public func setTransformation(transformation: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Transformation.rawValue, value: transformation)
         return self
     }
@@ -656,10 +630,9 @@ import Foundation
      
      - returns:                      The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
     @objc(setTagsWithArray:)
-    open func setTags(_ tags: [String]) -> CLDUploadRequestParams {
-        return setTags(tags.joined(separator: ","))
+    public func setTags(tags: [String]) -> CLDUploadRequestParams {
+        return setTags(tags.joinWithSeparator(","))
     }
     
     /**
@@ -670,8 +643,7 @@ import Foundation
      
      - returns:                      The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setTags(_ tags: String) -> CLDUploadRequestParams {
+    public func setTags(tags: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Tags.rawValue, value: tags)
         return self
     }
@@ -687,10 +659,9 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
     @objc(setAllowedFormatsWithArray:)
-    open func setAllowedFormats(_ allowedFormats: [String]) -> CLDUploadRequestParams {
-        return setAllowedFormats(allowedFormats.joined(separator: ","))
+    public func setAllowedFormats(allowedFormats: [String]) -> CLDUploadRequestParams {
+        return setAllowedFormats(allowedFormats.joinWithSeparator(","))
     }
     
     /**
@@ -704,8 +675,7 @@ import Foundation
      
      - returns:                     The same instance of CLDUploadRequestParams.
      */
-    @discardableResult
-    open func setAllowedFormats(_ allowedFormats: String) -> CLDUploadRequestParams {
+    public func setAllowedFormats(allowedFormats: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.AllowedFormats.rawValue, value: allowedFormats)
         return self
     }
@@ -721,8 +691,7 @@ import Foundation
      
      */
     @objc(setContextFromDictionary:)
-    @discardableResult
-    open func setContext(_ context: [String : String]) -> CLDUploadRequestParams {
+    public func setContext(context: [String : String]) -> CLDUploadRequestParams {
         return setContext(buildContextString(context))
     }
     
@@ -736,8 +705,7 @@ import Foundation
      - returns:                 The same instance of CLDUploadRequestParams.
      
      */
-    @discardableResult
-    open func setContext(_ context: String) -> CLDUploadRequestParams {
+    public func setContext(context: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Context.rawValue, value: context)
         return self
     }
@@ -752,8 +720,7 @@ import Foundation
      
      */
     @objc(setFaceCoordinatesFromCoordinates:)
-    @discardableResult
-    open func setFaceCoordinates(_ faceCoordinates: [CLDCoordinate]) -> CLDUploadRequestParams {
+    public func setFaceCoordinates(faceCoordinates: [CLDCoordinate]) -> CLDUploadRequestParams {
         return setFaceCoordinates(buildCoordinatesString(faceCoordinates))
     }
     
@@ -766,8 +733,7 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      
      */
-    @discardableResult
-    open func setFaceCoordinates(_ faceCoordinates: String) -> CLDUploadRequestParams {
+    public func setFaceCoordinates(faceCoordinates: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.FaceCoordinates.rawValue, value: faceCoordinates)
         return self
     }
@@ -782,8 +748,7 @@ import Foundation
      
      */
     @objc(setCustomCoordinatesFromCoordinates:)
-    @discardableResult
-    open func setCustomCoordinates(_ customCoordinates: [CLDCoordinate]) -> CLDUploadRequestParams {
+    public func setCustomCoordinates(customCoordinates: [CLDCoordinate]) -> CLDUploadRequestParams {
         return setCustomCoordinates(buildCoordinatesString(customCoordinates))
     }
     
@@ -796,8 +761,7 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      
      */
-    @discardableResult
-    open func setCustomCoordinates(_ customCoordinates: String) -> CLDUploadRequestParams {
+    public func setCustomCoordinates(customCoordinates: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.CustomCoordinates.rawValue, value: customCoordinates)
         return self
     }
@@ -811,8 +775,7 @@ import Foundation
      
      */
     @objc(setEagerFromTransformationArray:)
-    @discardableResult
-    open func setEager(_ eager: [CLDTransformation]) -> CLDUploadRequestParams {
+    public func setEager(eager: [CLDTransformation]) -> CLDUploadRequestParams {
         return setEager(buildEagerString(eager))
     }
     
@@ -824,8 +787,7 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      
      */
-    @discardableResult
-    open func setEager(_ eager: String) -> CLDUploadRequestParams {
+    public func setEager(eager: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Eager.rawValue, value: eager)
         return self
     }
@@ -841,8 +803,7 @@ import Foundation
      
      */
     @objc(setHeadersWithDictionary:)
-    @discardableResult
-    open func setHeaders(_ headers: [String : String]) -> CLDUploadRequestParams {
+    public func setHeaders(headers: [String : String]) -> CLDUploadRequestParams {
         return setHeaders(buildHeadersString(headers))
     }
     
@@ -856,8 +817,7 @@ import Foundation
      - returns:                     The same instance of CLDUploadRequestParams.
      
      */
-    @discardableResult
-    open func setHeaders(_ headers: String) -> CLDUploadRequestParams {
+    public func setHeaders(headers: String) -> CLDUploadRequestParams {
         setParam(UploadRequestParams.Headers.rawValue, value: headers)
         return self
     }
@@ -869,11 +829,10 @@ import Foundation
      
      - returns:                                 The same instance of CLDExplicitRequestParams.
      */
-    @discardableResult
-    open func setResponsiveBreakpoints(_ responsiveBreakpoints: [CLDResponsiveBreakpoints]) -> Self {
+    public func setResponsiveBreakpoints(responsiveBreakpoints: [CLDResponsiveBreakpoints]) -> Self {
         var responsiveBreakpointsJSON: [AnyObject] = []
         for rb in responsiveBreakpoints {
-            responsiveBreakpointsJSON.append(rb.params as AnyObject)
+            responsiveBreakpointsJSON.append(rb.params)
         }
         super.setParam(UploadRequestParams.ResponsiveBreakpoints.rawValue, value: responsiveBreakpointsJSON)
         return self
@@ -881,7 +840,7 @@ import Foundation
     
     // MARK: - Helpers
     
-    fileprivate enum UploadRequestParams: String {
+    private enum UploadRequestParams: String {
         case PublicId =                             "public_id"
         case Callback =                             "callback"
         case Format =                               "format"

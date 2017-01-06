@@ -24,17 +24,17 @@
 
 import Foundation
 
-@objc open class CLDExplicitResult: CLDUploadResult {
+@objc public class CLDExplicitResult: CLDUploadResult {
         
     
     // MARK: - Getters    
     
-    open var type: String? {
-        return getParam(.urlType) as? String
+    public var type: String? {
+        return getParam(.UrlType) as? String
     }
     
-    open var eager: [CLDEagerResult]? {
-        guard let eagerArr = getParam(.eager) as? [[String : AnyObject]] else {
+    public var eager: [CLDEagerResult]? {
+        guard let eagerArr = getParam(.Eager) as? [[String : AnyObject]] else {
             return nil
         }
         var eager: [CLDEagerResult] = []
@@ -46,30 +46,30 @@ import Foundation
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: ExplicitResultKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: ExplicitResultKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum ExplicitResultKey: CustomStringConvertible {
-        case eager
+    private enum ExplicitResultKey: CustomStringConvertible {
+        case Eager
         
         var description: String {
             switch self {
-            case .eager:            return "eager"
+            case .Eager:            return "eager"
             }
         }
     }
 }
 
-@objc open class CLDEagerResult: CLDBaseResult {
+@objc public class CLDEagerResult: CLDBaseResult {
     
     // MARK: - Getters
     
-    open var url: String? {
-        return getParam(.url) as? String
+    public var url: String? {
+        return getParam(.Url) as? String
     }
     
-    open var secureUrl: String? {
-        return getParam(.secureUrl) as? String
+    public var secureUrl: String? {
+        return getParam(.SecureUrl) as? String
     }        
 }

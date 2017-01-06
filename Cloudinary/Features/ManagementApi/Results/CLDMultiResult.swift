@@ -24,27 +24,27 @@
 
 import Foundation
 
-@objc open class CLDMultiResult: CLDBaseResult {
+@objc public class CLDMultiResult: CLDBaseResult {
     
     
     // MARK: - Getters
     
-    open var url: String? {
-        return getParam(.url) as? String
+    public var url: String? {
+        return getParam(.Url) as? String
     }
     
-    open var secureUrl: String? {
-        return getParam(.secureUrl) as? String
+    public var secureUrl: String? {
+        return getParam(.SecureUrl) as? String
     }
     
-    open var publicId: String? {
-        return getParam(.publicId) as? String
+    public var publicId: String? {
+        return getParam(.PublicId) as? String
     }
     
-    open var version: String? {
-        guard let version = getParam(.version) else {
+    public var version: String? {
+        guard let version = getParam(.Version) else {
             return nil
         }
-        return String(describing: version)
+        return String(version)
     }    
 }

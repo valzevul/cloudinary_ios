@@ -24,9 +24,9 @@
 
 import Foundation
 
-@objc open class CLDBaseResult: NSObject {
+@objc public class CLDBaseResult: NSObject {
     
-    open fileprivate(set) var resultJson: [String : AnyObject]
+    public private(set) var resultJson: [String : AnyObject]
     
     
     // MARK: - Init
@@ -37,7 +37,7 @@ import Foundation
     
     // MARK: - Private Helpers
     
-    internal func getParam(_ param: CommonResultKeys) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    internal func getParam(param: CommonResultKeys) -> AnyObject? {
+        return resultJson[String(param)]
     }
 }

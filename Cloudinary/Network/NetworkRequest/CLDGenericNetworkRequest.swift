@@ -25,15 +25,17 @@
 import Foundation
 import Alamofire
 
-internal class CLDGenericNetworkRequest<T: Request>: NSObject, CLDNetworkRequest {
+internal class CLDGenericNetworkRequest: NSObject, CLDNetworkRequest {
     
-    internal let request: T
+    internal let request: Request
+    
     
     // MARK: - Init
     
-    internal init(request: T) {
+    internal init(request: Request) {
         self.request = request
     }
+
     
     //MARK: - State
     
@@ -57,4 +59,32 @@ internal class CLDGenericNetworkRequest<T: Request>: NSObject, CLDNetworkRequest
     func cancel() {
         request.cancel()
     }
+    
+    //MARK: - Handlers
+    
+    func response(completionHandler: ((response: AnyObject?, error: NSError?) -> ())?) -> CLDNetworkRequest {
+        request.responseJSON { [weak self] response in
+            if let value = response.result.value {
+                if let error = value["error"] as? [String : AnyObject] {
+                    let code = self?.request.response?.statusCode ?? CLDError.CloudinaryErrorCode.GeneralErrorCode.rawValue
+                    let err = CLDError.error(code: code, userInfo: error)
+                    completionHandler?(response: nil, error: err)
+                }
+                else {
+                    completionHandler?(response: value, error: nil)
+                }
+            }
+            else if let err = response.result.error {
+                let error = err as NSError
+                completionHandler?(response: nil, error: error)
+            }
+            else {
+                completionHandler?(response: nil, error: CLDError.generalError())
+            }
+            
+        }
+        
+        return self
+    }
+    
 }

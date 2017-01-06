@@ -29,10 +29,10 @@ import Foundation
 /**
 The CLDSignature class represents a signature used to sign a URL request.
 */
-@objc open class CLDSignature: NSObject {
+@objc public class CLDSignature: NSObject {
         
-    open let signature: String
-    open let timestamp: NSNumber
+    public let signature: String
+    public let timestamp: NSNumber
     
     public init(signature: String, timestamp: NSNumber) {
         self.signature = signature
@@ -62,7 +62,7 @@ The CLDSignature class represents a signature used to sign a URL request.
 /**
 The CLDCoordinate class represents a rectangle area on an asset.
 */
-@objc open class CLDCoordinate: NSObject {
+@objc public class CLDCoordinate: NSObject {
     
     let rect: CGRect
     
@@ -95,14 +95,14 @@ The CLDCoordinate class represents a rectangle area on an asset.
         self.rect = rect
     }
     
-    open override var description: String {
+    public override var description: String {
         get {
             var components: [String] = []
-            components.append(x.cldFormat(f: ".0"))
-            components.append(y.cldFormat(f: ".0"))
-            components.append(width.cldFormat(f: ".0"))
-            components.append(height.cldFormat(f: ".0"))
-            return components.joined(separator: ",")
+            components.append(x.cldFormat(".0"))
+            components.append(y.cldFormat(".0"))
+            components.append(width.cldFormat(".0"))
+            components.append(height.cldFormat(".0"))
+            return components.joinWithSeparator(",")
         }
     }
 }
@@ -115,7 +115,7 @@ The CLDCoordinate class represents a rectangle area on an asset.
 The CLDResponsiveBreakpoints class describe the settings available for configuring responsive breakpoints.
 Responsive breakpoints is used to request Cloudinary to automatically find the best breakpoints.
 */
-@objc open class CLDResponsiveBreakpoints: NSObject {
+@objc public class CLDResponsiveBreakpoints: NSObject {
     
     internal var params: [String: AnyObject] = [:]
     
@@ -131,7 +131,7 @@ Responsive breakpoints is used to request Cloudinary to automatically find the b
     */
     public init(createDerived: Bool) {
         super.init()
-        setParam(ResponsiveBreakpointsParams.CreateDerived.rawValue, value: createDerived as AnyObject?)
+        setParam(ResponsiveBreakpointsParams.CreateDerived.rawValue, value: createDerived)
     }
     
     // MARK - Set Param
@@ -143,9 +143,9 @@ Responsive breakpoints is used to request Cloudinary to automatically find the b
     
     - returns:                      The same CLDResponsiveBreakpoints instance.
     */
-    open func setTransformations(_ transformation: CLDTransformation) -> Self {
+    public func setTransformations(transformation: CLDTransformation) -> Self {
         if let trans = transformation.asString() {
-            setParam(ResponsiveBreakpointsParams.Transformation.rawValue, value: trans as AnyObject?)
+            setParam(ResponsiveBreakpointsParams.Transformation.rawValue, value: trans)
         }
         return self
     }
@@ -158,8 +158,8 @@ Responsive breakpoints is used to request Cloudinary to automatically find the b
      
      - returns:                      The same CLDResponsiveBreakpoints instance.
      */
-    open func setMaxWidth(_ maxWidth: Int) -> Self {
-        return setParam(ResponsiveBreakpointsParams.MaxWidth.rawValue, value: maxWidth as AnyObject?)
+    public func setMaxWidth(maxWidth: Int) -> Self {
+        return setParam(ResponsiveBreakpointsParams.MaxWidth.rawValue, value: maxWidth)
     }
     
     /**
@@ -169,8 +169,8 @@ Responsive breakpoints is used to request Cloudinary to automatically find the b
      
      - returns:                      The same CLDResponsiveBreakpoints instance.
      */
-    open func setMinWidth(_ minWidth: Int) -> Self {
-        return setParam(ResponsiveBreakpointsParams.MinWidth.rawValue, value: minWidth as AnyObject?)
+    public func setMinWidth(minWidth: Int) -> Self {
+        return setParam(ResponsiveBreakpointsParams.MinWidth.rawValue, value: minWidth)
     }
     
     /**
@@ -180,8 +180,8 @@ Responsive breakpoints is used to request Cloudinary to automatically find the b
      
      - returns:                      The same CLDResponsiveBreakpoints instance.
      */
-    open func setBytesStep(_ bytesStep: Int) -> Self {
-        return setParam(ResponsiveBreakpointsParams.BytesStep.rawValue, value: bytesStep as AnyObject?)
+    public func setBytesStep(bytesStep: Int) -> Self {
+        return setParam(ResponsiveBreakpointsParams.BytesStep.rawValue, value: bytesStep)
     }
     
     /**
@@ -192,18 +192,17 @@ Responsive breakpoints is used to request Cloudinary to automatically find the b
      
      - returns:                      The same CLDResponsiveBreakpoints instance.
      */
-    open func setMaxImages(_ maxImages: Int) -> Self {
-        return setParam(ResponsiveBreakpointsParams.MaxImages.rawValue, value: maxImages as AnyObject?)
+    public func setMaxImages(maxImages: Int) -> Self {
+        return setParam(ResponsiveBreakpointsParams.MaxImages.rawValue, value: maxImages)
     }
     
-    @discardableResult
-    open func setParam(_ key: String, value: AnyObject?) -> Self {
+    public func setParam(key: String, value: AnyObject?) -> Self {
         params[key] = value
         return self
     }
     
     
-    fileprivate enum ResponsiveBreakpointsParams: String, CustomStringConvertible {
+    private enum ResponsiveBreakpointsParams: String, CustomStringConvertible {
         case CreateDerived =                "create_derived"
         case Transformation =               "transformation"
         case MaxWidth =                     "max_width"

@@ -24,10 +24,10 @@
 
 import Foundation
 
-@objc open class CLDInfo: CLDBaseResult {
+@objc public class CLDInfo: CLDBaseResult {
     
-    open var detection: CLDDetection? {
-        guard let detection = getParam(.detection) as? [String : AnyObject] else {
+    public var detection: CLDDetection? {
+        guard let detection = getParam(.Detection) as? [String : AnyObject] else {
             return nil
         }
         return CLDDetection(json: detection)
@@ -35,16 +35,16 @@ import Foundation
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: CLDInfoKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDInfoKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDInfoKey: CustomStringConvertible {
-        case detection
+    private enum CLDInfoKey: CustomStringConvertible {
+        case Detection
         
         var description: String {
             switch self {
-            case .detection:           return "detection"
+            case .Detection:           return "detection"
             }
         }
     }

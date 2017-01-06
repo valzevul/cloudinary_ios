@@ -129,12 +129,12 @@ class UrlTests: XCTestCase {
         let trans = CLDTransformation().setWidth(100).setHeight(101)
         var url = cloudinary?.createUrl().setTransformation(trans).generate("test")
         
-        url = cloudinary?.createUrl().setTransformation(CLDTransformation().setWidth(100).setHeight(101).setCrop(.crop)).generate("test")
+        url = cloudinary?.createUrl().setTransformation(CLDTransformation().setWidth(100).setHeight(101).setCrop(.Crop)).generate("test")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/image/upload/c_crop,h_101,w_100/test")
     }
     
     func testVariousOptions() {
-        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(1).setY(2).setRadius(3).setGravity(.center).setQuality("0.4").setPrefix("a")).generate("test")
+        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(1).setY(2).setRadius(3).setGravity(.Center).setQuality("0.4").setPrefix("a")).generate("test")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/image/upload/g_center,p_a,q_0.4,r_3,x_1,y_2/test")
     }
     
@@ -149,32 +149,32 @@ class UrlTests: XCTestCase {
     }
     
     func testBaseTransformations() {
-        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(100).setY(100).setCrop(.fill).chain().setCrop(.crop).setWidth(100)).generate("test")
+        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(100).setY(100).setCrop(.Fill).chain().setCrop(.Crop).setWidth(100)).generate("test")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/image/upload/c_fill,x_100,y_100/c_crop,w_100/test")
     }
     
     func testBaseTransformationArray() {
-        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(100).setY(100).setWidth(200).setCrop(.fill).chain().setRadius(10).chain().setCrop(.crop).setWidth(100)).generate("test")
+        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(100).setY(100).setWidth(200).setCrop(.Fill).chain().setRadius(10).chain().setCrop(.Crop).setWidth(100)).generate("test")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/image/upload/c_fill,w_200,x_100,y_100/r_10/c_crop,w_100/test")
     }
     
     func testNoEmptyTransformation() {
-        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(100).setY(100).setCrop(.fill).chain()).generate("test")
+        let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setX(100).setY(100).setCrop(.Fill).chain()).generate("test")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/image/upload/c_fill,x_100,y_100/test")
     }
     
     func testType() {
-        let url = cloudinary?.createUrl().setType(.facebook).generate("test")
+        let url = cloudinary?.createUrl().setType(.Facebook).generate("test")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/image/facebook/test")
     }
     
     func testResourceType() {
-        let url = cloudinary?.createUrl().setResourceType(.raw).generate("test")
+        let url = cloudinary?.createUrl().setResourceType(.Raw).generate("test")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/raw/upload/test")
     }
     
     func testFetch() {
-        let url = cloudinary?.createUrl().setType(.fetch).generate("http://blah.com/hello?a=b")
+        let url = cloudinary?.createUrl().setType(.Fetch).generate("http://blah.com/hello?a=b")
         XCTAssertEqual(url, "http://res.cloudinary.com/test123/image/fetch/http://blah.com/hello%3Fa%3Db")
     }
     
@@ -199,7 +199,7 @@ class UrlTests: XCTestCase {
      func testUrlSuffixNonUpload() {
         let config = CLDConfiguration(cloudName: "test123", apiKey: "a", apiSecret: "b", privateCdn: true)
         cloudinary = CLDCloudinary(configuration: config)
-        XCTAssertNil(cloudinary?.createUrl().setType(.facebook).setSuffix("hello").generate("test"))
+        XCTAssertNil(cloudinary?.createUrl().setType(.Facebook).setSuffix("hello").generate("test"))
      }
     
     func testUrlSuffixDisallowedChars() {
@@ -224,22 +224,22 @@ class UrlTests: XCTestCase {
     
     func testUrlSuffixSign() {
         var url1 = cloudinary?.createUrl().setFormat("jpg").generate("test", signUrl: true)
-        var sig1 = url1?.components(separatedBy: "--")[1]
+        var sig1 = url1?.componentsSeparatedByString("--")[1]
         
         var config = CLDConfiguration(cloudName: "test123", apiKey: "a", apiSecret: "b", privateCdn: true)
         cloudinary = CLDCloudinary(configuration: config)
         var url2 = cloudinary?.createUrl().setSuffix("hello").setFormat("jpg").generate("test", signUrl: true)
-        var sig2 = url2?.components(separatedBy: "--")[1]
+        var sig2 = url2?.componentsSeparatedByString("--")[1]
         
         XCTAssertEqual(sig1, sig2)
         
         url1 = cloudinary?.createUrl().setFormat("jpg").setTransformation(CLDTransformation().setAngle(0)).generate("test", signUrl: true)
-        sig1 = url1?.components(separatedBy: "--")[1]
+        sig1 = url1?.componentsSeparatedByString("--")[1]
         
         config = CLDConfiguration(cloudName: "test123", apiKey: "a", apiSecret: "b", privateCdn: true)
         cloudinary = CLDCloudinary(configuration: config)
         url2 = cloudinary?.createUrl().setSuffix("hello").setFormat("jpg").setTransformation(CLDTransformation().setAngle(0)).generate("test", signUrl: true)
-        sig2 = url2?.components(separatedBy: "--")[1]
+        sig2 = url2?.componentsSeparatedByString("--")[1]
         
         XCTAssertEqual(sig1, sig2)
     }
@@ -247,7 +247,7 @@ class UrlTests: XCTestCase {
     func testUrlSuffixRaw() {
         let config = CLDConfiguration(cloudName: "test123", apiKey: "a", apiSecret: "b", privateCdn: true)
         cloudinary = CLDCloudinary(configuration: config)
-        XCTAssertEqual(cloudinary?.createUrl().setSuffix("hello").setResourceType(.raw).generate("test"), "http://test123-res.cloudinary.com/files/test/hello")
+        XCTAssertEqual(cloudinary?.createUrl().setSuffix("hello").setResourceType(.Raw).generate("test"), "http://test123-res.cloudinary.com/files/test/hello")
     }
     
     func testUseRootPathShared() {
@@ -258,8 +258,8 @@ class UrlTests: XCTestCase {
     func testUseRootPathNonImageUpload() {
         let config = CLDConfiguration(cloudName: "test123", apiKey: "a", apiSecret: "b", privateCdn: true)
         cloudinary = CLDCloudinary(configuration: config)
-        XCTAssertNil(cloudinary?.createUrl().setUseRootPath(true).setType(.facebook).generate("test"))
-        XCTAssertNil(cloudinary?.createUrl().setUseRootPath(true).setResourceType(.raw).generate("test"))
+        XCTAssertNil(cloudinary?.createUrl().setUseRootPath(true).setType(.Facebook).generate("test"))
+        XCTAssertNil(cloudinary?.createUrl().setUseRootPath(true).setResourceType(.Raw).generate("test"))
     }
     
     func testUseRootPathPrivateCdn() {
@@ -316,17 +316,17 @@ class UrlTests: XCTestCase {
     
     func testFetchFormat() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setType(.fetch).setFormat("jpg").generate("http://cloudinary.com/images/logo.png"), "http://res.cloudinary.com/test123/image/fetch/f_jpg/http://cloudinary.com/images/logo.png")
+        XCTAssertEqual(cloudinary?.createUrl().setType(.Fetch).setFormat("jpg").generate("http://cloudinary.com/images/logo.png"), "http://res.cloudinary.com/test123/image/fetch/f_jpg/http://cloudinary.com/images/logo.png")
     }
     
     func testEffect() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setEffect(.sepia)).generate("test"), "http://res.cloudinary.com/test123/image/upload/e_sepia/test")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setEffect(.Sepia)).generate("test"), "http://res.cloudinary.com/test123/image/upload/e_sepia/test")
     }
     
     func testEffectWithParam() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setEffect(.sepia, param: "10")).generate("test"), "http://res.cloudinary.com/test123/image/upload/e_sepia:10/test")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setEffect(.Sepia, param: "10")).generate("test"), "http://res.cloudinary.com/test123/image/upload/e_sepia:10/test")
     }
     
     func testDensity() {
@@ -360,9 +360,9 @@ class UrlTests: XCTestCase {
     func testDprAuto() {
         let url = cloudinary?.createUrl().setTransformation(CLDTransformation().setDprAuto()).generate("test")
         var dprValue = ""
-        if let finalUrl = url, let range = finalUrl.range(of: "dpr_") {
-            let startIndex = range.upperBound
-            dprValue = finalUrl[startIndex..<(finalUrl.index(startIndex, offsetBy: 1))]
+        if let range = url?.rangeOfString("dpr_") {
+            let dprRange = range.endIndex..<range.endIndex.advancedBy(1)
+            dprValue = url?.substringWithRange(dprRange) ?? ""
         }
         
         if !dprValue.isEmpty {
@@ -401,7 +401,7 @@ class UrlTests: XCTestCase {
     
     func testSignUrls() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setWidth(10).setHeight(20).setCrop(.crop)).setVersion("1234").generate("image.jpg", signUrl: true), "http://res.cloudinary.com/test123/image/upload/s--Ai4Znfl3--/c_crop,h_20,w_10/v1234/image.jpg")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setWidth(10).setHeight(20).setCrop(.Crop)).setVersion("1234").generate("image.jpg", signUrl: true), "http://res.cloudinary.com/test123/image/upload/s--Ai4Znfl3--/c_crop,h_20,w_10/v1234/image.jpg")
     }
     
     func testEscapePublicId() {
@@ -415,55 +415,55 @@ class UrlTests: XCTestCase {
     func testPreloadedImage() {
         
         XCTAssertEqual(cloudinary?.createUrl().generate("raw/private/v1234567/document.docx"), "http://res.cloudinary.com/test123/raw/private/v1234567/document.docx")
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setWidth(1.1).setCrop(.scale)).generate("image/private/v1234567/img.jpg"), "http://res.cloudinary.com/test123/image/private/c_scale,w_1.1/v1234567/img.jpg")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setWidth(1.1).setCrop(.Scale)).generate("image/private/v1234567/img.jpg"), "http://res.cloudinary.com/test123/image/private/c_scale,w_1.1/v1234567/img.jpg")
     }
     
     func testVideoCodec() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoCodec("auto")).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vc_auto/video_id")
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoCodecAndProfileAndLevel("h264", videoProfile: "basic", level: "3.1")).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vc_h264:basic:3.1/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoCodec("auto")).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vc_auto/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoCodecAndProfileAndLevel("h264", videoProfile: "basic", level: "3.1")).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vc_h264:basic:3.1/video_id")
     }
     
     func testAudioCodec() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setAudioCodec("acc")).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/ac_acc/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setAudioCodec("acc")).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/ac_acc/video_id")
     }
     
     func testBitRate() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setBitRate("1m")).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/br_1m/video_id")
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setBitRate(2048)).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/br_2048/video_id")
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setBitRate(kb: 44)).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/br_44k/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setBitRate("1m")).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/br_1m/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setBitRate(2048)).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/br_2048/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setBitRate(kb: 44)).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/br_44k/video_id")        
     }
     
     func testAudioFrequency() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setAudioFrequency("44100")).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/af_44100/video_id")
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setAudioFrequency(44100)).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/af_44100/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setAudioFrequency("44100")).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/af_44100/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setAudioFrequency(44100)).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/af_44100/video_id")
     }
     
     func testVideoSampling() {
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoSampling("20")).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vs_20/video_id")
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoSampling(frames: 20)).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vs_20/video_id")
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoSampling(delay: 2.3)).setResourceType(.video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vs_2.3s/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoSampling("20")).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vs_20/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoSampling(frames: 20)).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vs_20/video_id")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setVideoSampling(delay: 2.3)).setResourceType(.Video).generate("video_id"), "http://res.cloudinary.com/test123/video/upload/vs_2.3s/video_id")
     }
     
     func testOverlayOptions() {
         
         XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDLayer().setPublicId(publicId: "logo"))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_logo/test")
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDLayer().setPublicId(publicId: "logo").setType(.private))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_private:logo/test")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDLayer().setPublicId(publicId: "logo").setType(.Private))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_private:logo/test")
         
         XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDLayer().setPublicId(publicId: "logo").setFormat(format: "png"))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_logo.png/test")
         
         XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDLayer().setPublicId(publicId: "folder/logo"))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_folder:logo/test")
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDLayer().setPublicId(publicId: "cat").setResourceType(.video))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_video:cat/test")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDLayer().setPublicId(publicId: "cat").setResourceType(.Video))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_video:cat/test")
         
         XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDTextLayer().setText(text: "Hello World, Nice to meet you?").setFontFamily(fontFamily: "Arial").setFontSize(18))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_text:Arial_18:Hello%20World%E2%80%9A%20Nice%20to%20meet%20you%3F/test")
         
-        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDTextLayer().setText(text: "Hello World, Nice to meet you?").setFontFamily(fontFamily: "Arial").setFontSize(18).setFontStyle(.italic).setFontWeight(.bold).setLetterSpacing(4))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_text:Arial_18_bold_italic_letter_spacing_4:Hello%20World%E2%80%9A%20Nice%20to%20meet%20you%3F/test")
+        XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDTextLayer().setText(text: "Hello World, Nice to meet you?").setFontFamily(fontFamily: "Arial").setFontSize(18).setFontStyle(.Italic).setFontWeight(.Bold).setLetterSpacing(4))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_text:Arial_18_bold_italic_letter_spacing_4:Hello%20World%E2%80%9A%20Nice%20to%20meet%20you%3F/test")
         
         XCTAssertEqual(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDSubtitlesLayer().setPublicId(publicId: "sample_sub_en.srt"))).generate("test"), "http://res.cloudinary.com/test123/image/upload/l_subtitles:sample_sub_en.srt/test")
         
@@ -471,9 +471,9 @@ class UrlTests: XCTestCase {
     }
     
     func testOverlayErrors() {
-        XCTAssertNil(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDTextLayer().setText(text: "text").setFontStyle(.italic))).generate("test"))
+        XCTAssertNil(cloudinary?.createUrl().setTransformation(CLDTransformation().setOverlayWithLayer(CLDTextLayer().setText(text: "text").setFontStyle(.Italic))).generate("test"))
         
-        XCTAssertNil(cloudinary?.createUrl().setTransformation(CLDTransformation().setUnderlayWithLayer(CLDLayer().setResourceType(.video))).generate("test"))
+        XCTAssertNil(cloudinary?.createUrl().setTransformation(CLDTransformation().setUnderlayWithLayer(CLDLayer().setResourceType(.Video))).generate("test"))
     }
     
 }

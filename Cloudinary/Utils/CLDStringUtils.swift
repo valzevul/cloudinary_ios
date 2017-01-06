@@ -25,12 +25,6 @@
 import Foundation
 
 
-//internal extension Int {
-//    func format(f: String) -> String {
-//        return String(format: "%\(f)d", self)
-//    }
-//}
-
 internal extension Double {
     func cldFormat(f: String) -> String {
         return String(format: "%\(f)f", self)
@@ -40,7 +34,7 @@ internal extension Double {
 internal extension Float {
     
     func cldFloatFormat() -> String {
-        return cldFormat(f: ".1")
+        return cldFormat(".1")
     }
     
     func cldFormat(f: String) -> String {
@@ -51,24 +45,22 @@ internal extension Float {
 internal extension String {
     
     internal func cldSmartEncodeUrl() -> String? {
-        let customAllowedSet =  NSCharacterSet(charactersIn:"!*'\"();@&=+$,?%#[] ").inverted
-        return addingPercentEncoding(withAllowedCharacters: customAllowedSet)
+        let customAllowedSet =  NSCharacterSet(charactersInString:"!*'\"();@&=+$,?%#[] ").invertedSet
+        return stringByAddingPercentEncodingWithAllowedCharacters(customAllowedSet)
     }
     
     internal subscript (i: Int) -> Character {
-        return self[startIndex.cldAdvance(i, for: self)]
+        return self[startIndex.advancedBy(i)]
     }
     
-    subscript (r: CountableClosedRange<Int>) -> String {
-        get {
-            let startIndex =  self.index(self.startIndex, offsetBy: r.lowerBound)
-            let endIndex = self.index(startIndex, offsetBy: r.upperBound - r.lowerBound)
-            return self[startIndex...endIndex]
-        }
-    }  
+    internal subscript (r: Range<Int>) -> String {
+        let start = startIndex.advancedBy(r.startIndex)
+        let end = start.advancedBy(r.endIndex - r.startIndex)
+        return self[start..<end]
+    }    
     
     internal func cldStringByAppendingPathComponent(str: String) -> String {
-        return self + ("/\(str)")
+        return stringByAppendingString("/\(str)")
     }
     
     internal func cldAsBool() -> Bool {
@@ -76,28 +68,14 @@ internal extension String {
             return true
         }
         if let intValue = Int(self) {
-            return NSNumber(value: intValue).boolValue
+            return NSNumber(integer: intValue).boolValue
         }
         return false
     }
 }
 
-internal extension String.Index{
-//    func successor(in string:String)->String.Index{
-//        return string.index(after: self)
-//    }
-//
-//    func predecessor(in string:String)->String.Index{
-//        return string.index(before: self)
-//    }
-    
-    func cldAdvance(_ offset:Int, `for` string:String)->String.Index{
-        return string.index(self, offsetBy: offset)
-    }
-}
 
-
-internal func cldParamValueAsString(value: Any) -> String? {
+internal func cldParamValueAsString(value: AnyObject) -> String? {
     if let valueStr = value as? String {
         if valueStr.isEmpty {
             return nil
@@ -105,10 +83,10 @@ internal func cldParamValueAsString(value: Any) -> String? {
         return valueStr
     }
     else if let valueNum = value as? NSNumber {
-        return String(describing: valueNum)
+        return String(valueNum)
     }
     else {
-        printLog(.error, text: "The parameter value must ba a String or a Number")
+        printLog(.Error, text: "The parameter value must ba a String or a Number")
         return nil
     }
 }

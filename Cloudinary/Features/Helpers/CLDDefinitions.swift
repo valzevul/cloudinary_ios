@@ -27,19 +27,19 @@ import Foundation
 // MARK: URL Type
 
 @objc public enum CLDType: Int, CustomStringConvertible {
-    case upload, fetch, facebook, twitter, twitterName, sprite, `private`, authenticated
+    case Upload, Fetch, Facebook, Twitter, TwitterName, Sprite, Private, Authenticated
     
     public var description: String {
         get {
             switch self {
-            case .upload:               return "upload"
-            case .facebook:             return "facebook"
-            case .fetch:                return "fetch"
-            case .twitter:              return "twitter"
-            case .twitterName:          return "twitter_name"
-            case .sprite:               return "sprite"
-            case .private:              return "private"
-            case .authenticated:        return "authenticated"
+            case .Upload:               return "upload"
+            case .Facebook:             return "facebook"
+            case .Fetch:                return "fetch"
+            case .Twitter:              return "twitter"
+            case .TwitterName:          return "twitter_name"
+            case .Sprite:               return "sprite"
+            case .Private:              return "private"
+            case .Authenticated:        return "authenticated"
             }
         }
     }
@@ -48,15 +48,15 @@ import Foundation
 // MARK: Resource Type
 
 @objc public enum CLDUrlResourceType: Int, CustomStringConvertible {
-    case image, raw, video, auto
+    case Image, Raw, Video, Auto
     
     public var description: String {
         get {
             switch self {
-            case .image:        return "image"
-            case .raw:          return "raw"
-            case .video:        return "video"
-            case .auto:         return "auto"
+            case .Image:        return "image"
+            case .Raw:          return "raw"
+            case .Video:        return "video"
+            case .Auto:         return "auto"
             }
         }
     }
@@ -65,13 +65,13 @@ import Foundation
 // MARK: - Upload Params
 
 @objc public enum CLDModeration: Int, CustomStringConvertible {
-    case manual, webpurify
+    case Manual, Webpurify
     
     public var description: String {
         get {
             switch self {
-            case .manual:           return "manual"
-            case .webpurify:        return "webpurify"
+            case .Manual:           return "manual"
+            case .Webpurify:        return "webpurify"
             }
         }
     }
@@ -80,39 +80,39 @@ import Foundation
 // MARK: - Text Params
 
 @objc public enum CLDFontWeight: Int, CustomStringConvertible {
-    case normal, bold
+    case Normal, Bold
     
     public var description: String {
         get {
             switch self {
-            case .normal:           return "normal"
-            case .bold:             return "bold"
+            case .Normal:           return "normal"
+            case .Bold:             return "bold"
             }
         }
     }
 }
 
 @objc public enum CLDFontStyle: Int, CustomStringConvertible {
-    case normal, italic
+    case Normal, Italic
     
     public var description: String {
         get {
             switch self {
-            case .normal:           return "normal"
-            case .italic:           return "italic"
+            case .Normal:           return "normal"
+            case .Italic:           return "italic"
             }
         }
     }
 }
 
 @objc public enum CLDTextDecoration: Int, CustomStringConvertible {
-    case none, underline
+    case None, Underline
     
     public var description: String {
         get {
             switch self {
-            case .none:             return "none"
-            case .underline:        return "underline"
+            case .None:             return "none"
+            case .Underline:        return "underline"
             }
         }
     }

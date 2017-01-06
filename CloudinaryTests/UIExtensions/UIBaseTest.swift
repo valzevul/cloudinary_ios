@@ -24,7 +24,6 @@
 
 import XCTest
 import Cloudinary
-import UIKit
 
 class UIBaseTest: NetworkBaseTest {
     
@@ -35,7 +34,7 @@ class UIBaseTest: NetworkBaseTest {
     override func setUp() {
         super.setUp()
         
-        cloudinary!.cachePolicy = .none
+        cloudinary!.cachePolicy = .None
         continueAfterFailure = false        
     }
     

@@ -24,94 +24,94 @@
 
 import Foundation
 
-@objc open class CLDUploadResult: CLDBaseResult {
+@objc public class CLDUploadResult: CLDBaseResult {
     
     
     // MARK: - Getters
     
-    open var publicId: String? {
-        return getParam(.publicId) as? String
+    public var publicId: String? {
+        return getParam(.PublicId) as? String
     }
     
-    open var version: String? {
-        guard let version = getParam(.version) else {
+    public var version: String? {
+        guard let version = getParam(.Version) else {
             return nil
         }
-        return String(describing: version)
+        return String(version)
     }
     
-    open var url: String? {
-        return getParam(.url) as? String
+    public var url: String? {
+        return getParam(.Url) as? String
     }
     
-    open var secureUrl: String? {
-        return getParam(.secureUrl) as? String
+    public var secureUrl: String? {
+        return getParam(.SecureUrl) as? String
     }
     
-    open var resourceType: String? {
-        return getParam(.resourceType) as? String
+    public var resourceType: String? {
+        return getParam(.ResourceType) as? String
     }
     
-    open var signature: String? {
-        return getParam(.signature) as? String
+    public var signature: String? {
+        return getParam(.Signature) as? String
     }
     
-    open var createdAt: String? {
-        return getParam(.createdAt) as? String
+    public var createdAt: String? {
+        return getParam(.CreatedAt) as? String
     }
     
-    open var length: Double? {
-        return getParam(.length) as? Double
+    public var length: Double? {
+        return getParam(.Length) as? Double
     }
     
-    open var tags: [String]? {
-        return getParam(.tags) as? [String]
+    public var tags: [String]? {
+        return getParam(.Tags) as? [String]
     }
     
-    open var moderation: AnyObject? {
-        return getParam(.moderation)
+    public var moderation: AnyObject? {
+        return getParam(.Moderation)
     }
     
     // MARK: Image Params
     
-    open var width: Int? {
-        return getParam(.width) as? Int
+    public var width: Int? {
+        return getParam(.Width) as? Int
     }
     
-    open var height: Int? {
-        return getParam(.height) as? Int
+    public var height: Int? {
+        return getParam(.Height) as? Int
     }
     
-    open var format: String? {
-        return getParam(.format) as? String
+    public var format: String? {
+        return getParam(.Format) as? String
     }
     
-    open var exif: [String : String]? {
-        return getParam(.exif) as? [String : String]
+    public var exif: [String : String]? {
+        return getParam(.Exif) as? [String : String]
     }
     
-    open var metadata: [String : String]? {
-        return getParam(.metadata) as? [String : String]
+    public var metadata: [String : String]? {
+        return getParam(.Metadata) as? [String : String]
     }
     
-    open var faces: AnyObject? {
-        return getParam(.faces)
+    public var faces: AnyObject? {
+        return getParam(.Faces)
     }
     
-    open var colors: AnyObject? {
-        return getParam(.colors)
+    public var colors: AnyObject? {
+        return getParam(.Colors)
     }
     
-    open var phash: String? {
-        return getParam(.phash) as? String
+    public var phash: String? {
+        return getParam(.Phash) as? String
     }
     
-    open var deleteToken: String? {
-        return getParam(.deleteToken) as? String
+    public var deleteToken: String? {
+        return getParam(.DeleteToken) as? String
     }
     
-    open var info: CLDInfo? {
-        guard let info = getParam(.info) as? [String : AnyObject] else {
+    public var info: CLDInfo? {
+        guard let info = getParam(.Info) as? [String : AnyObject] else {
             return nil
         }
         return CLDInfo(json: info)
@@ -119,54 +119,54 @@ import Foundation
     
     // MARK: Video Params
     
-    open var video: CLDVideo? {
-        guard let video = getParam(.video) as? [String : AnyObject] else {
+    public var video: CLDVideo? {
+        guard let video = getParam(.Video) as? [String : AnyObject] else {
             return nil
         }
         return CLDVideo(json: video)
     }
     
-    open var audio: CLDAudio? {
-        guard let audio = getParam(.audio) as? [String : AnyObject] else {
+    public var audio: CLDAudio? {
+        guard let audio = getParam(.Audio) as? [String : AnyObject] else {
             return nil
         }
         return CLDAudio(json: audio)
     }
     
-    open var frameRte: Double? {
-        return getParam(.frameRate) as? Double
+    public var frameRte: Double? {
+        return getParam(.FrameRate) as? Double
     }
     
-    open var bitRate: Int? {
-        return getParam(.bitRate) as? Int
+    public var bitRate: Int? {
+        return getParam(.BitRate) as? Int
     }
     
-    open var duration: Double? {
-        return getParam(.duration) as? Double
+    public var duration: Double? {
+        return getParam(.Duration) as? Double
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: UploadResultKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: UploadResultKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
     enum UploadResultKey: CustomStringConvertible {
-        case signature
-        case deleteToken // Image
-        case video, audio, frameRate, bitRate, duration // Video
+        case Signature
+        case DeleteToken // Image
+        case Video, Audio, FrameRate, BitRate, Duration // Video
         
         var description: String {
             switch self {
-            case .signature:        return "signature"
+            case .Signature:        return "signature"
                 
-            case .deleteToken:      return "delete_token"
+            case .DeleteToken:      return "delete_token"
                 
-            case .video:            return "video"
-            case .audio:            return "audio"
-            case .frameRate:        return "frame_rate"
-            case .bitRate:          return "bit_rate"
-            case .duration:         return "duration"
+            case .Video:            return "video"
+            case .Audio:            return "audio"
+            case .FrameRate:        return "frame_rate"
+            case .BitRate:          return "bit_rate"
+            case .Duration:         return "duration"
             }
         }
     }
@@ -175,82 +175,82 @@ import Foundation
 
 // MARK: - Video Result
 
-@objc open class CLDVideo: CLDBaseResult {
+@objc public class CLDVideo: CLDBaseResult {
     
-    open var format: String? {
-        return getParam(.pixFormat) as? String
+    public var format: String? {
+        return getParam(.PixFormat) as? String
     }
     
-    open var codec: String? {
-        return getParam(.codec) as? String
+    public var codec: String? {
+        return getParam(.Codec) as? String
     }
     
-    open var level: Int? {
-        return getParam(.level) as? Int
+    public var level: Int? {
+        return getParam(.Level) as? Int
     }
     
-    open var bitRate: Int? {
-        return getParam(.bitRate) as? Int
+    public var bitRate: Int? {
+        return getParam(.BitRate) as? Int
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: VideoKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: VideoKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum VideoKey: CustomStringConvertible {
-        case pixFormat, codec, level, bitRate
+    private enum VideoKey: CustomStringConvertible {
+        case PixFormat, Codec, Level, BitRate
         
         var description: String {
             switch self {
-            case .pixFormat:        return "pix_format"
-            case .codec:            return "codec"
-            case .level:            return "level"
-            case .bitRate:          return "bit_rate"
+            case .PixFormat:        return "pix_format"
+            case .Codec:            return "codec"
+            case .Level:            return "level"
+            case .BitRate:          return "bit_rate"
             }
         }
     }
 }
 
-@objc open class CLDAudio: CLDBaseResult {
+@objc public class CLDAudio: CLDBaseResult {
     
-    open var codec: String? {
-        return getParam(.codec) as? String
+    public var codec: String? {
+        return getParam(.Codec) as? String
     }
     
-    open var bitRate: Int? {
-        return getParam(.bitRate) as? Int
+    public var bitRate: Int? {
+        return getParam(.BitRate) as? Int
     }
     
-    open var frequency: Int? {
-        return getParam(.frequency) as? Int
+    public var frequency: Int? {
+        return getParam(.Frequency) as? Int
     }
     
-    open var channels: Int? {
-        return getParam(.channels) as? Int
+    public var channels: Int? {
+        return getParam(.Channels) as? Int
     }
     
-    open var channelLayout: String? {
-        return getParam(.channelLayout) as? String
+    public var channelLayout: String? {
+        return getParam(.ChannelLayout) as? String
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: AudioKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: AudioKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum AudioKey: CustomStringConvertible {
-        case codec, bitRate, frequency, channels, channelLayout
+    private enum AudioKey: CustomStringConvertible {
+        case Codec, BitRate, Frequency, Channels, ChannelLayout
         
         var description: String {
             switch self {
-            case .codec:            return "codec"
-            case .bitRate:          return "bit_rate"
-            case .frequency:        return "frequency"
-            case .channels:         return "channels"
-            case .channelLayout:    return "channel_layout"
+            case .Codec:            return "codec"
+            case .BitRate:          return "bit_rate"
+            case .Frequency:        return "frequency"
+            case .Channels:         return "channels"
+            case .ChannelLayout:    return "channel_layout"
             }
         }
     }

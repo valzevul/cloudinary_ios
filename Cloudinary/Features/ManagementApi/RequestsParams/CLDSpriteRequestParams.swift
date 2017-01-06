@@ -27,7 +27,7 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing a request to generate a sprite.
  */
-@objc open class CLDSpriteRequestParams: CLDRequestParams {
+@objc public class CLDSpriteRequestParams: CLDRequestParams {
 
     
     // MARK: Init
@@ -69,8 +69,7 @@ import Foundation
     
     - returns:                      A new instance of CLDSpriteRequestParams.
     */
-    @discardableResult
-    open func setTransformation(_ transformation: CLDTransformation) -> Self {
+    public func setTransformation(transformation: CLDTransformation) -> Self {
         if let stringRep = transformation.asString() {
             setParam(SpriteParams.Transformation.rawValue, value: stringRep)
         }
@@ -84,8 +83,7 @@ import Foundation
      
      - returns:                      A new instance of CLDSpriteRequestParams.
      */
-    @discardableResult
-    open func setFormat(_ format: String) -> Self {
+    public func setFormat(format: String) -> Self {
         super.setParam(SpriteParams.Format.rawValue, value: format)
         return self
     }
@@ -97,8 +95,7 @@ import Foundation
      
      - returns:                      A new instance of CLDSpriteRequestParams.
      */
-    @discardableResult
-    open func setAsync(_ async: Bool) -> Self {
+    public func setAsync(async: Bool) -> Self {
         super.setParam(SpriteParams.Async.rawValue, value: async)
         return self
     }
@@ -110,15 +107,14 @@ import Foundation
      
      - returns:                      A new instance of CLDSpriteRequestParams.
      */
-    @discardableResult
-    open func setNotificationUrl(_ notificationUrl: String) -> Self {
+    public func setNotificationUrl(notificationUrl: String) -> Self {
         super.setParam(SpriteParams.NotificationUrl.rawValue, value: notificationUrl)
         return self
     }
     
     
     
-    fileprivate enum SpriteParams: String {
+    private enum SpriteParams: String {
         case Tag =                  "tag"
         case Transformation =       "transformation"
         case Format =               "format"

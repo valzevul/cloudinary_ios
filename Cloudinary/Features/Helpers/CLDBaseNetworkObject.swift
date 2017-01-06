@@ -24,10 +24,10 @@
 
 import Foundation
 
-@objc open class CLDBaseNetworkObject: NSObject {
+@objc public class CLDBaseNetworkObject: NSObject {
 
     
-    internal fileprivate(set) var networkCoordinator: CLDNetworkCoordinator!
+    internal private(set) var networkCoordinator: CLDNetworkCoordinator!
     
     internal override init() {
         super.init()

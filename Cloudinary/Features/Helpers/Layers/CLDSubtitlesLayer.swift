@@ -24,7 +24,7 @@
 
 import Foundation
 
-@objc open class CLDSubtitlesLayer: CLDTextLayer {
+@objc public class CLDSubtitlesLayer: CLDTextLayer {
     
     // MARK: - Init
     
@@ -35,6 +35,6 @@ import Foundation
      */
     public override init() {
         super.init()
-        resourceType = String(describing: LayerResourceType.subtitles)
+        resourceType = String(LayerResourceType.Subtitles)
     }
 }

@@ -24,14 +24,14 @@
 
 import Foundation
 
-@objc open class CLDRekognitionFace: CLDBaseResult {
+@objc public class CLDRekognitionFace: CLDBaseResult {
     
-    open var status: String? {
-        return getParam(.status) as? String
+    public var status: String? {
+        return getParam(.Status) as? String
     }
     
-    open var faces: [CLDFace]? {
-        guard let facesArr = getParam(.faces) as? [[String : AnyObject]] else {
+    public var faces: [CLDFace]? {
+        guard let facesArr = getParam(.Faces) as? [[String : AnyObject]] else {
             return nil
         }
         var faces: [CLDFace] = []
@@ -43,17 +43,17 @@ import Foundation
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: CLDRekognitionFaceKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDRekognitionFaceKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDRekognitionFaceKey: CustomStringConvertible {
-        case status, facesData
+    private enum CLDRekognitionFaceKey: CustomStringConvertible {
+        case Status, FacesData
         
         var description: String {
             switch self {
-            case .status:           return "status"
-            case .facesData:        return "data"
+            case .Status:           return "status"
+            case .FacesData:        return "data"
             }
         }
     }

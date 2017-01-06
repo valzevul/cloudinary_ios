@@ -29,7 +29,7 @@ import Foundation
  It allows the options to add a response closure to be called once the request has finished,
  as well as performing actions on the request, such as cancelling, suspending or resuming it.
  */
-@objc open class CLDTextRequest: CLDRequest {
+@objc public class CLDTextRequest: CLDRequest {
     
     /**
      Set a response closure to be called once the request has finished.
@@ -38,17 +38,16 @@ import Foundation
      
      - returns:                          The same instance of CLDTextRequest.
      */
-    @discardableResult
-    open func response(_ completionHandler: ((_ result: CLDTextResult?, _ error: NSError?) -> ())?) -> CLDTextRequest {
+    public func response(completionHandler: ((result: CLDTextResult?, error: NSError?) -> ())?) -> CLDTextRequest {
         responseRaw { (response, error) in
             if let res = response as? [String : AnyObject] {
-                completionHandler?(CLDTextResult(json: res), nil)
+                completionHandler?(result: CLDTextResult(json: res), error: nil)
             }
             else if let err = error {
-                completionHandler?(nil, err)
+                completionHandler?(result: nil, error: err)
             }
             else {
-                completionHandler?(nil, CLDError.generalError())
+                completionHandler?(result: nil, error: CLDError.generalError())
             }
         }
         

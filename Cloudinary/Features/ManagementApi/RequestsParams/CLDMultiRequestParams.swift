@@ -27,7 +27,7 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing a request to generate a multi-image.
  */
-open class CLDMultiRequestParams: CLDRequestParams {
+public class CLDMultiRequestParams: CLDRequestParams {
 
     // MARK: Init
     
@@ -68,8 +68,7 @@ open class CLDMultiRequestParams: CLDRequestParams {
     
     - returns:                      A new instance of CLDMultiRequestParams.
     */
-    @discardableResult
-    open func setTransformation(_ transformation: CLDTransformation) -> Self {
+    public func setTransformation(transformation: CLDTransformation) -> Self {
         if let trans = transformation.asString() {        
             super.setParam(MultiParams.Transformation.rawValue, value: trans)
         }
@@ -83,8 +82,7 @@ open class CLDMultiRequestParams: CLDRequestParams {
      
      - returns:                      A new instance of CLDMultiRequestParams.
      */
-    @discardableResult
-    open func setFormat(_ format: String) -> Self {
+    public func setFormat(format: String) -> Self {
         super.setParam(MultiParams.Format.rawValue, value: format)
         return self
     }
@@ -96,8 +94,7 @@ open class CLDMultiRequestParams: CLDRequestParams {
      
      - returns:                      A new instance of CLDMultiRequestParams.
      */
-    @discardableResult
-    open func setAsync(_ async: Bool) -> Self {
+    public func setAsync(async: Bool) -> Self {
         super.setParam(MultiParams.Async.rawValue, value: async)
         return self
     }
@@ -109,15 +106,14 @@ open class CLDMultiRequestParams: CLDRequestParams {
      
      - returns:                      A new instance of CLDMultiRequestParams.
      */
-    @discardableResult
-    open func setNotificationUrl(_ notificationUrl: String) -> Self {
+    public func setNotificationUrl(notificationUrl: String) -> Self {
         super.setParam(MultiParams.NotificationUrl.rawValue, value: notificationUrl)
         return self
     }
     
     
     
-    fileprivate enum MultiParams: String {
+    private enum MultiParams: String {
         case Tag =                  "tag"
         case Transformation =       "transformation"
         case Format =               "format"

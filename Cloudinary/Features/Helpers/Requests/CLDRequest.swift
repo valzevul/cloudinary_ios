@@ -29,12 +29,12 @@ import Foundation
  It allows the options to add a response closure to be called once the request has finished,
  as well as performing actions on the request, such as cancelling, suspending or resuming it.
  */
-@objc open class CLDRequest: NSObject {
+@objc public class CLDRequest: NSObject {
     
     
-    internal var networkRequest: CLDNetworkDataRequest
+    internal var networkRequest: CLDNetworkRequest        
     
-    internal init(networkRequest: CLDNetworkDataRequest) {
+    internal init(networkRequest: CLDNetworkRequest) {
         self.networkRequest = networkRequest
     }
     
@@ -44,21 +44,21 @@ import Foundation
     /**
      Resume the request.
      */
-    open func resume() {
+    public func resume() {
        networkRequest.resume()
     }
     
     /**
      Suspend the request.
      */
-    open func suspend() {
+    public func suspend() {
         networkRequest.suspend()
     }
     
     /**
      Cancel the request.
      */
-    open func cancel() {
+    public func cancel() {
         networkRequest.cancel()
     }
     
@@ -71,8 +71,7 @@ import Foundation
      
      - returns:                          The same instance of CLDRequest.
      */
-    @discardableResult
-    open func responseRaw(_ completionHandler: @escaping (_ response: Any?, _ error: NSError?) -> ()) -> CLDRequest {
+    public func responseRaw(completionHandler: (response: AnyObject?, error: NSError?) -> ()) -> CLDRequest {
         networkRequest.response(completionHandler)
         return self
     }        

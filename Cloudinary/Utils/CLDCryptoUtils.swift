@@ -25,67 +25,60 @@ import Foundation
 import CLDCrypto
 
 
-public func cloudinarySignParamsUsingSecret(_ paramsToSign: [String : Any],cloudinaryApiSecret: String) -> String {
+public func cloudinarySignParamsUsingSecret(paramsToSign: [String : AnyObject],cloudinaryApiSecret: String) -> String {
     var paramsArr: [String] = []
-    let sortedKeys = paramsToSign.keys.sorted(){$0 < $1} // sort by dictionary keys
+    let sortedKeys = paramsToSign.keys.sort(){$0 < $1} // sort by dictionary keys
     for key in sortedKeys {
         if let value = paramsToSign[key] {
             var paramValue: String?
             if value is [String] {
-                if let valueArr: [String] = value as? [String] , valueArr.count > 0 {
-                    paramValue = valueArr.joined(separator: ",")
+                if let valueArr: [String] = value as? [String] where valueArr.count > 0 {
+                    paramValue = valueArr.joinWithSeparator(",")
                 }
                 else {continue}
             }
-            else if let valueStr = cldParamValueAsString(value: value) {
+            else if let valueStr = cldParamValueAsString(value) {
                 paramValue = valueStr
             }
             
             if let paramValue = paramValue {
                 let encodedParam = [key, paramValue]
-                paramsArr.append(encodedParam.joined(separator: "="))
+                paramsArr.append(encodedParam.joinWithSeparator("="))
             }
         }
     }
     
-    let toSign = paramsArr.joined(separator: "&")
+    let toSign = paramsArr.joinWithSeparator("&")
     return toSign.sha1_base8(cloudinaryApiSecret)
 }
 
 internal extension String {
     
-    internal func sha1_base8(_ secret: String?) -> String {
-        let data = self.data(using: String.Encoding.utf8)!
-        var digest = [UInt8](repeating: 0, count:Int(CC_SHA1_DIGEST_LENGTH))
-        let ctx = UnsafeMutablePointer<CC_SHA1_CTX>.allocate(capacity: 1)
+    internal func sha1_base8(secret: String?) -> String {
+        let data = self.dataUsingEncoding(NSUTF8StringEncoding)!
+        var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
+        let ctx = UnsafeMutablePointer<CC_SHA1_CTX>.alloc(1)
         CC_SHA1_Init(ctx)
-        
-        _ = data.withUnsafeBytes { bytes in
-            CC_SHA1_Update(ctx, bytes, CC_LONG(data.count))
-        }
-        
+        CC_SHA1_Update(ctx, data.bytes, CC_LONG(data.length))
         if let secret = secret {
-            let secretData = secret.data(using: String.Encoding.utf8)!
-            _ = secretData.withUnsafeBytes { bytes in
-                CC_SHA1_Update(ctx, bytes, CC_LONG(secretData.count))
-            }
+            let secretData = secret.dataUsingEncoding(NSUTF8StringEncoding)!
+            CC_SHA1_Update(ctx, secretData.bytes, CC_LONG(secretData.length))
         }
         
         CC_SHA1_Final(&digest, ctx)
         let hexBytes = digest.map { String(format: "%02hhx", $0) }
-        return hexBytes.joined()
+        return hexBytes.joinWithSeparator("")
     }
     
     internal func sha1_base64() -> String {
-        var digest = [UInt8](repeating: 0, count:Int(CC_SHA1_DIGEST_LENGTH))
-        let cStr = NSString(string: self).utf8String
+        var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
+        let cStr = NSString(string: self).UTF8String
         CC_SHA1(cStr, CC_LONG(strlen(cStr)), &digest)
-        
-        let data = Data(bytes: digest, count: MemoryLayout<UInt8>.size * digest.count)
-        let base64 = data.base64EncodedString(options: NSData.Base64EncodingOptions(rawValue: 0))
-        let encoded = base64.replacingOccurrences(of: "/", with: "_")
-                            .replacingOccurrences(of: "+", with: "-")
-                            .replacingOccurrences(of: "=", with: "")
+        let data = NSData(bytes: digest, length: sizeof(UInt8) * digest.count)
+        let base64 = data.base64EncodedStringWithOptions(NSDataBase64EncodingOptions(rawValue: 0))
+        let encoded = base64.stringByReplacingOccurrencesOfString("/", withString: "_")
+                            .stringByReplacingOccurrencesOfString("+", withString: "-")
+                            .stringByReplacingOccurrencesOfString("=", withString: "")
         
         
         return encoded
@@ -96,11 +89,9 @@ internal extension String {
     }    
     
     internal func md5() -> String {
-        var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        if let data = self.data(using: String.Encoding.utf8) {
-            _ = data.withUnsafeBytes { bytes in
-                CC_MD5(bytes, CC_LONG(data.count), &digest)
-            }
+        var digest = [UInt8](count: Int(CC_MD5_DIGEST_LENGTH), repeatedValue: 0)
+        if let data = self.dataUsingEncoding(NSUTF8StringEncoding) {
+            CC_MD5(data.bytes, CC_LONG(data.length), &digest)
         }
         
         var digestHex = ""
@@ -112,7 +103,7 @@ internal extension String {
     }
 }
 
-private func crc32(_ string: String) -> UInt32 {
+private func crc32(string: String) -> UInt32 {
     
     let crcTable:[UInt32] = [0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
         0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
@@ -148,16 +139,16 @@ private func crc32(_ string: String) -> UInt32 {
         0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d]
     
     
-    guard let data = string.data(using: String.Encoding.utf8)
+    guard let data = string.dataUsingEncoding(NSUTF8StringEncoding)
         else {
         return 0
     }
     
     var crc:UInt32 = 0xffffffff
-    var buffer = (data as NSData).bytes.bindMemory(to: UInt8.self, capacity: data.count)
+    var buffer = UnsafePointer<UInt8>(data.bytes)
     
-    for _ in 1...data.count {
-        crc = (crc >> 8) ^ crcTable[Int((crc ^ UInt32(buffer.pointee)) & 0xff)]
+    for _ in 1...data.length {
+        crc = (crc >> 8) ^ crcTable[Int((crc ^ UInt32(buffer.memory)) & 0xff)]
         buffer += 1
     }
     

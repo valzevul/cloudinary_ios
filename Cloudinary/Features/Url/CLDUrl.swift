@@ -27,9 +27,9 @@ import Foundation
 /**
  The CLDUrl class represents a URL to a remote asset either on your Cloudinary cloud, or from another remote source.
 */
-@objc open class CLDUrl: NSObject {
+@objc public class CLDUrl: NSObject {
     
-    fileprivate struct CLDUrlConsts {
+    private struct CLDUrlConsts {
         static let CLD_OLD_AKAMAI_CHARED_CDN = "cloudinary-a.akamaihd.net"
         static let CLD_SHARED_CDN = "res\(CLD_COM)"
         static let CLD_COM = ".cloudinary.com"
@@ -38,51 +38,51 @@ import Foundation
     /**
      The current Cloudinary session configuration.
     */
-    fileprivate var config: CLDConfiguration!
+    private var config: CLDConfiguration!
     
     /**
      The media source of the URL. default is upload.
      */
-    fileprivate var type: String = String(describing: CLDType.upload)
+    private var type: String = String(CLDType.Upload)
     
     /**
      The resource type of the remote asset that the URL points to. default is image.
      */
-    fileprivate var resourceType: String = String(describing: CLDUrlResourceType.image)
+    private var resourceType: String = String(CLDUrlResourceType.Image)
     
     /**
      The format of the remote asset that the URL points to.
      */
-    fileprivate var format: String?
+    private var format: String?
     
     /**
      The version of the remote asset that the URL points to.
      */
-    fileprivate var version: String?
+    private var version: String?
     
     /**
      A suffix to the URL that points to the remote asset (private CDN only, image/upload and raw/upload only).
      */
-    fileprivate var suffix: String?
+    private var suffix: String?
     
     /**
      A boolean parameter indicating whether or not to use a root path instead of a full path (image/upload only).
      */
-    fileprivate var useRootPath: Bool = false
+    private var useRootPath: Bool = false
     
     /**
      A boolean parameter indicating whether or not to use a shorten URL (image/upload only).
      */
-    fileprivate var shortenUrl: Bool = false
+    private var shortenUrl: Bool = false
     
     /**
      The transformation to be apllied on the remote asset.
      */
-    fileprivate var transformation: CLDTransformation?
+    private var transformation: CLDTransformation?
     
     // MARK: - Init
     
-    fileprivate override init() {
+    private override init() {
         super.init()
     }
     
@@ -101,8 +101,8 @@ import Foundation
     - returns:               the same instance of CLDUrl.
     */
     @objc(setTypeFromType:)
-    open func setType(_ type: CLDType) -> CLDUrl {
-        return setType(String(describing: type))
+    public func setType(type: CLDType) -> CLDUrl {
+        return setType(String(type))
     }
     
     /**
@@ -112,7 +112,7 @@ import Foundation
      
      - returns:               the same instance of CLDUrl.
      */
-    open func setType(_ type: String) -> CLDUrl {
+    public func setType(type: String) -> CLDUrl {
         self.type = type
         return self
     }
@@ -125,8 +125,8 @@ import Foundation
      - returns:                      the same instance of CLDUrl.
      */
     @objc(setResourceTypeFromUrlResourceType:)
-    open func setResourceType(_ resourceType: CLDUrlResourceType) -> CLDUrl {
-        return setResourceType(String(describing: resourceType))
+    public func setResourceType(resourceType: CLDUrlResourceType) -> CLDUrl {
+        return setResourceType(String(resourceType))
     }
     
     /**
@@ -136,7 +136,7 @@ import Foundation
      
      - returns:                      the same instance of CLDUrl.
      */
-    open func setResourceType(_ resourceType: String) -> CLDUrl {
+    public func setResourceType(resourceType: String) -> CLDUrl {
         self.resourceType = resourceType
         return self
     }
@@ -148,7 +148,7 @@ import Foundation
      
      - returns:                      the same instance of CLDUrl.
      */
-    open func setFormat(_ format: String) -> CLDUrl {
+    public func setFormat(format: String) -> CLDUrl {
         self.format = format
         return self
     }
@@ -161,7 +161,7 @@ import Foundation
      
      - returns:                      the same instance of CLDUrl.
      */
-    open func setVersion(_ version: String) -> CLDUrl {
+    public func setVersion(version: String) -> CLDUrl {
         self.version = version
         return self
     }
@@ -173,7 +173,7 @@ import Foundation
      
      - returns:                      the same instance of CLDUrl.
      */
-    open func setSuffix(_ suffix: String) -> CLDUrl {
+    public func setSuffix(suffix: String) -> CLDUrl {
         self.suffix = suffix
         return self
     }
@@ -185,7 +185,7 @@ import Foundation
      
      - returns:                      the same instance of CLDUrl.
      */
-    open func setUseRootPath(_ useRootPath: Bool) -> CLDUrl {
+    public func setUseRootPath(useRootPath: Bool) -> CLDUrl {
         self.useRootPath = useRootPath
         return self
     }
@@ -197,7 +197,7 @@ import Foundation
      
      - returns:                      the same instance of CLDUrl.
      */
-    open func setShortenUrl(_ shortenUrl: Bool) -> CLDUrl {
+    public func setShortenUrl(shortenUrl: Bool) -> CLDUrl {
         self.shortenUrl = shortenUrl
         return self
     }
@@ -209,8 +209,7 @@ import Foundation
      
      - returns:                      the same instance of CLDUrl.
      */
-    @discardableResult
-    open func setTransformation(_ transformation: CLDTransformation) -> CLDUrl {
+    public func setTransformation(transformation: CLDTransformation) -> CLDUrl {
         self.transformation = transformation
         return self
     }
@@ -225,10 +224,10 @@ import Foundation
      
      - returns:                  The generated string URL representation.
      */
-    open func generate(_ publicId: String, signUrl: Bool = false) -> String? {
+    public func generate(publicId: String, signUrl: Bool = false) -> String? {
         
         if signUrl && config.apiSecret == nil {
-            printLog(.error, text: "Must supply api_secret for signing urls")
+            printLog(.Error, text: "Must supply api_secret for signing urls")
             return nil
         }
         
@@ -239,31 +238,31 @@ import Foundation
         var format = self.format
         
         
-        let preloadedComponentsMatch = GenerateUrlRegex.preloadedRegex.matches(in: sourceName, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, sourceName.characters.count))
+        let preloadedComponentsMatch = GenerateUrlRegex.preloadedRegex.matchesInString(sourceName, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, sourceName.characters.count))
         if preloadedComponentsMatch.count > 0 {
             if let preloadedComponents = preloadedComponentsMatch.first {
-                resourceType = (sourceName as NSString).substring(with: preloadedComponents.rangeAt(1))
-                type = (sourceName as NSString).substring(with: preloadedComponents.rangeAt(2))
-                version = (sourceName as NSString).substring(with: preloadedComponents.rangeAt(3))
-                sourceName = (sourceName as NSString).substring(with: preloadedComponents.rangeAt(4))
+                resourceType = (sourceName as NSString).substringWithRange(preloadedComponents.rangeAtIndex(1))
+                type = (sourceName as NSString).substringWithRange(preloadedComponents.rangeAtIndex(2))
+                version = (sourceName as NSString).substringWithRange(preloadedComponents.rangeAtIndex(3))
+                sourceName = (sourceName as NSString).substringWithRange(preloadedComponents.rangeAtIndex(4))
             }
         }
         
         let transformation = self.transformation ?? CLDTransformation()
-        if let unwrappedFormat = format , !unwrappedFormat.isEmpty && type == String(describing: CLDType.fetch) {
+        if let unwrappedFormat = format where !unwrappedFormat.isEmpty && type == String(CLDType.Fetch) {
             transformation.setFetchFormat(unwrappedFormat)
             format = nil
         }
         
         guard let transformationStr = transformation.asString() else {
-                printLog(.error, text: "An invalid transformation was added.")
+                printLog(.Error, text: "An invalid transformation was added.")
                 return nil
         }
         
         if  version.isEmpty &&
-            sourceName.contains("/") &&
-            sourceName.range(of: "^v[0-9]+/.*", options: NSString.CompareOptions.regularExpression, range: nil, locale: nil) == nil &&
-            sourceName.range(of: "^https?:/.*", options: [NSString.CompareOptions.regularExpression, NSString.CompareOptions.caseInsensitive], range: nil, locale: nil) == nil
+            sourceName.containsString("/") &&
+            sourceName.rangeOfString("^v[0-9]+/.*", options: NSStringCompareOptions.RegularExpressionSearch, range: nil, locale: nil) == nil &&
+            sourceName.rangeOfString("^https?:/.*", options: [NSStringCompareOptions.RegularExpressionSearch, NSStringCompareOptions.CaseInsensitiveSearch], range: nil, locale: nil) == nil
         {
             version = "1"
         }
@@ -274,24 +273,24 @@ import Foundation
         
         var toSign: String = String()
         if !transformationStr.isEmpty {
-            toSign.append("\(transformationStr)/")
+            toSign.appendContentsOf("\(transformationStr)/")
         }
         
-        if sourceName.range(of: "^https?:/.*", options: [NSString.CompareOptions.regularExpression, NSString.CompareOptions.caseInsensitive], range: nil, locale: nil) != nil {
+        if sourceName.rangeOfString("^https?:/.*", options: [NSStringCompareOptions.RegularExpressionSearch, NSStringCompareOptions.CaseInsensitiveSearch], range: nil, locale: nil) != nil {
             if let encBasename = sourceName.cldSmartEncodeUrl() {
-                toSign.append(encBasename)
+                toSign.appendContentsOf(encBasename)
                 sourceName = encBasename
             }
         }
         else {
-            if let encBasename = sourceName.removingPercentEncoding?.cldSmartEncodeUrl() {
-                toSign.append(encBasename)
+            if let encBasename = sourceName.stringByRemovingPercentEncoding?.cldSmartEncodeUrl() {
+                toSign.appendContentsOf(encBasename)
                 sourceName = encBasename
             }
             
-            if let suffix = suffix , !suffix.isEmpty {
-                if suffix.range(of: "[/\\.]", options: NSString.CompareOptions.regularExpression, range: nil, locale: nil) != nil {
-                    printLog(.error, text: "URL Suffix should not include . or /")
+            if let suffix = suffix where !suffix.isEmpty {
+                if suffix.rangeOfString("[/\\.]", options: NSStringCompareOptions.RegularExpressionSearch, range: nil, locale: nil) != nil {
+                    printLog(.Error, text: "URL Suffix should not include . or /")
                     return nil
                 }
                 sourceName = "\(sourceName)/\(suffix)"
@@ -299,7 +298,7 @@ import Foundation
             
             if let unwrappedFormat = format {
                 sourceName = "\(sourceName).\(unwrappedFormat)"
-                toSign.append(".\(unwrappedFormat)")
+                toSign.appendContentsOf(".\(unwrappedFormat)")
             }
         }
         
@@ -312,43 +311,43 @@ import Foundation
         var signature = String()
         if signUrl {
             if let apiSecret = config.apiSecret {
-                toSign.append(apiSecret)
+                toSign.appendContentsOf(apiSecret)
             }
             let encoded = toSign.sha1_base64()
             signature = "s--\(encoded[0...7])--"
         }
         
-        let url = [prefix, resourceTypeAndType, signature, transformationStr, version , sourceName].joined(separator: "/")
+        let url = [prefix, resourceTypeAndType, signature, transformationStr, version ?? String(), sourceName].joinWithSeparator("/")
         
-        let regex = try! NSRegularExpression(pattern: "([^:])\\/+", options: NSRegularExpression.Options.caseInsensitive)
+        let regex = try! NSRegularExpression(pattern: "([^:])\\/+", options: NSRegularExpressionOptions.CaseInsensitive)
         
-        return regex.stringByReplacingMatches(in: url, options: [], range: NSMakeRange(0, url.characters.count), withTemplate: "$1/")
+        return regex.stringByReplacingMatchesInString(url, options: [], range: NSMakeRange(0, url.characters.count), withTemplate: "$1/")
     }
     
-    fileprivate struct GenerateUrlRegex {
-        fileprivate static let preloadedRegexString = "^([^/]+)/([^/]+)/v([0-9]+)/([^#]+)(#[0-9a-f]+)?$"
+    private struct GenerateUrlRegex {
+        private static let preloadedRegexString = "^([^/]+)/([^/]+)/v([0-9]+)/([^#]+)(#[0-9a-f]+)?$"
         static let preloadedRegex: NSRegularExpression = {
-            return try! NSRegularExpression(pattern:preloadedRegexString, options: NSRegularExpression.Options.caseInsensitive)
+            return try! NSRegularExpression(pattern:preloadedRegexString, options: NSRegularExpressionOptions.CaseInsensitive)
         }()
     }
     
     // MARK: - Helpers
     
-    fileprivate func finalizePrefix(_ basename: String) -> String {
+    private func finalizePrefix(basename: String) -> String {
         var prefix = String()
 
         if config.secure {
             var secureDistribution = String()
-            if let secureDist = config.secureDistribution , (secureDist != CLDUrlConsts.CLD_OLD_AKAMAI_CHARED_CDN && !secureDist.isEmpty) {
+            if let secureDist = config.secureDistribution where (secureDist != CLDUrlConsts.CLD_OLD_AKAMAI_CHARED_CDN && !secureDist.isEmpty) {
                 secureDistribution = secureDist
             }
             else {
-                secureDistribution = config.privateCdn ? "\(config.cloudName!)-\(CLDUrlConsts.CLD_SHARED_CDN)" : CLDUrlConsts.CLD_SHARED_CDN
+                secureDistribution = config.privateCdn ? "\(config.cloudName)-\(CLDUrlConsts.CLD_SHARED_CDN)" : CLDUrlConsts.CLD_SHARED_CDN
             }
             
             if config.secureCdnSubdomain {
                 let sharedDomain = "res-\(basename.toCRC32() % 5 + 1)\(CLDUrlConsts.CLD_COM)"
-                secureDistribution = secureDistribution.replacingOccurrences(of: CLDUrlConsts.CLD_SHARED_CDN, with: sharedDomain)
+                secureDistribution = secureDistribution.stringByReplacingOccurrencesOfString(CLDUrlConsts.CLD_SHARED_CDN, withString: sharedDomain)
             }
             
             prefix = "https://\(secureDistribution)"
@@ -364,7 +363,7 @@ import Foundation
         else {
             prefix = "http://"
             if config.privateCdn {
-                prefix += "\(config.cloudName!)-"
+                prefix += "\(config.cloudName)-"
             }
             prefix += "res"
             if config.cdnSubdomain {
@@ -374,49 +373,48 @@ import Foundation
         }
         
         if !config.privateCdn {
-            prefix += "/\(config.cloudName!)"
+            prefix += "/\(config.cloudName)"
         }
         return prefix
     }
     
-    fileprivate func finalizeResourceTypeAndType(_ resourceType: String, type: String) -> String? {
-        if !config.privateCdn, let urlSuffix = suffix , !urlSuffix.isEmpty {
-            printLog(.error, text: "URL Suffix only supported in private CDN")
+    private func finalizeResourceTypeAndType(resourceType: String, type: String) -> String? {
+        if !config.privateCdn, let urlSuffix = suffix where !urlSuffix.isEmpty {
+            printLog(.Error, text: "URL Suffix only supported in private CDN")
             return nil
         }
         
         var resourceTypeAndType = "\(resourceType)/\(type)"
-        if let urlSuffix = suffix , !urlSuffix.isEmpty {
-            if resourceTypeAndType == "\(String(describing: CLDUrlResourceType.image))/\(String(describing: CLDType.upload))" {
+        if let urlSuffix = suffix where !urlSuffix.isEmpty {
+            if resourceTypeAndType == "\(String(CLDUrlResourceType.Image))/\(String(CLDType.Upload))" {
                resourceTypeAndType = "images"
             }
-            else if resourceTypeAndType == "\(String(describing: CLDUrlResourceType.raw))/\(String(describing: CLDType.upload))" {
+            else if resourceTypeAndType == "\(String(CLDUrlResourceType.Raw))/\(String(CLDType.Upload))" {
                 resourceTypeAndType = "files"
             }
             else {
-                printLog(.error, text: "URL Suffix only supported for image/upload and raw/upload")
+                printLog(.Error, text: "URL Suffix only supported for image/upload and raw/upload")
                 return nil
             }
         }
         
         if useRootPath {
-            if resourceTypeAndType == "\(String(describing: CLDUrlResourceType.image))/\(String(describing: CLDType.upload))" || resourceTypeAndType == "images" {
+            if resourceTypeAndType == "\(String(CLDUrlResourceType.Image))/\(String(CLDType.Upload))" || resourceTypeAndType == "images" {
                resourceTypeAndType = String()
             }
             else {
-                printLog(.error, text: "Root path only supported for image/upload")
+                printLog(.Error, text: "Root path only supported for image/upload")
                 return nil
             }
         }
         
-        if shortenUrl && resourceTypeAndType == "\(String(describing: CLDUrlResourceType.image))/\(String(describing: CLDType.upload))" {
+        if shortenUrl && resourceTypeAndType == "\(String(CLDUrlResourceType.Image))/\(String(CLDType.Upload))" {
             resourceTypeAndType = "iu"
         }
         
         return resourceTypeAndType
     }
     
-   
 }
 
 

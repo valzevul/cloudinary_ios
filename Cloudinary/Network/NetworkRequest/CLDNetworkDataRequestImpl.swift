@@ -1,5 +1,5 @@
 //
-//  CLDDataNetworkRequest.swift
+//  CLDNetworkDataRequestImpl.swift
 //
 //  Copyright (c) 2016 Cloudinary (http://cloudinary.com)
 //
@@ -25,44 +25,13 @@
 import Foundation
 import Alamofire
 
-internal class CLDNetworkDataRequestImpl<T: DataRequest>: CLDGenericNetworkRequest<T>, CLDNetworkDataRequest {
+internal class CLDNetworkDataRequestImpl: CLDGenericNetworkRequest, CLDNetworkDataRequest {
     
-    @discardableResult
-    public func progress(_ progress: ((Progress) -> Void)?) -> CLDNetworkDataRequest {
-        if let progress = progress{
-            request.downloadProgress(closure: progress)
-        }
-        
+    func progress(block: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())?) -> CLDNetworkDataRequest {
+        request.progress(block)
         return self
     }
     
-    //MARK: - Handlers
-    
-    func response(_ completionHandler: ((_ response: Any?, _ error: NSError?) -> ())?) -> CLDNetworkRequest {
-        
-        request.responseJSON { response in
-            if let value = response.result.value as? [String : AnyObject] {
-                if let error = value["error"] as? [String : AnyObject] {
-                    let code = response.response?.statusCode ?? CLDError.CloudinaryErrorCode.generalErrorCode.rawValue
-                    let err = CLDError.error(code: code, userInfo: error)
-                    completionHandler?(nil, err)
-                }
-                else {
-                    completionHandler?(value as AnyObject?, nil)
-                }
-            }
-            else if let err = response.result.error {
-                let error = err as NSError
-                completionHandler?(nil, error)
-            }
-            else {
-                completionHandler?(nil, CLDError.generalError())
-            }
-            
-        }
-        
-        return self
-    }
 }
 
 

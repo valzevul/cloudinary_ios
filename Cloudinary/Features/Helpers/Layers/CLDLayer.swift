@@ -27,7 +27,7 @@ import Foundation
 /**
  The CLDLayer is used to help adding an overlay or underlay layer to a transformation.
 */
-@objc open class CLDLayer: NSObject {
+@objc public class CLDLayer: NSObject {
     
     internal var publicId: String?
     internal var format: String?
@@ -54,7 +54,7 @@ import Foundation
     
     - returns:                 The same instance of CLDLayer.
     */
-    open func setPublicId(publicId: String) -> CLDLayer {
+    public func setPublicId(publicId publicId: String) -> CLDLayer {
         self.publicId = publicId
         return self
     }
@@ -66,7 +66,7 @@ import Foundation
      
      - returns:                 The same instance of CLDLayer.
      */
-    open func setFormat(format: String) -> CLDLayer {
+    public func setFormat(format format: String) -> CLDLayer {
         self.format = format
         return self
     }
@@ -79,8 +79,8 @@ import Foundation
      - returns:                     The same instance of CLDLayer.
      */
     @objc(setResourceTypeFromLayerResourceType:)
-    open func setResourceType(_ resourceType: LayerResourceType) -> CLDLayer {
-        return setResourceType(String(describing: resourceType))
+    public func setResourceType(resourceType: LayerResourceType) -> CLDLayer {
+        return setResourceType(String(resourceType))
     }
     
     /**
@@ -91,7 +91,7 @@ import Foundation
      - returns:                     The same instance of CLDLayer.
      */
     @objc(setResourceTypeFromString:)
-    open func setResourceType(_ resourceType: String) -> CLDLayer {
+    public func setResourceType(resourceType: String) -> CLDLayer {
         self.resourceType = resourceType
         return self
     }
@@ -104,8 +104,8 @@ import Foundation
      - returns:         The same instance of CLDLayer.
      */
     @objc(setTypeFromType:)
-    open func setType(_ type: CLDType) -> CLDLayer {
-        return setType(String(describing: type))
+    public func setType(type: CLDType) -> CLDLayer {
+        return setType(String(type))
     }
     
     /**
@@ -116,23 +116,23 @@ import Foundation
      - returns:         The same instance of CLDLayer.
      */
     @objc(setTypeFromString:)
-    open func setType(_ rawType: String) -> CLDLayer {
+    public func setType(rawType: String) -> CLDLayer {
         type = rawType
         return self
     }
     
     // MARK: - Helpers
     
-    fileprivate func isResourceTypeTextual(_ resourceType: String?) -> Bool {
+    private func isResourceTypeTextual(resourceType: String?) -> Bool {
         guard let resourceType = resourceType else {
                 return false
         }
-        return resourceType == String(describing: LayerResourceType.text) || resourceType == String(describing: LayerResourceType.subtitles)
+        return resourceType == String(LayerResourceType.Text) || resourceType == String(LayerResourceType.Subtitles)
     }
     
     internal func getFinalPublicId() -> String? {
         var finalPublicId: String?
-        if let pubId = publicId , !pubId.isEmpty, let format = format , !format.isEmpty {
+        if let pubId = publicId where !pubId.isEmpty, let format = format where !format.isEmpty {
             finalPublicId = "\(pubId).\(format)"
         }
         return finalPublicId ?? publicId
@@ -141,21 +141,21 @@ import Foundation
     internal func getStringComponents() -> [String]? {
         var components: [String] = []
         
-        if publicId == nil, let resourceType = resourceType , resourceType != String(describing: LayerResourceType.text) {
-            printLog(.error, text: "Must supply publicId for non-text layer")
+        if publicId == nil, let resourceType = resourceType where resourceType != String(LayerResourceType.Text) {
+            printLog(.Error, text: "Must supply publicId for non-text layer")
             return nil
         }
         
-        if let resourceType = resourceType , resourceType != String(describing: LayerResourceType.image) {
+        if let resourceType = resourceType where resourceType != String(LayerResourceType.Image) {
             components.append(resourceType)
         }
-        if let type = type , type != String(describing: CLDType.upload) {
+        if let type = type where type != String(CLDType.Upload) {
             components.append(type)
         }
         
         if !isResourceTypeTextual(resourceType) {
-            if let pubId = getFinalPublicId() , !pubId.isEmpty {
-                components.append(pubId.replacingOccurrences(of: "/", with: ":"))
+            if let pubId = getFinalPublicId() where !pubId.isEmpty {
+                components.append(pubId.stringByReplacingOccurrencesOfString("/", withString: ":"))
             }
         }
         
@@ -169,23 +169,23 @@ import Foundation
             return nil
         }
         
-        return components.joined(separator: ":")
+        return components.joinWithSeparator(":")
     }
     
     // MARK: - Params
     
     @objc public enum LayerResourceType: Int, CustomStringConvertible {
-        case image, raw, auto, text, subtitles, video
+        case Image, Raw, Auto, Text, Subtitles, Video
         
         public var description: String {
             get {
                 switch self {
-                case .image:        return "image"
-                case .raw:          return "raw"
-                case .auto:         return "auto"
-                case .text:         return "text"
-                case .subtitles:    return "subtitles"
-                case .video:        return "video"
+                case .Image:        return "image"
+                case .Raw:          return "raw"
+                case .Auto:         return "auto"
+                case .Text:         return "text"
+                case .Subtitles:    return "subtitles"
+                case .Video:        return "video"
                 }
             }
         }

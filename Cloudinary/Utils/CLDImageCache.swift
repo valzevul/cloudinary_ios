@@ -26,7 +26,7 @@ import Foundation
 
 
 @objc public enum CLDImageCachePolicy: Int {
-    case none, memory, disk
+    case None, Memory, Disk
 }
 
 private struct Defines {
@@ -41,16 +41,16 @@ private struct Defines {
 
 internal class CLDImageCache {
     
-    internal var cachePolicy = CLDImageCachePolicy.disk
+    internal var cachePolicy = CLDImageCachePolicy.Disk
     
-    fileprivate let memoryCache = NSCache<NSString, UIImage>()
+    private let memoryCache = NSCache()
     internal var maxMemoryTotalCost: Int = Defines.defaultMemoryTotalCostLimit {
         didSet{
             memoryCache.totalCostLimit = maxMemoryTotalCost
         }
     }
     
-    fileprivate let diskCacheDir: String
+    private let diskCacheDir: String
     
     
     // Disk Size Control
@@ -59,9 +59,9 @@ internal class CLDImageCache {
             clearDiskToMatchCapacityIfNeeded()
         }
     }
-    fileprivate var usedCacheSize: UInt64 = 0
+    private var usedCacheSize: UInt64 = 0
     
-    fileprivate let readWriteQueue: DispatchQueue
+    private let readWriteQueue: dispatch_queue_t
     
     internal static let defaultImageCache: CLDImageCache = CLDImageCache(name: Defines.cacheDefaultName)
     
@@ -72,40 +72,40 @@ internal class CLDImageCache {
         let cacheName = "\(Defines.cacheBaseName).\(name)"
         memoryCache.name = cacheName
         
-        let diskPath = diskCachePath ?? NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-        diskCacheDir = diskPath.cldStringByAppendingPathComponent(str: cacheName)
+        let diskPath = diskCachePath ?? NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first!
+        diskCacheDir = diskPath.cldStringByAppendingPathComponent(cacheName)
         
-        readWriteQueue = DispatchQueue(label: Defines.readWriteQueueName + name, attributes: [])
+        readWriteQueue = dispatch_queue_create(Defines.readWriteQueueName + name, DISPATCH_QUEUE_SERIAL)
         
         calculateCurrentDiskCacheSize()
         clearDiskToMatchCapacityIfNeeded()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(CLDImageCache.clearMemoryCache), name: NSNotification.Name.UIApplicationDidReceiveMemoryWarning, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CLDImageCache.clearMemoryCache), name: UIApplicationDidReceiveMemoryWarningNotification, object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     // MARK: - Get Object
     
-    internal func getImageForKey(_ key: String, completion: @escaping (_ image: UIImage?) -> ()) {
+    internal func getImageForKey(key: String, completion: (image: UIImage?) -> ()) {
         
         let callCompletionClosureOnMain = { (image: UIImage?) in
-            DispatchQueue.main.async {
-                completion(image)
+            dispatch_async(dispatch_get_main_queue()) {
+                completion(image: image)
             }
         }
         
-        if let memoryImage = memoryCache.object(forKey: key as NSString) {
+        if let memoryImage = memoryCache.objectForKey(key) as? UIImage {
             let path = getFilePathFromKey(key)
-            readWriteQueue.async {
+            dispatch_async(readWriteQueue) {
                 self.updateDiskImageModifiedDate(path)
             }
             callCompletionClosureOnMain(memoryImage)
         }
         else {
-            readWriteQueue.async {
+            dispatch_async(readWriteQueue) {
                 if let diskImage = self.getImageFromDiskForKey(key) {
                     callCompletionClosureOnMain(diskImage)
                     self.cacheImage(diskImage, data: nil, key: key, includingDisk: false, completion: nil)
@@ -119,37 +119,37 @@ internal class CLDImageCache {
     
     // MARK: - Set Object
     
-    internal func cacheImage(_ image: UIImage, data: Data?, key: String, completion: (() -> ())?) {
+    internal func cacheImage(image: UIImage, data: NSData?, key: String, completion: (() -> ())?) {
         cacheImage(image, data: data, key: key, includingDisk: true, completion: completion)
     }
     
-    fileprivate func cacheImage(_ image: UIImage, data: Data?, key: String, includingDisk: Bool, completion: (() -> ())?) {
+    private func cacheImage(image: UIImage, data: NSData?, key: String, includingDisk: Bool, completion: (() -> ())?) {
         
-        if cachePolicy == .memory || cachePolicy == .disk {
+        if cachePolicy == .Memory || cachePolicy == .Disk {
             let cost = Int(image.size.height * image.scale * image.size.width * image.scale)
-            memoryCache.setObject(image, forKey: key as NSString, cost: cost)
+            memoryCache.setObject(image, forKey: key, cost: cost)
         }
         
-        if cachePolicy == .disk && includingDisk {
+        if cachePolicy == .Disk && includingDisk {
             let path = getFilePathFromKey(key)
-            readWriteQueue.async {
+            dispatch_async(readWriteQueue) {
                 // If the original data was passed, save the data to the disk, otherwise default to UIImagePNGRepresentation to create the data from the image
                 if let data = data ?? UIImagePNGRepresentation(image) {
                     // create the cach directory if it doesn't exist
-                    if !FileManager.default.fileExists(atPath: self.diskCacheDir) {
+                    if !NSFileManager.defaultManager().fileExistsAtPath(self.diskCacheDir) {
                         do {
-                            try FileManager.default.createDirectory(atPath: self.diskCacheDir, withIntermediateDirectories: true, attributes: nil)
+                            try NSFileManager.defaultManager().createDirectoryAtPath(self.diskCacheDir, withIntermediateDirectories: true, attributes: nil)
                         } catch {
-                            printLog(.warning, text: "Failed while attempting to create the image cache directory.")
+                            printLog(.Warning, text: "Failed while attempting to create the image cache directory.")
                         }
                     }
                     
-                    FileManager.default.createFile(atPath: path, contents: data, attributes: nil)
-                    self.usedCacheSize += UInt64(data.count)
+                    NSFileManager.defaultManager().createFileAtPath(path, contents: data, attributes: nil)
+                    self.usedCacheSize += UInt64(data.length)
                     self.clearDiskToMatchCapacityIfNeeded()
                 }
                 else {
-                    printLog(.warning, text: "Couldn't convert image to data for key: \(key)")
+                    printLog(.Warning, text: "Couldn't convert image to data for key: \(key)")
                 }
                 completion?()
             }
@@ -161,21 +161,21 @@ internal class CLDImageCache {
     
     // MARK: - Remove Object
     
-    internal func removeCacheImageForKey(_ key: String) {
-        memoryCache.removeObject(forKey: key as NSString)
+    internal func removeCacheImageForKey(key: String) {
+        memoryCache.removeObjectForKey(key)
         let path = getFilePathFromKey(key)
         removeFileAtPath(path)
     }
     
-    fileprivate func removeFileAtPath(_ path: String) {
-        readWriteQueue.async {
+    private func removeFileAtPath(path: String) {
+        dispatch_async(readWriteQueue) {
             if let fileAttr = self.getFileAttributes(path) {
                 let fileSize = fileAttr.fileSize()
                 do {
-                    try FileManager.default.removeItem(atPath: path)
+                    try NSFileManager.defaultManager().removeItemAtPath(path)
                     self.usedCacheSize = self.usedCacheSize > fileSize ? self.usedCacheSize - fileSize : 0
                 } catch {
-                    printLog(.warning, text: "Failed while attempting to remove a cached file")
+                    printLog(.Warning, text: "Failed while attempting to remove a cached file")
                 }
             }
         }
@@ -183,30 +183,32 @@ internal class CLDImageCache {
     
     // MARK: - Clear
     
-    fileprivate func clearDiskToMatchCapacityIfNeeded() {
+    private func clearDiskToMatchCapacityIfNeeded() {
         if usedCacheSize < maxDiskCapacity {
             return
         }
         
         if let sortedUrls = sortedDiskImagesByModifiedDate() {
             for url in sortedUrls {
-                removeFileAtPath(url.path)
-                if usedCacheSize <= UInt64(maxDiskCapacity * Defines.thresholdPercentSize) {
-                    break
+                if let path = url.path {
+                    removeFileAtPath(path)
+                    if usedCacheSize <= UInt64(maxDiskCapacity * Defines.thresholdPercentSize) {
+                        break
+                    }
                 }
             }
         }
     }
     
-    @objc fileprivate func clearMemoryCache() {
+    @objc private func clearMemoryCache() {
         memoryCache.removeAllObjects()
     }
     
     // MARK: - State
     
-    internal func hasCachedImageForKey(_ key: String) -> Bool {
+    internal func hasCachedImageForKey(key: String) -> Bool {
         var hasCachedImage = false
-        if memoryCache.object(forKey: key as NSString) != nil {
+        if memoryCache.objectForKey(key) != nil {
             hasCachedImage = true
         }
         else {
@@ -217,89 +219,89 @@ internal class CLDImageCache {
         return hasCachedImage
     }
     
-    fileprivate func hasCachedDiskImageAtPath(_ path: String) -> Bool {
+    private func hasCachedDiskImageAtPath(path: String) -> Bool {
         var hasCachedImage = false
-        readWriteQueue.sync {
-            hasCachedImage = FileManager.default.fileExists(atPath: path)
+        dispatch_sync(readWriteQueue) {
+            hasCachedImage = NSFileManager.defaultManager().fileExistsAtPath(path)
         }
         return hasCachedImage
     }
 
     // MARK: - Disk Image Helpers
     
-    fileprivate func getImageFromDiskForKey(_ key: String) -> UIImage? {
+    private func getImageFromDiskForKey(key: String) -> UIImage? {
         if let data = getDataFromDiskForKey(key) {
             return data.cldToUIImageThreadSafe()
         }
         return nil
     }
     
-    fileprivate func getDataFromDiskForKey(_ key: String) -> Data? {
+    private func getDataFromDiskForKey(key: String) -> NSData? {
         let imagePath = getFilePathFromKey(key)
         updateDiskImageModifiedDate(imagePath)
-        return (try? Data(contentsOf: URL(fileURLWithPath: imagePath)))
+        return NSData(contentsOfFile: imagePath)
     }
     
-    fileprivate func getFilePathFromKey(_ key: String) -> String {
+    private func getFilePathFromKey(key: String) -> String {
         let fileName = getFileNameFromKey(key)
-        return diskCacheDir.cldStringByAppendingPathComponent(str: fileName)
+        return diskCacheDir.cldStringByAppendingPathComponent(fileName)
     }
     
-    fileprivate func getFileNameFromKey(_ key: String) -> String {
+    private func getFileNameFromKey(key: String) -> String {
         return key.md5()
     }
     
-    fileprivate func updateDiskImageModifiedDate(_ path: String) {
+    private func updateDiskImageModifiedDate(path: String) {
         do {
-            try FileManager.default.setAttributes([FileAttributeKey.modificationDate : Date()], ofItemAtPath: path)
+            try NSFileManager.defaultManager().setAttributes([NSFileModificationDate : NSDate()], ofItemAtPath: path)
         } catch {
-            printLog(.warning, text: "Failed attempting to update cached file modified date.")
+            printLog(.Warning, text: "Failed attempting to update cached file modified date.")
         }
     }
     
     // MARK: - Disk Capacity Helpers
     
-    fileprivate func calculateCurrentDiskCacheSize() {
-        let fileManager = FileManager.default
+    private func calculateCurrentDiskCacheSize() {
+        let fileManager = NSFileManager.defaultManager()
         usedCacheSize = 0
         do {
-            let contents = try fileManager.contentsOfDirectory(atPath: diskCacheDir)
+            let contents = try fileManager.contentsOfDirectoryAtPath(diskCacheDir)
             for pathComponent in contents {
-                let filePath = diskCacheDir.cldStringByAppendingPathComponent(str: pathComponent)
+                let filePath = diskCacheDir.cldStringByAppendingPathComponent(pathComponent)
                 if let fileAttr = getFileAttributes(filePath) {
                     usedCacheSize += fileAttr.fileSize()
                 }
             }
             
         } catch {
-            printLog(.warning, text: "Failed listing cache directiry")
+            printLog(.Warning, text: "Failed listing cache directiry")
         }
     }
     
-    fileprivate func sortedDiskImagesByModifiedDate() -> [URL]? {
-        let dirUrl = URL(fileURLWithPath: diskCacheDir)
+    private func sortedDiskImagesByModifiedDate() -> [NSURL]? {
+        let dirUrl = NSURL(fileURLWithPath: diskCacheDir)
         do {
-            let urlArray = try FileManager.default.contentsOfDirectory(at: dirUrl, includingPropertiesForKeys: [URLResourceKey.contentModificationDateKey], options:.skipsHiddenFiles)
+            let urlArray = try NSFileManager.defaultManager().contentsOfDirectoryAtURL(dirUrl, includingPropertiesForKeys: [NSURLContentModificationDateKey], options:.SkipsHiddenFiles)
             
-            return urlArray.map { url -> (URL, TimeInterval) in
+            return urlArray.map { url -> (NSURL, NSTimeInterval) in
                 var lastModified : AnyObject?
-                _ = try? (url as NSURL).getResourceValue(&lastModified, forKey: URLResourceKey.contentModificationDateKey)
+                _ = try? url.getResourceValue(&lastModified, forKey: NSURLContentModificationDateKey)
                 return (url, lastModified?.timeIntervalSinceReferenceDate ?? 0)
                 }
-                .sorted(by: { $0.1 > $1.1 }) // sort descending modification dates
+                .sort({ $0.1 > $1.1 }) // sort descending modification dates
                 .map { $0.0 }
         } catch {
-            printLog(.warning, text: "Failed listing cache directiry")
+            printLog(.Warning, text: "Failed listing cache directiry")
             return nil
         }
     }
     
-    fileprivate func getFileAttributes(_ path: String) -> NSDictionary? {
+    private func getFileAttributes(path: String) -> NSDictionary? {
         var fileAttr: NSDictionary?
         do {
-            fileAttr = try FileManager.default.attributesOfItem(atPath: path) as NSDictionary
+            fileAttr = try NSFileManager.defaultManager().attributesOfItemAtPath(path) as NSDictionary
         } catch {
-            printLog(.warning, text: "Failed while attempting to retrive a cached file attributes for filr at path: \(path)")
+            printLog(.Warning, text: "Failed while attempting to retrive a cached file attributes for filr at path: \(path)")
         }
         return fileAttr
     }    

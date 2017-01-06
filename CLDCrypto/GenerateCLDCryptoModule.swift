@@ -14,28 +14,28 @@ NSSetUncaughtExceptionHandler(handler)
 func runShellCommand(command: String) -> String? {
     let args: [String] = command.characters.split { $0 == " " }.map(String.init)
     let other = args[1..<args.count]
-    let outputPipe = Pipe()
-    let process = Process()
-    process.launchPath = args[0]
-    process.arguments = other.map { $0 }
-    process.standardOutput = outputPipe
-    process.launch()
-    process.waitUntilExit()
-
-    guard process	.terminationStatus == 0 else { return nil }
+    let outputPipe = NSPipe()
+    let task = NSTask()
+    task.launchPath = args[0]
+    task.arguments = other.map { $0 }
+    task.standardOutput = outputPipe
+    task.launch()
+    task.waitUntilExit()
+    
+    guard task.terminationStatus == 0 else { return nil }
 
     let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-    return String(data:outputData, encoding: .utf8)
+    return String(data:outputData, encoding: NSUTF8StringEncoding)
 }
 
 // MARK: - File System Utilities
 func fileExists(filePath: String) -> Bool {
-    return FileManager.default.fileExists(atPath: filePath)
+    return NSFileManager.defaultManager().fileExistsAtPath(filePath)
 }
 
 func mkdir(path: String) -> Bool {
     do {
-        try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+        try NSFileManager.defaultManager().createDirectoryAtPath(path, withIntermediateDirectories: true, attributes: nil)
         return true
     }
     catch {
@@ -45,14 +45,14 @@ func mkdir(path: String) -> Bool {
 
 // MARK: - String Utilities
 func trim(s: String) -> String {
-    return ((s as NSString).trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) as String)
+    return ((s as NSString).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) as String)
 }
 
 func trim(s: String?) -> String? {
-    return (s == nil) ? nil : (trim(s:s!) as String)
+    return (s == nil) ? nil : (trim(s!) as String)
 }
 
-func reportError(message: String) -> Never {
+@noreturn func reportError(message: String) {
     print("ERROR: \(message)")
     exit(1)
 }
@@ -62,16 +62,15 @@ enum SDK: String {
     case iOS = "iphoneos",
         iOSSimulator = "iphonesimulator"
     static let all = [iOS, iOSSimulator]
-
+    
 }
 
-guard let sdk = SDK(rawValue: CommandLine.arguments[1])?.rawValue else {
-    reportError(message: "SDK must be one of \(SDK.all.map { $0.rawValue })") }
-guard let sdkVersion = trim(s: runShellCommand(command: "/usr/bin/xcrun --sdk \(sdk) --show-sdk-version")) else {
-    reportError(message: "ERROR: Failed to determine SDK version for \(sdk)")
+guard let sdk = SDK(rawValue: Process.arguments[1])?.rawValue else { reportError("SDK must be one of \(SDK.all.map { $0.rawValue })") }
+guard let sdkVersion = trim(runShellCommand("/usr/bin/xcrun --sdk \(sdk) --show-sdk-version")) else {
+    reportError("ERROR: Failed to determine SDK version for \(sdk)")
 }
-guard let sdkPath = trim(s: runShellCommand(command: "/usr/bin/xcrun --sdk \(sdk) --show-sdk-path")) else {
-    reportError(message: "ERROR: Failed to determine SDK path for \(sdk)")
+guard let sdkPath = trim(runShellCommand("/usr/bin/xcrun --sdk \(sdk) --show-sdk-path")) else {
+    reportError("ERROR: Failed to determine SDK path for \(sdk)")
 }
 
 if verbose {
@@ -82,24 +81,24 @@ if verbose {
 
 let moduleDirectory: String
 let moduleFileName: String
-if CommandLine.arguments.count > 2 {
-    moduleDirectory =  "\(CommandLine.arguments[2])/Cloudinary/Frameworks/CLDCrypto/\(sdk)/CLDCrypto.framework"
+if Process.arguments.count > 2 {
+    moduleDirectory =  "\(Process.arguments[2])/Cloudinary/Frameworks/CLDCrypto/\(sdk)/CLDCrypto.framework"
     moduleFileName = "module.map"
 }
 else {
     moduleDirectory = "\(sdkPath)/System/Library/Frameworks/CLDCrypto/CLDCrypto.framework"
     moduleFileName = "module.map"
-
-    if fileExists(filePath: moduleDirectory) {
-        reportError(message: "Module directory already exists at \(moduleDirectory).")
+    
+    if fileExists(moduleDirectory) {
+        reportError("Module directory already exists at \(moduleDirectory).")
     }
 }
 
-if !mkdir(path: moduleDirectory) {
-    reportError(message: "Failed to create module directory \(moduleDirectory)")
+if !mkdir(moduleDirectory) {
+    reportError("Failed to create module directory \(moduleDirectory)")
 }
 
-let headerDir = "\(sdkPath)/usr/include/CommonCrypto"
+let headerDir = "\(sdkPath)/usr/include/CommonCrypto/"
 let headerFile1 = "\(headerDir)/CommonCrypto.h"
 let headerFile2 = "\(headerDir)/CommonRandom.h"
 
@@ -112,10 +111,11 @@ let moduleMapFile =
 
 let moduleMapPath = "\(moduleDirectory)/\(moduleFileName)"
 do {
-    try moduleMapFile.write(toFile:moduleMapPath, atomically: true, encoding:.utf8)
+    try moduleMapFile.writeToFile(moduleMapPath, atomically: true, encoding:NSUTF8StringEncoding)
     print("Successfully created module \(moduleMapPath)")
     exit(0)
 }
 catch {
-    reportError(message: "Failed to write module map file to \(moduleMapPath)")
+    reportError("Failed to write module map file to \(moduleMapPath)")
 }
+

@@ -23,47 +23,51 @@
 //
 
 import Foundation
-import Alamofire
 
-internal class CLDNetworkDownloadRequest: CLDNetworkDataRequestImpl<DataRequest>, CLDFetchImageRequest {
+internal class CLDNetworkDownloadRequest: CLDNetworkDataRequestImpl, CLDFetchImageRequest {
 
+    
     //MARK: - Handlers
     
-    func responseImage(_ completionHandler: ((_ responseImage: UIImage?, _ error: NSError?) -> ())?) -> CLDFetchImageRequest {
+    func responseImage(completionHandler: ((responseImage: UIImage?, error: NSError?) -> ())?) -> CLDFetchImageRequest {
         
         return responseData { (responseData, error) -> () in
             if let data = responseData {
                 if let image = data.cldToUIImageThreadSafe() {
-                    completionHandler?(image, nil)
+                    completionHandler?(responseImage: image, error: nil)
                 }
                 else {
-                    let error = CLDError.error(code: .failedCreatingImageFromData, message: "Failed creating an image from the received data.")
-                    completionHandler?(nil, error)
+                    let error = CLDError.error(code: .FailedCreatingImageFromData, message: "Failed creating an image from the received data.")
+                    completionHandler?(responseImage: nil, error: error)
                 }
             }
             else if let err = error {
-                completionHandler?(nil, err)
+                completionHandler?(responseImage: nil, error: err)
             }
             else {
-                completionHandler?(nil, CLDError.generalError())
+                completionHandler?(responseImage: nil, error: CLDError.generalError())
             }
         }
     }
     
+    func fetchProgress(block: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())?) -> CLDFetchImageRequest {
+        super.progress(block)
+        return self
+    }
+    
     // MARK: - Private
     
-    @discardableResult
-    internal func responseData(_ completionHandler: ((_ responseData: Data?, _ error: NSError?) -> ())?) -> CLDFetchImageRequest {
+    internal func responseData(completionHandler: ((responseData: NSData?, error: NSError?) -> ())?) -> CLDFetchImageRequest {
         request.responseData { response in
             if let imageData = response.result.value {
-                completionHandler?(imageData, nil)
+                completionHandler?(responseData: imageData, error: nil)
             }
             else if let err = response.result.error {
                 let error = err as NSError
-                completionHandler?(nil, error)
+                completionHandler?(responseData: nil, error: error)
             }
             else {
-                completionHandler?(nil, CLDError.generalError())
+                completionHandler?(responseData: nil, error: CLDError.generalError())
             }
         }
         return self

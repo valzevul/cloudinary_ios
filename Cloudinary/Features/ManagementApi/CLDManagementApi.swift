@@ -27,11 +27,11 @@ import Foundation
 /**
  The CLDManagementApi class is used to perform the available methods for managing your cloud assets.
 */
-@objc open class CLDManagementApi: CLDBaseNetworkObject {
+@objc public class CLDManagementApi: CLDBaseNetworkObject {
     
     // MARK: - Init
     
-    fileprivate override init() {
+    private override init() {
         super.init()
     }
     
@@ -56,8 +56,7 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
     */
-    @discardableResult
-    open func rename(_ publicId: String, to: String, overwrite: Bool? = nil, invalidate: Bool? = nil, params: CLDRenameRequestParams? = nil, completionHandler: ((_ result: CLDRenameResult?, _ error: Error?) -> ())? = nil) -> CLDRenameRequest {
+    public func rename(publicId: String, to: String, overwrite: Bool? = nil, invalidate: Bool? = nil, params: CLDRenameRequestParams? = nil, completionHandler: ((result: CLDRenameResult?, error: NSError?) -> ())? = nil) -> CLDRenameRequest {        
         let renameParams = CLDRenameRequestParams(fromPublicId: publicId, toPublicId: to, overwrite: overwrite, invalidate: invalidate)
         renameParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.Rename, params:renameParams)
@@ -77,8 +76,7 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func destroy(_ publicId: String, params: CLDDestroyRequestParams? = nil, completionHandler: ((_ result: CLDDeleteResult?, _ error: Error?) -> ())? = nil) -> CLDDeleteRequest {
+    public func destroy(publicId: String, params: CLDDestroyRequestParams? = nil, completionHandler: ((result: CLDDeleteResult?, error: NSError?) -> ())? = nil) -> CLDDeleteRequest {
         let destroyParams = CLDDestroyRequestParams(publicId: publicId)
         destroyParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.Destroy, params: destroyParams)
@@ -102,11 +100,10 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func addTag(_ tag: String, publicIds: [String], params: CLDTagsRequestParams? = nil, completionHandler: ((_ result: CLDTagResult?, _ error: Error?) -> ())? = nil) -> CLDTagRequest {
+    public func addTag(tag: String, publicIds: [String], params: CLDTagsRequestParams? = nil, completionHandler: ((result: CLDTagResult?, error: NSError?) -> ())? = nil) -> CLDTagRequest {
         let addTagParams = CLDTagsRequestParams(tag: tag, publicIds: publicIds)
         addTagParams.params.cldMerge(params?.params)
-        let request = networkCoordinator.callAction(.Tags, params: addTagParams.setCommand(.add))
+        let request = networkCoordinator.callAction(.Tags, params: addTagParams.setCommand(.Add))
         let tagRequest = CLDTagRequest(networkRequest: request)
         tagRequest.response(completionHandler)
         return tagRequest
@@ -126,12 +123,11 @@ import Foundation
      - returns:             An instance of `CLDTagRequest`,
      allowing the options to add response closure to be called once the request has finished,
      as well as performing actions on the request, such as cancelling, suspending or resuming it.
-     */
-    @discardableResult
-    open func removeTag(_ tag: String, publicIds: [String], params: CLDTagsRequestParams? = nil, completionHandler: ((_ result: CLDTagResult?, _ error: Error?) -> ())? = nil) -> CLDTagRequest {
+     */    
+    public func removeTag(tag: String, publicIds: [String], params: CLDTagsRequestParams? = nil, completionHandler: ((result: CLDTagResult?, error: NSError?) -> ())? = nil) -> CLDTagRequest {
         let removeTagParams = CLDTagsRequestParams(tag: tag, publicIds: publicIds)
         removeTagParams.params.cldMerge(params?.params)
-        let request = networkCoordinator.callAction(.Tags, params: removeTagParams.setCommand(.remove))
+        let request = networkCoordinator.callAction(.Tags, params: removeTagParams.setCommand(.Remove))
         let tagRequest = CLDTagRequest(networkRequest: request)
         tagRequest.response(completionHandler)
         return tagRequest
@@ -152,11 +148,10 @@ import Foundation
      allowing the options to add response closure to be called once the request has finished,
      as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func replaceTag(_ tag: String, publicIds: [String], params: CLDTagsRequestParams? = nil, completionHandler: ((_ result: CLDTagResult?, _ error: Error?) -> ())? = nil) -> CLDTagRequest {
+    public func replaceTag(tag: String, publicIds: [String], params: CLDTagsRequestParams? = nil, completionHandler: ((result: CLDTagResult?, error: NSError?) -> ())? = nil) -> CLDTagRequest {
         let replaceTagParams = CLDTagsRequestParams(tag: tag, publicIds: publicIds)
         replaceTagParams.params.cldMerge(params?.params)
-        let request = networkCoordinator.callAction(.Tags, params: replaceTagParams.setCommand(.replace))
+        let request = networkCoordinator.callAction(.Tags, params: replaceTagParams.setCommand(.Replace))
         let tagRequest = CLDTagRequest(networkRequest: request)
         tagRequest.response(completionHandler)
         return tagRequest
@@ -177,9 +172,8 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
     @objc(explicitPublicId:stringType:params:completionHandler:)
-    open func explicit(_ publicId: String, type: String, params: CLDExplicitRequestParams? = nil, completionHandler: ((_ result: CLDExplicitResult?, _ error: Error?) -> ())? = nil) -> CLDExplicitRequest {
+    public func explicit(publicId: String, type: String, params: CLDExplicitRequestParams? = nil, completionHandler: ((result: CLDExplicitResult?, error: NSError?) -> ())? = nil) -> CLDExplicitRequest {
         let explicitParams = CLDExplicitRequestParams(publicId: publicId, type: type)
         explicitParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.Explicit, params: explicitParams)
@@ -203,9 +197,8 @@ import Foundation
      allowing the options to add response closure to be called once the request has finished,
      as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func explicit(_ publicId: String, type: CLDType, params: CLDExplicitRequestParams? = nil, completionHandler: ((_ result: CLDExplicitResult?, _ error: Error?) -> ())? = nil) -> CLDExplicitRequest {
-        return explicit(publicId, type: String(describing: type), params: params, completionHandler: completionHandler)
+    public func explicit(publicId: String, type: CLDType, params: CLDExplicitRequestParams? = nil, completionHandler: ((result: CLDExplicitResult?, error: NSError?) -> ())? = nil) -> CLDExplicitRequest {
+        return explicit(publicId, type: String(type), params: params, completionHandler: completionHandler)
     }
     
     /**
@@ -224,8 +217,7 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func explode(_ publicId: String, transformation: CLDTransformation, params: CLDExplodeRequestParams? = nil, completionHandler: ((_ result: CLDExplodeResult?, _ error: Error?) -> ())? = nil) -> CLDExplodeRequest {
+    public func explode(publicId: String, transformation: CLDTransformation, params: CLDExplodeRequestParams? = nil, completionHandler: ((result: CLDExplodeResult?, error: NSError?) -> ())? = nil) -> CLDExplodeRequest {
         let explodeParams = CLDExplodeRequestParams(publicId: publicId, transformation: transformation)
         explodeParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.Explode, params: explodeParams)
@@ -246,8 +238,7 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func generateSprite(_ tag: String, params: CLDSpriteRequestParams? = nil, completionHandler: ((_ result: CLDSpriteResult?, _ error: Error?) -> ())? = nil) -> CLDSpriteRequest {
+    public func generateSprite(tag: String, params: CLDSpriteRequestParams? = nil, completionHandler: ((result: CLDSpriteResult?, error: NSError?) -> ())? = nil) -> CLDSpriteRequest {
         let generateSpriteParams = CLDSpriteRequestParams(tag: tag)
         generateSpriteParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.GenerateSprite, params: generateSpriteParams)
@@ -269,8 +260,7 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
     */
-    @discardableResult
-    open func multi(_ tag: String, params: CLDMultiRequestParams? = nil, completionHandler: ((_ result: CLDMultiResult?, _ error: Error?) -> ())? = nil) -> CLDMultiRequest {
+    public func multi(tag: String, params: CLDMultiRequestParams? = nil, completionHandler: ((result: CLDMultiResult?, error: NSError?) -> ())? = nil) -> CLDMultiRequest {
         let multiParams = CLDMultiRequestParams(tag: tag)
         multiParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.Multi, params: multiParams)
@@ -293,8 +283,7 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func text(_ text: String, params: CLDTextRequestParams? = nil, completionHandler: ((_ result: CLDTextResult?, _ error: Error?) -> ())? = nil) -> CLDTextRequest {
+    public func text(text: String, params: CLDTextRequestParams? = nil, completionHandler: ((result: CLDTextResult?, error: NSError?) -> ())? = nil) -> CLDTextRequest {
         let textParams = CLDTextRequestParams(text: text)
         textParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.GenerateText, params: textParams)
@@ -316,8 +305,7 @@ import Foundation
                             allowing the options to add response closure to be called once the request has finished,
                             as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    @discardableResult
-    open func deleteByToken(_ token: String, params: CLDDeleteByTokenRequestParams? = nil, completionHandler: ((_ result: CLDDeleteResult?, _ error: Error?) -> ())? = nil) -> CLDDeleteRequest {
+    public func deleteByToken(token: String, params: CLDDeleteByTokenRequestParams? = nil, completionHandler: ((result: CLDDeleteResult?, error: NSError?) -> ())? = nil) -> CLDDeleteRequest {
         let deleteByTokenParams = CLDDeleteByTokenRequestParams(token: token)
         deleteByTokenParams.params.cldMerge(params?.params)
         let request = networkCoordinator.callAction(.DeleteByToken, params: deleteByTokenParams)

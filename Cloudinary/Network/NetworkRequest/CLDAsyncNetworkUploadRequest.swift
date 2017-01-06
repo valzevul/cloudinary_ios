@@ -24,22 +24,23 @@
 
 import Foundation
 
-internal class CLDAsyncNetworkUploadRequest: CLDNetworkDataRequest {
+@objc
+internal class CLDAsyncNetworkUploadRequest: NSObject, CLDNetworkDataRequest {
     
     
     // Once a value is set it should not be overridden
     internal var networkDataRequest: CLDNetworkDataRequest? {
         didSet {
             if networkDataRequest != nil {
-                closureQueue.isSuspended = false
+                closureQueue.suspended = false
             }
         }
     }
     
-    fileprivate let closureQueue: OperationQueue = {
-        let operationQueue = OperationQueue()
+    private let closureQueue: NSOperationQueue = {
+        let operationQueue = NSOperationQueue()
         operationQueue.maxConcurrentOperationCount = 1
-        operationQueue.isSuspended = true
+        operationQueue.suspended = true
         return operationQueue
     }()
     
@@ -47,34 +48,34 @@ internal class CLDAsyncNetworkUploadRequest: CLDNetworkDataRequest {
     // MARK: - CLDNetworkDataRequest
     
     func resume() {
-        closureQueue.addOperation {
+        closureQueue.addOperationWithBlock({ 
             self.networkDataRequest?.resume()
-        }
+        })
     }
     
     func suspend() {
-        closureQueue.addOperation {
+        closureQueue.addOperationWithBlock({
             self.networkDataRequest?.suspend()
-        }
+        })
     }
     
     func cancel() {
-        closureQueue.addOperation {
+        closureQueue.addOperationWithBlock({
             self.networkDataRequest?.cancel()
-        }
+        })
     }
     
-    func response(_ completionHandler: ((_ response: Any?, _ error: NSError?) -> ())?) -> CLDNetworkRequest {
-        closureQueue.addOperation {
+    func response(completionHandler: ((response: AnyObject?, error: NSError?) -> ())?) -> CLDNetworkRequest {
+        closureQueue.addOperationWithBlock({
             self.networkDataRequest?.response(completionHandler)
-        }
+        })
         return self
     }
     
-    func progress(_ progress: ((Progress) -> Void)?) -> CLDNetworkDataRequest {
-        closureQueue.addOperation {
+    func progress(progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())?) -> CLDNetworkDataRequest {
+        closureQueue.addOperationWithBlock({
             self.networkDataRequest?.progress(progress)
-        }        
+        })
         return self
     }
 }

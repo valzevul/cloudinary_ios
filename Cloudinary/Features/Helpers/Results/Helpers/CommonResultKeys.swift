@@ -25,31 +25,31 @@
 import Foundation
 
 internal enum CommonResultKeys: CustomStringConvertible {
-    case publicId, format, version, resourceType, urlType, createdAt, length, width, height, x, y, url, secureUrl, exif, metadata, faces, colors, tags, moderation, phash, info
+    case PublicId, Format, Version, ResourceType, UrlType, CreatedAt, Length, Width, Height, X, Y, Url, SecureUrl, Exif, Metadata, Faces, Colors, Tags, Moderation, Phash, Info
     
     var description: String {
         switch self {
-        case .publicId:         return "public_id"
-        case .format:           return "format"
-        case .version:          return "version"
-        case .resourceType:     return "resource_type"
-        case .urlType:          return "type"
-        case .createdAt:        return "created_at"
-        case .length:           return "bytes"
-        case .width:            return "width"
-        case .height:           return "height"
-        case .x:                return "x"
-        case .y:                return "y"
-        case .url:              return "url"
-        case .secureUrl:        return "secure_url"
-        case .exif:             return "exif"
-        case .metadata:         return "image_metadata"
-        case .faces:            return "faces"
-        case .colors:           return "colors"
-        case .tags:             return "tags"
-        case .moderation:       return "moderation"
-        case .phash:            return "phash"        
-        case .info:             return "info"
+        case .PublicId:         return "public_id"
+        case .Format:           return "format"
+        case .Version:          return "version"
+        case .ResourceType:     return "resource_type"
+        case .UrlType:          return "type"
+        case .CreatedAt:        return "created_at"
+        case .Length:           return "bytes"
+        case .Width:            return "width"
+        case .Height:           return "height"
+        case .X:                return "x"
+        case .Y:                return "y"
+        case .Url:              return "url"
+        case .SecureUrl:        return "secure_url"
+        case .Exif:             return "exif"
+        case .Metadata:         return "image_metadata"
+        case .Faces:            return "faces"
+        case .Colors:           return "colors"
+        case .Tags:             return "tags"
+        case .Moderation:       return "moderation"
+        case .Phash:            return "phash"        
+        case .Info:             return "info"
         }
     }
 }

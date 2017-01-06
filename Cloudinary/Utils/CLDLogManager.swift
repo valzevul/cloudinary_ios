@@ -27,32 +27,32 @@ import Foundation
 private let prefix = "[Cloudinary]"
 
 @objc public enum CLDLogLevel: Int {
-    case trace, debug, info, warning, error, none
+    case Trace, Debug, Info, Warning, Error, None
 }
 
 private enum LevelText: String {
     case Trace, Debug, Info, Warning, Error, None
 }
 
-private func levelTextForLevel(_ logLevel: CLDLogLevel) -> LevelText {
+private func levelTextForLevel(logLevel: CLDLogLevel) -> LevelText {
     switch(logLevel) {
-        case .trace:    return .Trace
-        case .debug:    return .Debug
-        case .info:     return .Info
-        case .warning:  return .Warning
-        case .error:    return .Error
-        case .none:     return .None
+        case .Trace:    return .Trace
+        case .Debug:    return .Debug
+        case .Info:     return .Info
+        case .Warning:  return .Warning
+        case .Error:    return .Error
+        case .None:     return .None
     }
 }
 
 internal struct CLDLogManager {
     
-    internal static var minimumLogLevel = CLDLogLevel.none
+    internal static var minimumLogLevel = CLDLogLevel.None
     
 }
 
 
-internal func printLog<T>(_ logLevel : CLDLogLevel, text: T, _ file: String = #file, _ function: String = #function, _ line: Int = #line){
+internal func printLog<T>(logLevel : CLDLogLevel, text: T, _ file: String = #file, _ function: String = #function, _ line: Int = #line){
     
     if CLDLogManager.minimumLogLevel.rawValue <= logLevel.rawValue {
         let filename = (file as NSString).lastPathComponent

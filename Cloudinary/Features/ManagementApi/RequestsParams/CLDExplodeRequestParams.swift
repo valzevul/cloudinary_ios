@@ -27,7 +27,7 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing an `explode` request.
  */
-@objc open class CLDExplodeRequestParams: CLDRequestParams {
+@objc public class CLDExplodeRequestParams: CLDRequestParams {
 
     
     // MARK: Init
@@ -72,10 +72,9 @@ import Foundation
     
     - returns:              The same instance of CLDExplodeRequestParams.
     */
-    @discardableResult
     @objc(setTypeWithType:)
-    open func setType(_ type: CLDType) -> Self {
-        return setType(String(describing: type))
+    public func setType(type: CLDType) -> Self {
+        return setType(String(type))
     }
     
     /**
@@ -85,8 +84,7 @@ import Foundation
      
      - returns:              The same instance of CLDExplodeRequestParams.
      */
-    @discardableResult
-    open func setType(_ type: String) -> Self {
+    public func setType(type: String) -> Self {
         setParam(ExplodeParams.CloudType.rawValue, value: type)
         return self
     }
@@ -98,8 +96,7 @@ import Foundation
      
      - returns:                 The same instance of CLDExplodeRequestParams.
      */
-    @discardableResult
-    open func setFormat(_ format: String) -> Self {
+    public func setFormat(format: String) -> Self {
         setParam(ExplodeParams.Format.rawValue, value: format)
         return self
     }
@@ -111,8 +108,7 @@ import Foundation
      
      - returns:                 The same instance of CLDExplodeRequestParams.
      */
-    @discardableResult
-    open func setAsync(_ async: Bool) -> Self {
+    public func setAsync(async: Bool) -> Self {
         setParam(ExplodeParams.Async.rawValue, value: async)
         return self
     }
@@ -124,15 +120,14 @@ import Foundation
      
      - returns:                         The same instance of CLDExplodeRequestParams.
      */
-    @discardableResult
-    open func setNotificationUrl(_ notificationUrl: String) -> Self {
+    public func setNotificationUrl(notificationUrl: String) -> Self {
         setParam(ExplodeParams.NotificationUrl.rawValue, value: notificationUrl)
         return self
     }
     
     
     
-    fileprivate enum ExplodeParams: String {
+    private enum ExplodeParams: String {
         case PublicId =             "public_id"
         case CloudType =            "type"
         case Transformation =       "transformation"

@@ -27,11 +27,11 @@ import Foundation
 /**
  The CLDUploader class is used to upload assets to your Cloudinary account's cloud.
 */
-@objc open class CLDUploader: CLDBaseNetworkObject {
+@objc public class CLDUploader: CLDBaseNetworkObject {
     
     // MARK: - Init
     
-    fileprivate override init() {
+    private override init() {
         super.init()
     }
     
@@ -50,12 +50,12 @@ import Foundation
     - parameter progress:      The closure that is called periodically during the data transfer.
     - parameter completionHandler:  The closure to be called once the request has finished, holding either the response object or the error.
     
-    - returns:                      An instance implementing the protocol `CLDNetworkDataRequest`,
+    - returns:                      An instance of `CLDUploadRequest`,
                                     allowing the options to add a progress closure that is called periodically during the upload
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
     */
-    open func signedUpload(data: Data, params: CLDUploadRequestParams? = nil, progress: ((Progress) -> Void)? = nil, completionHandler:((_ response: CLDUploadResult?, _ error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func upload(data data: NSData, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(true)
         let request = networkCoordinator.upload(data, params: params)
@@ -77,33 +77,33 @@ import Foundation
      - parameter progress:     The closure that is called periodically during the data transfer.
      - parameter completionHandler: The closure to be called once the request has finished, holding either the response object or the error.
      
-     - returns:                     An instance implementing the protocol `CLDNetworkDataRequest`,
+     - returns:                     An instance of `CLDUploadRequest`,
                                     allowing the options to add a progress closure that is called periodically during the upload
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    open func upload(data: Data, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((Progress) -> Void)? = nil, completionHandler:((_ response: CLDUploadResult?, _ error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func unsignedUpload(data data: NSData, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(false)
         params.setUploadPreset(uploadPreset)
-        return signedUpload(data: data, params: params, progress: progress, completionHandler: completionHandler)
+        return upload(data: data, params: params, progress: progress, completionHandler: completionHandler)
     }
     
      /**
      Uploads a file from the specified URL to the configured cloud.
      The URL can either be of a local file (i.e. from the bundle) or can point to a remote file.
      
-     - parameter url:              The URL pointing to the file to upload.
+     - parameter url:               The URL pointing to the file to upload.
      - parameter params:            An object holding all the available parameters for uploading.
      - parameter progress:     The closure that is called periodically during the data transfer.
      - parameter completionHandler: The closure to be called once the request has finished, holding either the response object or the error.
      
-     - returns:                     An instance implementing the protocol `CLDNetworkDataRequest`,
+     - returns:                     An instance of `CLDUploadRequest`,
                                     allowing the options to add a progress closure that is called periodically during the upload
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    open func signedUpload(url: URL, params: CLDUploadRequestParams? = nil, progress: ((Progress) -> Void)? = nil, completionHandler:((_ response: CLDUploadResult?, _ error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func upload(url url: NSURL, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(true)
         let request = networkCoordinator.upload(url, params: params)
@@ -121,21 +121,21 @@ import Foundation
      Uploads a file from the specified URL to the configured cloud.
      The URL can either be of a local file (i.e. from the bundle) or can point to a remote file.
      
-     - parameter url:              The URL pointing to the file to upload.
+     - parameter url:               The URL pointing to the file to upload.
      - parameter params:            An object holding all the available parameters for uploading.
      - parameter progress:     The closure that is called periodically during the data transfer.
      - parameter completionHandler: The closure to be called once the request has finished, holding either the response object or the error.
      
-     - returns:                     An instance implementing the protocol `CLDNetworkDataRequest`,
+     - returns:                     An instance of `CLDUploadRequest`,
                                     allowing the options to add a progress closure that is called periodically during the upload
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    open func upload(url: URL, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((Progress) -> Void)? = nil, completionHandler:((_ response: CLDUploadResult?, _ error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func unsignedUpload(url url: NSURL, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(false)
         params.setUploadPreset(uploadPreset)
-        return signedUpload(url: url, params: params, progress: progress, completionHandler: completionHandler)
+        return upload(url: url, params: params, progress: progress, completionHandler: completionHandler)
     }    
 
 }

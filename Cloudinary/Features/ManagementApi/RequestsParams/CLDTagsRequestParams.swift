@@ -27,7 +27,7 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing a tag request.
  */
-@objc open class CLDTagsRequestParams: CLDRequestParams {
+@objc public class CLDTagsRequestParams: CLDRequestParams {
     
     //MARK: Init
     
@@ -71,27 +71,27 @@ import Foundation
      
      - returns:                       The same instance of CLDTagsRequestParams.
      */
-    internal func setCommand(_ command: TagsCommand) -> Self {
+    internal func setCommand(command: TagsCommand) -> Self {
         setParam(TagsParams.Command.rawValue, value: command.description)
         return self
     }
     
     // MARK: Private
     
-    fileprivate enum TagsParams: String {
+    private enum TagsParams: String {
         case PublicIds =            "public_ids"
         case Tag =                  "tag"
         case Command =              "command"
     }
     
     internal enum TagsCommand: CustomStringConvertible {
-        case add, remove, replace
+        case Add, Remove, Replace
         
         var description: String {
             switch self {
-            case .add:              return "add"
-            case .remove:           return "remove"
-            case .replace:          return "replace"
+            case .Add:              return "add"
+            case .Remove:           return "remove"
+            case .Replace:          return "replace"
             }
         }
     }

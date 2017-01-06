@@ -27,7 +27,7 @@ import Foundation
 /**
  This class represents the different parameters that can be passed when performing a destroy request.
  */
-@objc open class CLDDestroyRequestParams: CLDRequestParams {
+@objc public class CLDDestroyRequestParams: CLDRequestParams {
     
     //MARK: Init
     
@@ -68,10 +68,9 @@ import Foundation
     
     - returns:              The same instance of CLDDestroyRequestParams.
     */
-    @discardableResult
     @objc(setTypeWithType:)
-    open func setType(_ type: CLDType) -> Self {
-        return setType(String(describing: type))
+    public func setType(type: CLDType) -> Self {
+        return setType(String(type))
     }
     
     /**
@@ -81,8 +80,7 @@ import Foundation
      
      - returns:              The same instance of CLDExplodeRequestParams.
      */
-    @discardableResult
-    open func setType(_ type: String) -> Self {
+    public func setType(type: String) -> Self {
         super.setParam(DestroyParams.CloudType.rawValue, value: type)
         return self
     }
@@ -94,13 +92,12 @@ import Foundation
      
     - returns:              The same instance of CLDDestroyRequestParams.
     */
-    @discardableResult
-    open func setInvalidate(_ invalidate: Bool) -> Self {
+    public func setInvalidate(invalidate: Bool) -> Self {
         super.setParam(DestroyParams.Invalidate.rawValue, value: invalidate)
         return self
     }
     
-    fileprivate enum DestroyParams: String {
+    private enum DestroyParams: String {
         case PublicId =             "public_id"
         case CloudType =            "type"
         case Invalidate =           "invalidate"

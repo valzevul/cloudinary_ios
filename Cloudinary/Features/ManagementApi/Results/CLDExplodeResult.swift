@@ -24,32 +24,32 @@
 
 import Foundation
 
-@objc open class CLDExplodeResult: CLDBaseResult {
+@objc public class CLDExplodeResult: CLDBaseResult {
     
     // MARK: - Getters
     
-    open var status: String? {
-        return getParam(.status) as? String
+    public var status: String? {
+        return getParam(.Status) as? String
     }
     
-    open var batchId: String? {
-        return getParam(.batchId) as? String
+    public var batchId: String? {
+        return getParam(.BatchId) as? String
     }
     
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: ExplodeResultKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: ExplodeResultKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum ExplodeResultKey: CustomStringConvertible {
-        case status, batchId
+    private enum ExplodeResultKey: CustomStringConvertible {
+        case Status, BatchId
         
         var description: String {
             switch self {
-            case .status:           return "status"
-            case .batchId:          return "batch_id"
+            case .Status:           return "status"
+            case .BatchId:          return "batch_id"
             }
         }
     }

@@ -23,49 +23,49 @@
 //
 import Foundation
 
-@objc open class CLDBoundingBox: CLDBaseResult {
+@objc public class CLDBoundingBox: CLDBaseResult {
     
-    open var topLeft: CGPoint? {
-        return CLDBoundingBox.parsePoint(resultJson, key: String(describing: CLDBoundingBoxJsonKey.topLeft))
+    public var topLeft: CGPoint? {
+        return CLDBoundingBox.parsePoint(resultJson, key: String(CLDBoundingBoxJsonKey.TopLeft))
     }
     
-    open var size: CGSize? {
-        return CLDBoundingBox.parseSize(resultJson, key: String(describing: CLDBoundingBoxJsonKey.size))
+    public var size: CGSize? {
+        return CLDBoundingBox.parseSize(resultJson, key: String(CLDBoundingBoxJsonKey.Size))
     }
     
-    internal static func parsePoint(_ json: [String : AnyObject], key: String) -> CGPoint? {
+    internal static func parsePoint(json: [String : AnyObject], key: String) -> CGPoint? {
         guard let
             point = json[key] as? [String : Double],
-            let x = point[CommonResultKeys.x.description],
-            let y = point[CommonResultKeys.y.description] else {
+            x = point[CommonResultKeys.X.description],
+            y = point[CommonResultKeys.Y.description] else {
                 return nil
         }
-        return CGPoint(x: CGFloat(x), y: CGFloat(y))
+        return CGPointMake(CGFloat(x), CGFloat(y))
     }
     
-    internal static func parseSize(_ json: [String : AnyObject], key: String) -> CGSize? {
+    internal static func parseSize(json: [String : AnyObject], key: String) -> CGSize? {
         guard let
             point = json[key] as? [String : Double],
-            let width = point[CommonResultKeys.width.description],
-            let height = point[CommonResultKeys.height.description] else {
+            width = point[CommonResultKeys.Width.description],
+            height = point[CommonResultKeys.Height.description] else {
                 return nil
         }
-        return CGSize(width: CGFloat(width), height: CGFloat(height))
+        return CGSizeMake(CGFloat(width), CGFloat(height))
     }
     
     // MARK: - Private Helpers
     
-    fileprivate func getParam(_ param: CLDBoundingBoxJsonKey) -> AnyObject? {
-        return resultJson[String(describing: param)]
+    private func getParam(param: CLDBoundingBoxJsonKey) -> AnyObject? {
+        return resultJson[String(param)]
     }
     
-    fileprivate enum CLDBoundingBoxJsonKey: CustomStringConvertible {
-        case topLeft, size
+    private enum CLDBoundingBoxJsonKey: CustomStringConvertible {
+        case TopLeft, Size
         
         var description: String {
             switch self {
-            case .topLeft:  return "tl"
-            case .size:     return "size"
+            case .TopLeft:  return "tl"
+            case .Size:     return "size"
             }
         }
     }

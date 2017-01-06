@@ -27,7 +27,7 @@ import XCTest
 import Cloudinary
 
 class NetworkBaseTest: XCTestCase {
-    let timeout: TimeInterval = 30.0
+    let timeout: NSTimeInterval = 30.0
     var cloudinary: CLDCloudinary?
     
     // MARK: - Lifcycle
@@ -35,7 +35,7 @@ class NetworkBaseTest: XCTestCase {
     override func setUp() {
         super.setUp()
         let config = CLDConfiguration.initWithEnvParams() ?? CLDConfiguration(cloudinaryUrl: "cloudinary://a:b@test123")!
-        cloudinary = CLDCloudinary(configuration: config, sessionConfiguration: URLSessionConfiguration.default)
+        cloudinary = CLDCloudinary(configuration: config, sessionConfiguration: NSURLSessionConfiguration.defaultSessionConfiguration())        
     }
     
     override func tearDown() {
@@ -43,13 +43,15 @@ class NetworkBaseTest: XCTestCase {
         cloudinary = nil
     }
     
-    // MARK: - Resources
+    // MARK: - Resources    
     
     enum TestResourceType {
         case logo, borderCollie, docx, dog, pdf
         
+        static let defaultResource = TestResourceType.logo
+        
         var fileName: String {
-            return String(describing: self)
+            return String(self)
         }
         
         var resourceExtension: String {
@@ -67,23 +69,22 @@ class NetworkBaseTest: XCTestCase {
             }
         }
         
-        var url: URL {
-            let bundle = Bundle(for: NetworkBaseTest.self)
-            return bundle.url(forResource: fileName, withExtension: resourceExtension)!
+        var url: NSURL {
+            let bundle = NSBundle(forClass: NetworkBaseTest.self)
+            return bundle.URLForResource(fileName, withExtension: resourceExtension)!
         }
         
-        var data: Data {
-            let data = try! Data(contentsOf: url, options: .uncached)
+        var data: NSData {
+            let data = try! NSData(contentsOfURL: url, options: .DataReadingUncached)
             return data
-        }        
+        }
     }
     
     // MARK: - Helpers
     
-    @discardableResult
-    func uploadFile(_ resource: TestResourceType = .borderCollie, params: CLDUploadRequestParams? = nil) -> CLDUploadRequest {
+    func uploadFile(resource: TestResourceType = TestResourceType.defaultResource, params: CLDUploadRequestParams? = nil) -> CLDUploadRequest {
         XCTAssertNotNil(cloudinary!.config.apiSecret, "Must set api secret for this test")
-        return cloudinary!.createUploader().signedUpload(data: resource.data, params: params)
+        return cloudinary!.createUploader().upload(data: resource.data, params: params)
     }
 }
 

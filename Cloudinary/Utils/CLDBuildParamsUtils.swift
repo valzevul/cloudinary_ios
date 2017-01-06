@@ -27,18 +27,18 @@ import Foundation
 
 // MARK: - Build String Params
 
-internal func buildCoordinatesString(_ coordinates: [CLDCoordinate]) -> String {
-    return coordinates.map{$0.description}.joined(separator: "|")
+internal func buildCoordinatesString(coordinates: [CLDCoordinate]) -> String {
+    return coordinates.map{$0.description}.joinWithSeparator("|")
 }
 
-internal func buildEagerString(_ eager: [CLDTransformation]) -> String {    
-    return eager.map{$0.asString() ?? ""}.filter{!$0.isEmpty}.joined(separator: "|")
+internal func buildEagerString(eager: [CLDTransformation]) -> String {    
+    return eager.map{$0.asString() ?? ""}.filter{!$0.isEmpty}.joinWithSeparator("|")
 }
 
-internal func buildContextString(_ context: [String : String]) -> String {
-    return context.map{"\($0)=\($1)"}.joined(separator: "|")
+internal func buildContextString(context: [String : String]) -> String {
+    return context.map{"\($0)=\($1)"}.joinWithSeparator("|")
 }
 
-internal func buildHeadersString(_ headers: [String : String]) -> String {    
-    return headers.map{"\($0): \($1)\\n"}.joined(separator: "")
+internal func buildHeadersString(headers: [String : String]) -> String {    
+    return headers.map{"\($0): \($1)\\n"}.joinWithSeparator("")
 }
