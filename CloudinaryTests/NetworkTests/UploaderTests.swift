@@ -41,7 +41,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setColors(true)
-        cloudinary!.createUploader().upload(data: data, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(data: data, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -66,7 +66,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setColors(true)
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -91,7 +91,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams().setColors(true)
         params.setResourceType(.Video)
-        cloudinary!.createUploader().upload(data: data, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(data: data, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -116,7 +116,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams().setColors(true)
         params.setResourceType(.Video)
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -154,7 +154,7 @@ class UploaderTests: NetworkBaseTest {
         var result: CLDUploadResult?
         var error: NSError?
         
-        cloudinary!.createUploader().unsignedUpload(url: url, uploadPreset: presetName, params: CLDUploadRequestParams()).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().upload(url: url, uploadPreset: presetName, params: CLDUploadRequestParams()).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -195,7 +195,7 @@ class UploaderTests: NetworkBaseTest {
         var error: NSError?
         
         let params = CLDUploadRequestParams()
-        cloudinary!.createUploader().upload(url: NSURL(string: "http://cloudinary.com/images/old_logo.png")!, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: NSURL(string: "http://cloudinary.com/images/old_logo.png")!, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -221,7 +221,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setUseFilename(true)
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -253,7 +253,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setUseFilename(true).setUniqueFilename(false)
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -280,7 +280,7 @@ class UploaderTests: NetworkBaseTest {
         let params = CLDUploadRequestParams()
         let trans = CLDTransformation().setCrop(.Crop).setWidth(2.0)
         params.setEager([trans])
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -307,7 +307,7 @@ class UploaderTests: NetworkBaseTest {
         let params = CLDUploadRequestParams()
         params.setHeaders(["Link" : "1"])
         params.setContext(["caption" : "My Logo"])
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -332,7 +332,7 @@ class UploaderTests: NetworkBaseTest {
         let params = CLDUploadRequestParams()
         let coordinate = CLDCoordinate(rect: CGRectMake(10, 10, 100, 100))
         params.setFaceCoordinates([coordinate])
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -357,7 +357,7 @@ class UploaderTests: NetworkBaseTest {
         let params = CLDUploadRequestParams()
         let coordinate = CLDCoordinate(rect: CGRectMake(10, 10, 100, 100))
         params.setCustomCoordinates([coordinate])
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -381,7 +381,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setModeration(.Manual)
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -422,7 +422,7 @@ class UploaderTests: NetworkBaseTest {
         let params = CLDUploadRequestParams()
         params.setRawConvert("illegal")
         params.setResourceType(.Raw)
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -453,7 +453,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setCategorization("illegal")
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -484,7 +484,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setDetection("illegal")
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             
@@ -515,7 +515,7 @@ class UploaderTests: NetworkBaseTest {
         
         let params = CLDUploadRequestParams()
         params.setAutoTagging(0.5)
-        cloudinary!.createUploader().upload(url: url, params: params).response({ (resultRes, errorRes) in
+        cloudinary!.createUploader().signedUpload(url: url, params: params).response({ (resultRes, errorRes) in
             result = resultRes
             error = errorRes
             

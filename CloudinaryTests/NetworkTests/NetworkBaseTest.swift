@@ -84,7 +84,7 @@ class NetworkBaseTest: XCTestCase {
     
     func uploadFile(resource: TestResourceType = TestResourceType.defaultResource, params: CLDUploadRequestParams? = nil) -> CLDUploadRequest {
         XCTAssertNotNil(cloudinary!.config.apiSecret, "Must set api secret for this test")
-        return cloudinary!.createUploader().upload(data: resource.data, params: params)
+        return cloudinary!.createUploader().signedUpload(data: resource.data, params: params)
     }
 }
 

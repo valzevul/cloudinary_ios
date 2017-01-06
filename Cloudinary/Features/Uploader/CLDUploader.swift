@@ -55,7 +55,7 @@ import Foundation
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
     */
-    public func upload(data data: NSData, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func signedUpload(data data: NSData, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:((response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(true)
         let request = networkCoordinator.upload(data, params: params)
@@ -82,11 +82,11 @@ import Foundation
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    public func unsignedUpload(data data: NSData, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func upload(data data: NSData, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:((response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(false)
         params.setUploadPreset(uploadPreset)
-        return upload(data: data, params: params, progress: progress, completionHandler: completionHandler)
+        return signedUpload(data: data, params: params, progress: progress, completionHandler: completionHandler)
     }
     
      /**
@@ -103,7 +103,7 @@ import Foundation
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    public func upload(url url: NSURL, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func signedUpload(url url: NSURL, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:((response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(true)
         let request = networkCoordinator.upload(url, params: params)
@@ -131,11 +131,11 @@ import Foundation
                                     and a response closure to be called once the upload is finished,
                                     as well as performing actions on the request, such as cancelling, suspending or resuming it.
      */
-    public func unsignedUpload(url url: NSURL, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:( (response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
+    public func upload(url url: NSURL, uploadPreset: String, params: CLDUploadRequestParams? = nil, progress: ((bytes: Int64, totalBytes: Int64, totalBytesExpected: Int64) -> ())? = nil, completionHandler:((response: CLDUploadResult?, error: NSError?) -> ())? = nil) -> CLDUploadRequest {
         let params = params ?? CLDUploadRequestParams()
         params.setSigned(false)
         params.setUploadPreset(uploadPreset)
-        return upload(url: url, params: params, progress: progress, completionHandler: completionHandler)
+        return signedUpload(url: url, params: params, progress: progress, completionHandler: completionHandler)
     }    
 
 }
