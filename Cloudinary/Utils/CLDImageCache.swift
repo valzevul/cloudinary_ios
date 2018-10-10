@@ -82,7 +82,7 @@ internal class CLDImageCache {
         calculateCurrentDiskCacheSize()
         clearDiskToMatchCapacityIfNeeded()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(CLDImageCache.clearMemoryCache), name: NSNotification.Name.UIApplicationDidReceiveMemoryWarning, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(CLDImageCache.clearMemoryCache), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
     }
     
     deinit {

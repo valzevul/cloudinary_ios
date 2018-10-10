@@ -37,7 +37,7 @@ public extension UIButton {
      CLDNetworkDelegate() by default.
      
      */
-    @objc public func cldSetImage(_ url: String, forState state: UIControlState, cloudinary: CLDCloudinary, placeholder: UIImage? = nil) {
+    @objc public func cldSetImage(_ url: String, forState state: UIControl.State, cloudinary: CLDCloudinary, placeholder: UIImage? = nil) {
         fetchImageForUIElement(url, placeholder: placeholder, cloudinary: cloudinary) { [weak self] (image: UIImage) in
             self?.setImage(image, for: state)
         }
